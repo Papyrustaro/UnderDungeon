@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SampleDebug : MonoBehaviour
+public class DungeonSkill : MonoBehaviour
 {
     // Start is called before the first frame update
     void Start()
     {
-        Debug.Log("testdayo");
+        
     }
 
     // Update is called once per frame
