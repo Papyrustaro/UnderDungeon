@@ -223,7 +223,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4df33764f9e88614984ac46ea447764b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  race: 1
   name: "\u30B9\u30E9\u30A4\u30E0A"
   id: 1
   maxHp: 10
@@ -282,7 +281,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4df33764f9e88614984ac46ea447764b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  race: 1
   name: "\u30B9\u30E9\u30A4\u30E0B"
   id: 1
   maxHp: 10
@@ -322,6 +320,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1426515516}
   - component: {fileID: 1426515515}
+  - component: {fileID: 1426515517}
   m_Layer: 0
   m_Name: TestPlayer (1)
   m_TagString: Untagged
@@ -341,7 +340,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 75a0d15ccfba6dc48aa4a6b41e337e22, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  race: 0
   name: "\u4EBA\u9593B"
   id: 0
   maxHp: 100
@@ -369,6 +367,25 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1426515517
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1426515514}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 02da2aa02f17f5f4984827e6d8b577ac, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  id: 0
+  skillName: 
+  description: 
+  needSp: 0
+  element: 0
+  activeSkillType: 0
+  needTarget: 0
 --- !u!1 &1550074792
 GameObject:
   m_ObjectHideFlags: 0
@@ -447,7 +464,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 75a0d15ccfba6dc48aa4a6b41e337e22, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  race: 0
   name: "\u4EBA\u9593A"
   id: 0
   maxHp: 100

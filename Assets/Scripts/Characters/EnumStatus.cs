@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 //using System;
 
-public enum Element //属性
+public enum EnumElement //属性
 {
     Fire,
     Aqua,
@@ -13,7 +13,7 @@ public enum Element //属性
     Normal,
 }
 
-public enum Race //種族
+public enum EnumRace //種族
 {
     Human,
     Animal,

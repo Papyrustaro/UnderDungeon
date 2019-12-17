@@ -13,10 +13,10 @@ public class EnemyCharacter : Character
     [SerializeField]
     private int haveGold; //獲得できるゴールド
 
-    public EnemyCharacter(int race, string name, int id, int maxHp, int maxAtk, int maxDef, int maxSpAtk,
-        int maxSpDef, int maxSpd, int element, int rarity, string description, bool haveSpecialAI, int dropRate,
+    public EnemyCharacter(string name, int id, int maxHp, int maxAtk, int maxDef, int maxSpAtk,
+        int maxSpDef, int maxSpd, EnumElement element, int rarity, string description, bool haveSpecialAI, int dropRate,
         int haveExp, int haveGold)
-        : base(race, name, id, maxHp, maxAtk, maxDef, maxSpAtk, maxSpDef, maxSpd, element, rarity, description)
+        : base(name, id, maxHp, maxAtk, maxDef, maxSpAtk, maxSpDef, maxSpd, element, rarity, description)
     {
         this.haveSpecialAI = haveSpecialAI; this.dropRate = dropRate;
         this.haveExp = haveExp; this.haveGold = haveGold;

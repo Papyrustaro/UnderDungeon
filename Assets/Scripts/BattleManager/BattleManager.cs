@@ -6,9 +6,9 @@ using System;
 public class BattleManager : MonoBehaviour
 {
     [SerializeField]
-    private PlayerCharacter[] player;
+    private PlayerCharacter[] player = default;
     [SerializeField]
-    private EnemyCharacter[] enemy;
+    private EnemyCharacter[] enemy = default;
 
     private void Awake()
     {
