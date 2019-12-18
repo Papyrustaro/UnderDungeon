@@ -223,8 +223,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4df33764f9e88614984ac46ea447764b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  name: "\u30B9\u30E9\u30A4\u30E0A"
   id: 1
+  name: "\u30B9\u30E9\u30A4\u30E0A"
   maxHp: 10
   maxAtk: 10
   maxDef: 10
@@ -234,10 +234,15 @@ MonoBehaviour:
   element: 1
   rarity: 1
   description: "\u3088\u304F\u3044\u308B\u3084\u3064"
+  hpRate: 0
+  atkRate: 0
+  defRate: 0
+  spAtkRate: 0
+  spDefRate: 0
+  spdRate: 0
   haveSpecialAI: 0
+  activeSkillID: 
   dropRate: 90
-  haveExp: 2
-  haveGold: 2
 --- !u!4 &983020641
 Transform:
   m_ObjectHideFlags: 0
@@ -281,8 +286,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4df33764f9e88614984ac46ea447764b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  name: "\u30B9\u30E9\u30A4\u30E0B"
   id: 1
+  name: "\u30B9\u30E9\u30A4\u30E0B"
   maxHp: 10
   maxAtk: 10
   maxDef: 10
@@ -292,10 +297,15 @@ MonoBehaviour:
   element: 1
   rarity: 1
   description: "\u3088\u304F\u3044\u308B\u3084\u30642"
+  hpRate: 0
+  atkRate: 0
+  defRate: 0
+  spAtkRate: 0
+  spDefRate: 0
+  spdRate: 0
   haveSpecialAI: 0
+  activeSkillID: 
   dropRate: 90
-  haveExp: 2
-  haveGold: 2
 --- !u!4 &1152117510
 Transform:
   m_ObjectHideFlags: 0
@@ -340,8 +350,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 75a0d15ccfba6dc48aa4a6b41e337e22, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  name: "\u4EBA\u9593B"
   id: 0
+  name: "\u4EBA\u9593B"
   maxHp: 100
   maxAtk: 100
   maxDef: 100
@@ -352,7 +362,13 @@ MonoBehaviour:
   rarity: 1
   description: "\u305F\u3060\u306E\u3084\u3064B"
   exp: 100
-  maxExp: 1000
+  exceedLimitNum: 0
+  haveActiveSkillID: 0000000000000000
+  useAbleActiveSkillLV: 
+  havePassiveSkillID: 
+  useAblePassiveSkillLV: 
+  compositeExp: 10
+  sellPrice: 20
 --- !u!4 &1426515516
 Transform:
   m_ObjectHideFlags: 0
@@ -464,8 +480,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 75a0d15ccfba6dc48aa4a6b41e337e22, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  name: "\u4EBA\u9593A"
   id: 0
+  name: "\u4EBA\u9593A"
   maxHp: 100
   maxAtk: 100
   maxDef: 100
@@ -476,7 +492,13 @@ MonoBehaviour:
   rarity: 1
   description: "\u305F\u3060\u306E\u3084\u3064"
   exp: 100
-  maxExp: 1000
+  exceedLimitNum: 0
+  haveActiveSkillID: 
+  useAbleActiveSkillLV: 
+  havePassiveSkillID: 
+  useAblePassiveSkillLV: 
+  compositeExp: 0
+  sellPrice: 0
 --- !u!4 &1701758682
 Transform:
   m_ObjectHideFlags: 0

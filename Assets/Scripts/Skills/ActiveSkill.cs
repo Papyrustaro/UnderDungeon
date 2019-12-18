@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
-public enum EnumActiveSkillType //物理スキルor特殊スキルorその他
+public enum E_ActiveSkillType //物理スキルor特殊スキルorその他
 {
     Physics,
     Special,
@@ -22,15 +22,15 @@ public class ActiveSkill : MonoBehaviour
     [SerializeField]
     private int needSp; //消費sp
     [SerializeField]
-    private EnumElement element;
+    private E_Element element;
     [SerializeField]
-    private EnumActiveSkillType activeSkillType;
+    private E_ActiveSkillType activeSkillType;
     [SerializeField]
     private bool needTarget; //プレイヤーにターゲットを訊くかどうか(特定の味方対象など)
 
     private Action skillFunc; //こっちからはidだけで管理するかも
 
-    public ActiveSkill(int id, string skillName, string description, int needSp, EnumElement element, EnumActiveSkillType activeSkillType, bool needTarget, Action skillFunc)
+    public ActiveSkill(int id, string skillName, string description, int needSp, E_Element element, E_ActiveSkillType activeSkillType, bool needTarget, Action skillFunc)
     {
         this.id = id; this.skillName = skillName; this.description = description; this.needSp = needSp; this.element = element;
         this.activeSkillType = activeSkillType; this.needTarget = needTarget;
@@ -41,8 +41,8 @@ public class ActiveSkill : MonoBehaviour
     public string SkillName => skillName;
     public string Description => description;
     public int NeedSp => needSp;
-    public EnumElement Element => element;
-    public EnumActiveSkillType ActiveSkillType => activeSkillType;
+    public E_Element Element => element;
+    public E_ActiveSkillType ActiveSkillType => activeSkillType;
     public bool NeedTarget => needTarget;
     public void SkillFunc()
     {

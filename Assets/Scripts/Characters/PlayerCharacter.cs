@@ -7,36 +7,40 @@ public class PlayerCharacter : Character
     [SerializeField]
     private int exp;
     [SerializeField]
-    private int maxExp;
+    private int exceedLimitNum; //限界突破数
     [SerializeField]
-    private int[] haveActiveSkillId = default; 
+    private E_ActiveSkillID[] haveActiveSkillID = default; 
     [SerializeField]
-    private int[] useAbleActiveSkillExp = default;
+    private int[] useAbleActiveSkillLV = default;
     [SerializeField]
-    private int[] havePassiveSkillId = default;
+    private E_PassiveSkillID[] havePassiveSkillID = default;
     [SerializeField]
-    private int[] useAblePassiveSkillExp = default;
+    private int[] useAblePassiveSkillLV = default;
+    [SerializeField]
+    private E_CompositeExp compositeExp;
+    [SerializeField]
+    private E_SellPrice sellPrice;
 
     public PlayerCharacter(string name, int id, int maxHp, int maxAtk, int maxDef, int maxSpAtk, 
-        int maxSpDef, int maxSpd, EnumElement element, int rarity, string description, int exp, int maxExp)
+        int maxSpDef, int maxSpd, E_Element element, int rarity, string description, int exp)
         : base(name, id, maxHp, maxAtk, maxDef, maxSpAtk, maxSpDef, maxSpd, element, rarity, description)
     {
-        this.exp = exp; this.maxExp = maxExp;
+        this.exp = exp;
     }
 
     public int Exp => exp;
-    public int MaxExp => maxExp;
 
-    public bool AddExp(int value) //MaxExpを超える:false, 超えない:true
+    public bool AddExp(int getExp) //MaxExpを超える:false, 超えない:true
     {
-        if(exp + value > maxExp)
+        int maxExp = LVTable.GetMaxExp(LVTable.GetMaxLV(Rarity, exceedLimitNum));
+        if (exp + getExp > maxExp)
         {
-            exp = value;
+            exp = maxExp;
             return false;
         }
         else
         {
-            exp += value;
+            exp += getExp;
             return true;
         }
     }
