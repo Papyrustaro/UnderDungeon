@@ -6,9 +6,9 @@ using System;
 public class BattleManager : MonoBehaviour
 {
     [SerializeField]
-    private PlayerCharacter[] player = default;
+    private PlayerCharacter[] player;
     [SerializeField]
-    private EnemyCharacter[] enemy = default;
+    private EnemyCharacter[] enemy;
 
     private void Awake()
     {
@@ -16,11 +16,11 @@ public class BattleManager : MonoBehaviour
         {
             foreach (PlayerCharacter pc in player)
             {
-                Debug.Log(pc.Name + ": " + pc.Description);
+                Debug.Log(pc.CharaName + ": " + pc.Description);
             }
             foreach (EnemyCharacter ec in enemy)
             {
-                Debug.Log(ec.Name + ": " + ec.Description);
+                Debug.Log(ec.CharaName + ": " + ec.Description);
             }
         }catch(Exception e)
         {

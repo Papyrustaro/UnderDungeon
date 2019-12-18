@@ -194,7 +194,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &983020639
+--- !u!1 &521179769
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -202,8 +202,9 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 983020641}
-  - component: {fileID: 983020640}
+  - component: {fileID: 521179770}
+  - component: {fileID: 521179772}
+  - component: {fileID: 521179771}
   m_Layer: 0
   m_Name: TestEnemy
   m_TagString: Untagged
@@ -211,53 +212,65 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &983020640
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 983020639}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4df33764f9e88614984ac46ea447764b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  id: 1
-  name: "\u30B9\u30E9\u30A4\u30E0A"
-  maxHp: 10
-  maxAtk: 10
-  maxDef: 10
-  maxSpAtk: 10
-  maxSpDef: 10
-  maxSpd: 10
-  element: 1
-  rarity: 1
-  description: "\u3088\u304F\u3044\u308B\u3084\u3064"
-  hpRate: 0
-  atkRate: 0
-  defRate: 0
-  spAtkRate: 0
-  spDefRate: 0
-  spdRate: 0
-  haveSpecialAI: 0
-  activeSkillID: 
-  dropRate: 90
---- !u!4 &983020641
+--- !u!4 &521179770
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 983020639}
+  m_GameObject: {fileID: 521179769}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 1
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1152117508
+--- !u!114 &521179771
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 521179769}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4df33764f9e88614984ac46ea447764b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hpRate: 0.1
+  atkRate: 0.1
+  defRate: 0.1
+  spAtkRate: 0.1
+  spDefRate: 0.1
+  spdRate: 0.1
+  haveSpecialAI: 0
+  haveActiveSkillID: 00000000
+  dropRate: 20
+--- !u!114 &521179772
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 521179769}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: deb572a7ec18e97438db026bdd81c089, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  id: 2
+  charaName: eeeeee
+  maxHp: 2
+  maxAtk: 22
+  maxDef: 2
+  maxSpAtk: 2
+  maxSpDef: 2
+  maxSpd: 2
+  element: 1
+  rarity: 1
+  description: za-ko
+--- !u!1 &1396085522
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -265,143 +278,73 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 1152117510}
-  - component: {fileID: 1152117509}
+  - component: {fileID: 1396085523}
+  - component: {fileID: 1396085525}
+  - component: {fileID: 1396085524}
   m_Layer: 0
-  m_Name: TestEnemy (1)
+  m_Name: TestPlayer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1152117509
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1152117508}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4df33764f9e88614984ac46ea447764b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  id: 1
-  name: "\u30B9\u30E9\u30A4\u30E0B"
-  maxHp: 10
-  maxAtk: 10
-  maxDef: 10
-  maxSpAtk: 10
-  maxSpDef: 10
-  maxSpd: 10
-  element: 1
-  rarity: 1
-  description: "\u3088\u304F\u3044\u308B\u3084\u30642"
-  hpRate: 0
-  atkRate: 0
-  defRate: 0
-  spAtkRate: 0
-  spDefRate: 0
-  spdRate: 0
-  haveSpecialAI: 0
-  activeSkillID: 
-  dropRate: 90
---- !u!4 &1152117510
+--- !u!4 &1396085523
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1152117508}
+  m_GameObject: {fileID: 1396085522}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1426515514
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1426515516}
-  - component: {fileID: 1426515515}
-  - component: {fileID: 1426515517}
-  m_Layer: 0
-  m_Name: TestPlayer (1)
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1426515515
+--- !u!114 &1396085524
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1426515514}
+  m_GameObject: {fileID: 1396085522}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 75a0d15ccfba6dc48aa4a6b41e337e22, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  id: 0
-  name: "\u4EBA\u9593B"
-  maxHp: 100
-  maxAtk: 100
-  maxDef: 100
-  maxSpAtk: 100
-  maxSpDef: 100
-  maxSpd: 100
-  element: 0
-  rarity: 1
-  description: "\u305F\u3060\u306E\u3084\u3064B"
-  exp: 100
+  haveExp: 0
   exceedLimitNum: 0
-  haveActiveSkillID: 0000000000000000
-  useAbleActiveSkillLV: 
-  havePassiveSkillID: 
-  useAblePassiveSkillLV: 
+  haveActiveSkillID: 01000000
+  useAbleActiveSkillLV: 05000000
+  havePassiveSkillID: 00000000
+  useAblePassiveSkillLV: 0a000000
   compositeExp: 10
-  sellPrice: 20
---- !u!4 &1426515516
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1426515514}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 5
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1426515517
+  sellPrice: 10
+--- !u!114 &1396085525
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1426515514}
+  m_GameObject: {fileID: 1396085522}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 02da2aa02f17f5f4984827e6d8b577ac, type: 3}
+  m_Script: {fileID: 11500000, guid: deb572a7ec18e97438db026bdd81c089, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  id: 0
-  skillName: 
-  description: 
-  needSp: 0
+  id: 1
+  charaName: aaaaa
+  maxHp: 2
+  maxAtk: 2
+  maxDef: 2
+  maxSpAtk: 2
+  maxSpDef: 2
+  maxSpd: 2
   element: 0
-  activeSkillType: 0
-  needTarget: 0
+  rarity: 2
+  description: "\u3046\u3093\uFF4B"
 --- !u!1 &1550074792
 GameObject:
   m_ObjectHideFlags: 0
@@ -432,11 +375,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player:
-  - {fileID: 1701758681}
-  - {fileID: 1426515515}
+  - {fileID: 1396085524}
   enemy:
-  - {fileID: 983020640}
-  - {fileID: 1152117509}
+  - {fileID: 521179771}
 --- !u!4 &1550074794
 Transform:
   m_ObjectHideFlags: 0
@@ -449,67 +390,5 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 3
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1701758680
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1701758682}
-  - component: {fileID: 1701758681}
-  m_Layer: 0
-  m_Name: TestPlayer
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1701758681
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1701758680}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 75a0d15ccfba6dc48aa4a6b41e337e22, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  id: 0
-  name: "\u4EBA\u9593A"
-  maxHp: 100
-  maxAtk: 100
-  maxDef: 100
-  maxSpAtk: 100
-  maxSpDef: 100
-  maxSpd: 100
-  element: 0
-  rarity: 1
-  description: "\u305F\u3060\u306E\u3084\u3064"
-  exp: 100
-  exceedLimitNum: 0
-  haveActiveSkillID: 
-  useAbleActiveSkillLV: 
-  havePassiveSkillID: 
-  useAblePassiveSkillLV: 
-  compositeExp: 0
-  sellPrice: 0
---- !u!4 &1701758682
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1701758680}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
