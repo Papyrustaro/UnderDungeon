@@ -21,6 +21,8 @@ public class PlayerCharacter : MonoBehaviour
     private E_CompositeExp compositeExp;
     [SerializeField]
     private E_SellPrice sellPrice;
+    [SerializeField]
+    private int cost; //パーティに入れる際のコスト
 
     private void Awake()
     {
@@ -49,6 +51,7 @@ public class PlayerCharacter : MonoBehaviour
     public int[] UseAblePassiveSkillLV => this.useAblePassiveSkillLV;
     public E_CompositeExp CompositeExp => this.compositeExp;
     public E_SellPrice SellPrice => this.sellPrice;
+    public int Cost => this.cost;
     public int MaxLV => LVTable.GetMaxLV(this.Rarity, this.exceedLimitNum);
     public int LV => LVTable.GetLV(this.haveExp, this.MaxLV);
     public int MaxExp => LVTable.GetMaxExp(this.MaxLV);

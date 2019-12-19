@@ -7,8 +7,6 @@ public class Character : MonoBehaviour
 {
     [SerializeField]
     private E_CharacterID id;
-    //[SerializeField]
-    //private string charaName;
     [SerializeField]
     private int maxHp, maxAtk, maxDef, maxSpAtk, maxSpDef, maxSpd;
     [SerializeField]
