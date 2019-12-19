@@ -6,9 +6,9 @@ using UnityEngine;
 public class Character : MonoBehaviour
 {
     [SerializeField]
-    private int id;
-    [SerializeField]
-    private string charaName;
+    private E_CharacterID id;
+    //[SerializeField]
+    //private string charaName;
     [SerializeField]
     private int maxHp, maxAtk, maxDef, maxSpAtk, maxSpDef, maxSpd;
     [SerializeField]
@@ -19,8 +19,8 @@ public class Character : MonoBehaviour
     private string description;
     //private Image image;
 
-    public int ID => id;
-    public string CharaName => charaName;
+    public E_CharacterID ID => id;
+    public string CharaName => this.id.ToString();
     public int MaxHp => maxHp;
     public int MaxAtk => maxAtk;
     public int MaxDef => maxDef;

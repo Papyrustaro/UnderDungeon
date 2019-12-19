@@ -28,9 +28,10 @@ public class PlayerCharacter : MonoBehaviour
     }
     private void Start()
     {
-        Debug.Log("rarity: " + this.Rarity);
+        Debug.Log("MaxLV: " + this.MaxLV);
+        Debug.Log("MaxExp: " + this.MaxExp);
     }
-    public int ID => charaClass.ID;
+    public E_CharacterID ID => charaClass.ID;
     public string CharaName => charaClass.CharaName;
     public int MaxHp => charaClass.MaxHp;
     public int MaxAtk => charaClass.MaxAtk;
@@ -48,32 +49,20 @@ public class PlayerCharacter : MonoBehaviour
     public int[] UseAblePassiveSkillLV => this.useAblePassiveSkillLV;
     public E_CompositeExp CompositeExp => this.compositeExp;
     public E_SellPrice SellPrice => this.sellPrice;
-
-
-    public int GetMaxExp()
-    {
-        return LVTable.GetMaxExp(LVTable.GetMaxLV(this.Rarity, this.exceedLimitNum));
-    }
-    public int GetMaxLV()
-    {
-        return LVTable.GetMaxLV(this.Rarity, this.exceedLimitNum);
-    }
-    public int GetLV()
-    {
-        return LVTable.GetLV(this.haveExp, LVTable.GetMaxLV(this.Rarity, this.exceedLimitNum));
-    }
+    public int MaxLV => LVTable.GetMaxLV(this.Rarity, this.exceedLimitNum);
+    public int LV => LVTable.GetLV(this.haveExp, this.MaxLV);
+    public int MaxExp => LVTable.GetMaxExp(this.MaxLV);
 
     public bool AddExp(int getExp) //MaxExpを超える:false, 超えない:true
     {
-        int maxExp = LVTable.GetMaxExp(LVTable.GetMaxLV(Rarity, exceedLimitNum));
-        if (haveExp + getExp > maxExp)
+        if (this.haveExp + getExp > this.MaxLV)
         {
-            haveExp = maxExp;
+            this.haveExp = this.MaxLV;
             return false;
         }
         else
         {
-            haveExp += getExp;
+            this.haveExp += getExp;
             return true;
         }
     }

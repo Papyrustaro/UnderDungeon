@@ -19,7 +19,7 @@ public class EnemyCharacter : MonoBehaviour
         this.charaClass = GetComponent<Character>();
     }
 
-    public int ID => charaClass.ID;
+    public E_CharacterID ID => charaClass.ID;
     public string CharaName => charaClass.CharaName;
     public int MaxHp => charaClass.MaxHp;
     public int MaxAtk => charaClass.MaxAtk;
