@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum E_ActiveSkillID
+public enum E_BattlePassiveSkill
 {
-    たいあたり,
-    二段切り,
+    対火攻撃強化1,
+    対水攻撃強化1,
 }

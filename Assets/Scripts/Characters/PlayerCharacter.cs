@@ -10,13 +10,21 @@ public class PlayerCharacter : MonoBehaviour
     [SerializeField]
     private int exceedLimitNum; //限界突破数
     [SerializeField]
-    private E_ActiveSkillID[] haveActiveSkillID; 
+    private E_BattleActiveSkill[] haveBattleActiveSkillID;
     [SerializeField]
-    private int[] useAbleActiveSkillLV;
+    private int[] useAbleBattleActiveSkillLV;
     [SerializeField]
-    private E_PassiveSkillID[] havePassiveSkillID;
+    private E_BattlePassiveSkill[] haveBattlePassiveSkillID;
     [SerializeField]
-    private int[] useAblePassiveSkillLV;
+    private int[] useAbleBattlePassiveSkillLV;
+    [SerializeField]
+    private E_DungeonActiveSkill[] haveDungeonActiveSkillID;
+    [SerializeField]
+    private int[] useAbleDungeonActiveSkillLV;
+    [SerializeField]
+    private E_DungeonPassiveSkill[] haveDungeonPassiveSkillID;
+    [SerializeField]
+    private int[] useAbleDungeonPassiveSkillLV;
     [SerializeField]
     private E_CompositeExp compositeExp;
     [SerializeField]
@@ -43,10 +51,14 @@ public class PlayerCharacter : MonoBehaviour
     public string Description => charaClass.Description;
     public int HaveExp => this.haveExp;
     public int ExceedLimitNum => this.exceedLimitNum;
-    public E_ActiveSkillID[] HaveActiveSkillID => this.haveActiveSkillID;
-    public int[] UseAbleActiveSkillLV => this.useAbleActiveSkillLV;
-    public E_PassiveSkillID[] HavePassiveSkillID => this.havePassiveSkillID;
-    public int[] UseAblePassiveSkillLV => this.useAblePassiveSkillLV;
+    public E_BattleActiveSkill[] HaveBattleActiveSkillID => this.haveBattleActiveSkillID;
+    public int[] UseAbleBattleActiveSkillLV => this.useAbleBattleActiveSkillLV;
+    public E_BattlePassiveSkill[] HaveBattlePassiveSkillID => this.haveBattlePassiveSkillID;
+    public int[] UseAbleBattlePassiveSkillLV => this.useAbleBattlePassiveSkillLV;
+    public E_DungeonActiveSkill[] HaveDungeonActiveSkillID => this.haveDungeonActiveSkillID;
+    public int[] UseAbleDungeonActiveSkillLV => this.useAbleDungeonActiveSkillLV;
+    public E_DungeonPassiveSkill[] HaveDungeonPassiveSkillID => this.haveDungeonPassiveSkillID;
+    public int[] UseAbleDungeonPassiveSkillLV => this.useAbleDungeonPassiveSkillLV;
     public E_CompositeExp CompositeExp => this.compositeExp;
     public E_SellPrice SellPrice => this.sellPrice;
     public int Cost => this.cost;

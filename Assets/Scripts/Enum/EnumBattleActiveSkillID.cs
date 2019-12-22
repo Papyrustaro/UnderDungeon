@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum E_PassiveSkillID
+public enum E_BattleActiveSkill
 {
-    体力UP1,
-    体力UP2,
+    たいあたり,
+    二段切り,
 }
