@@ -8,7 +8,7 @@ public class Character : MonoBehaviour
     [SerializeField]
     private E_CharacterID id;
     [SerializeField]
-    private int maxHp, maxAtk, maxDef, maxSpAtk, maxSpDef, maxSpd;
+    private int maxHp, maxAtk, maxSpd;
     [SerializeField]
     private E_Element element;
     [SerializeField]
@@ -21,9 +21,6 @@ public class Character : MonoBehaviour
     public string CharaName => this.id.ToString();
     public int MaxHp => maxHp;
     public int MaxAtk => maxAtk;
-    public int MaxDef => maxDef;
-    public int MaxSpAtk => maxSpAtk;
-    public int MaxSpDef => maxSpDef;
     public int MaxSpd => maxSpd;
     public E_Element Element => element;
     public int Rarity => rarity;

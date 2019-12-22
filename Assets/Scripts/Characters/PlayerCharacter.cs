@@ -37,9 +37,7 @@ public class PlayerCharacter : MonoBehaviour
     public string CharaName => charaClass.CharaName;
     public int MaxHp => charaClass.MaxHp;
     public int MaxAtk => charaClass.MaxAtk;
-    public int MaxDef => charaClass.MaxDef;
-    public int MaxSpAtk => charaClass.MaxSpAtk;
-    public int MaxSpDef => charaClass.MaxSpDef;
+    public int MaxSpd => charaClass.MaxSpd;
     public E_Element Element => charaClass.Element;
     public int Rarity => charaClass.Rarity;
     public string Description => charaClass.Description;

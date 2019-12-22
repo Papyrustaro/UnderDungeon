@@ -18,11 +18,6 @@ public class PassiveSkill : MonoBehaviour
     [SerializeField]
     private string description;
 
-    public PassiveSkill(int id, E_PassiveSkillType passiveSkillType, string skillName, string description)
-    {
-        this.id = id; this.passiveSkillType = passiveSkillType;  this.skillName = skillName; this.description = description;
-    }
-
     public int Id => id;
     public E_PassiveSkillType PassiveSkillType => passiveSkillType;
     public string SkillName => skillName;

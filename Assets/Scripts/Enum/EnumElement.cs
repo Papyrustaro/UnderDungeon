@@ -7,7 +7,8 @@ public enum E_Element
     Fire,
     Aqua,
     Tree,
-    Light,
-    Dark,
-    Normal,
+    FireAqua,
+    AquaTree,
+    TreeFire,
+    FireAquaTree,
 }
