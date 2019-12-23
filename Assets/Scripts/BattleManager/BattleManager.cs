@@ -14,14 +14,9 @@ public class BattleManager : MonoBehaviour
     {
         try
         {
-            foreach (PlayerCharacter pc in player)
-            {
-                Debug.Log(pc.CharaName + ": " + pc.Description);
-            }
-            foreach (EnemyCharacter ec in enemy)
-            {
-                Debug.Log(ec.CharaName + ": " + ec.Description);
-            }
+            Debug.Log(EnumBattleActiveSkillID.EnumSize);
+            BattleActiveSkillsFunc.SkillFunc(E_BattleActiveSkill.たいあたり);
+            BattleActiveSkillsFunc.SkillFunc(E_BattleActiveSkill.二段切り);
         }catch(Exception e)
         {
             Debug.Log(e);

@@ -226,12 +226,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hpRate: 1
   atkRate: 1
-  defRate: 1
-  spAtkRate: 1
-  spDefRate: 1
   spdRate: 1
   haveSpecialAI: 0
-  haveActiveSkillID: 00000000
+  haveBattleActiveSkillID: 
   dropRate: 50
 --- !u!114 &1207041997
 MonoBehaviour:
@@ -248,9 +245,6 @@ MonoBehaviour:
   id: 0
   maxHp: 2
   maxAtk: 2
-  maxDef: 2
-  maxSpAtk: 2
-  maxSpDef: 2
   maxSpd: 2
   element: 0
   rarity: 1
@@ -285,7 +279,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1550074793
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -298,10 +292,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a59c15a3caccb90429280c3650d27a91, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player:
-  - {fileID: 1715227324}
-  enemy:
-  - {fileID: 1207041996}
+  player: []
+  enemy: []
 --- !u!4 &1550074794
 Transform:
   m_ObjectHideFlags: 0
@@ -333,7 +325,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1715227324
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -348,12 +340,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   haveExp: 3
   exceedLimitNum: 0
-  haveActiveSkillID: 0000000001000000
-  useAbleActiveSkillLV: 050000000a000000
-  havePassiveSkillID: 0000000000000000
-  useAblePassiveSkillLV: 0300000007000000
+  haveBattleActiveSkillID: 
+  useAbleBattleActiveSkillLV: 
+  haveBattlePassiveSkillID: 
+  useAbleBattlePassiveSkillLV: 
+  haveDungeonActiveSkillID: 
+  useAbleDungeonActiveSkillLV: 
+  haveDungeonPassiveSkillID: 
+  useAbleDungeonPassiveSkillLV: 
   compositeExp: 10
   sellPrice: 10
+  cost: 0
 --- !u!114 &1715227325
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -369,9 +366,6 @@ MonoBehaviour:
   id: 0
   maxHp: 2
   maxAtk: 2
-  maxDef: 2
-  maxSpAtk: 2
-  maxSpDef: 2
   maxSpd: 2
   element: 0
   rarity: 1
