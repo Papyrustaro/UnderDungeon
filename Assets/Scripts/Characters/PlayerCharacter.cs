@@ -36,11 +36,6 @@ public class PlayerCharacter : MonoBehaviour
     {
         this.charaClass = GetComponent<Character>();
     }
-    private void Start()
-    {
-        Debug.Log("MaxLV: " + this.MaxLV);
-        Debug.Log("MaxExp: " + this.MaxExp);
-    }
     public E_CharacterID ID => charaClass.ID;
     public string CharaName => charaClass.CharaName;
     public int MaxHp => charaClass.MaxHp;

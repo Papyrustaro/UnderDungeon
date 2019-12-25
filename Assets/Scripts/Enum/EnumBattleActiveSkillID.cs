@@ -7,6 +7,9 @@ public enum E_BattleActiveSkill
 {
     たいあたり,
     二段切り,
+    ホイミ,
+    とっしん,
+    二度蹴り,
 }
 
 public class EnumBattleActiveSkillID

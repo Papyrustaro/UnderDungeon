@@ -16,6 +16,10 @@ public class BuffEffect
     {
         this.element = E_Element.FireAquaTree; this.rate = rate; this.effectTurn = effectTurn;
     }
+    public BuffEffect(E_Element element, int effectTurn)
+    {
+        this.element = element; this.rate = 0; this.effectTurn = effectTurn;
+    }
 
     public E_Element Element => this.element;
     public int Rate => this.rate;

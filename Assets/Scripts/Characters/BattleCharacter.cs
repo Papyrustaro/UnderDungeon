@@ -11,7 +11,8 @@ public class BattleCharacter : MonoBehaviour
     private List<BuffEffect> toDamageRate = new List<BuffEffect>();
     private List<BuffEffect> fromDamageRate = new List<BuffEffect>();
     private List<BuffEffect> noGetDamaged = new List<BuffEffect>();
-    private int[] skillTurnFromActivate = new int[4]; //ActiveSkillのスキル発動までのターン
+    private BuffEffect elementChange;
+    //private int[] skillTurnFromActivate = new int[4]; //ActiveSkillのスキル発動までのターン
     public bool CanReborn { get; set; } //復活できる状態か
     public bool Reborned { get; set; } //復活効果を使ったか
     public bool IsAttractingAffect { get; set; } //敵の攻撃を自分に集めているか
