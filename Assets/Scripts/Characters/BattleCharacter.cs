@@ -12,23 +12,43 @@ public class BattleCharacter : MonoBehaviour
     private List<BuffEffect> fromDamageRate = new List<BuffEffect>();
     private List<BuffEffect> noGetDamaged = new List<BuffEffect>();
     private BuffEffect elementChange;
+    private List<BuffEffect> normalAttackNum = new List<BuffEffect>(); //通常攻撃回数
+    private List<BuffEffect> normalAttackRate = new List<BuffEffect>(); //通常攻撃の倍率
+    private bool isEnemy = false;
+    private PlayerCharacter pc;
+    private EnemyCharacter ec;
+
+    public List<BuffEffect> HpRate => this.hpRate;
+    public List<BuffEffect> SpdRate => this.spdRate;
+
     //private int[] skillTurnFromActivate = new int[4]; //ActiveSkillのスキル発動までのターン
     public bool CanReborn { get; set; } //復活できる状態か
     public bool Reborned { get; set; } //復活効果を使ったか
     public bool IsAttractingAffect { get; set; } //敵の攻撃を自分に集めているか
     public double HaveDamageThisTurn { get; set; } //1ターンで喰らったダメージ量
     public bool CanWholeAttack { get; set; } //全体攻撃効果が付与されているか
+    public double NormalAttackRate { get; set; } = 1.0; //通常攻撃の倍率
 
     private void Awake()
     {
-        AddHpRate(20, 3);
-        AddHpRate(40, 2);
-        AddHpRate(60, 1);
-        foreach(BuffEffect item in hpRate)
+        SetCharacter();
+    }
+    public int Spd { get
         {
-            Debug.Log("element:" + item.Element + " rate:" + item.Rate + " effectTurn:" + item.EffectTurn);
+            if (this.isEnemy) return ec.MaxSpd;
+            else return pc.MaxSpd;
+        } }
+    public void SetCharacter()
+    {
+        if (this.gameObject.CompareTag("Player"))
+        {
+            pc = GetComponent<PlayerCharacter>();
         }
-        Debug.Log(CanReborn);
+        else
+        {
+            ec = GetComponent<EnemyCharacter>();
+            this.isEnemy = true;
+        }
     }
     public void AddHpRate(int rate, int effectTurn)
     {

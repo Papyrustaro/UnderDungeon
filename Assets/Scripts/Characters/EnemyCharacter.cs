@@ -21,9 +21,9 @@ public class EnemyCharacter : MonoBehaviour
 
     public E_CharacterID ID => charaClass.ID;
     public string CharaName => charaClass.CharaName;
-    public int MaxHp => charaClass.MaxHp;
-    public int MaxAtk => charaClass.MaxAtk;
-    public int MaxSpd => charaClass.MaxSpd;
+    public int MaxHp => (int)(charaClass.MaxHp * this.hpRate);
+    public int MaxAtk => (int)(charaClass.MaxAtk * this.atkRate);
+    public int MaxSpd => (int)(charaClass.MaxSpd * this.spdRate);
     public E_Element Element => charaClass.Element;
     public int Rarity => charaClass.Rarity;
     public string Description => charaClass.Description;
