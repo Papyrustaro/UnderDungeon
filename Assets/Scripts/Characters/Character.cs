@@ -19,9 +19,9 @@ public class Character : MonoBehaviour
 
     public E_CharacterID ID => id;
     public string CharaName => this.id.ToString();
-    public int MaxHp => maxHp;
-    public int MaxAtk => maxAtk;
-    public int MaxSpd => maxSpd;
+    public int MaxHp { get { return this.maxHp; } set { this.maxHp = value; } }
+    public int MaxAtk { get { return this.maxAtk; } set { this.maxAtk = value; } }
+    public int MaxSpd { get { return this.maxSpd; } set { this.maxSpd = value; } }
     public E_Element Element => element;
     public int Rarity => rarity;
     public string Description => description;

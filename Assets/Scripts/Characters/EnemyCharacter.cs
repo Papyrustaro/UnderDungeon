@@ -17,13 +17,21 @@ public class EnemyCharacter : MonoBehaviour
     private void Awake()
     {
         this.charaClass = GetComponent<Character>();
+        SetStatusRate(); //ステータス倍率を反映
+    }
+
+    private void SetStatusRate()
+    {
+        charaClass.MaxHp = (int)(MaxHp * hpRate);
+        charaClass.MaxAtk = (int)(MaxAtk * atkRate);
+        charaClass.MaxSpd = (int)(MaxSpd * spdRate);
     }
 
     public E_CharacterID ID => charaClass.ID;
     public string CharaName => charaClass.CharaName;
-    public int MaxHp => (int)(charaClass.MaxHp * this.hpRate);
-    public int MaxAtk => (int)(charaClass.MaxAtk * this.atkRate);
-    public int MaxSpd => (int)(charaClass.MaxSpd * this.spdRate);
+    public int MaxHp => charaClass.MaxHp;
+    public int MaxAtk => charaClass.MaxAtk;
+    public int MaxSpd => charaClass.MaxSpd;
     public E_Element Element => charaClass.Element;
     public int Rarity => charaClass.Rarity;
     public string Description => charaClass.Description;

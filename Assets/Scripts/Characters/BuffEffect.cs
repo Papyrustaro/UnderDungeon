@@ -5,14 +5,14 @@ using UnityEngine;
 public class BuffEffect
 {
     private readonly E_Element element;
-    private readonly int rate; //効果倍率
+    private readonly double rate; //効果倍率
     private readonly int effectTurn; //効果持続ターン
 
-    public BuffEffect(E_Element element, int rate, int effectTurn)
+    public BuffEffect(E_Element element, double rate, int effectTurn)
     {
         this.element = element; this.rate = rate; this.effectTurn = effectTurn;
     }
-    public BuffEffect(int rate, int effectTurn)
+    public BuffEffect(double rate, int effectTurn)
     {
         this.element = E_Element.FireAquaTree; this.rate = rate; this.effectTurn = effectTurn;
     }
@@ -22,16 +22,6 @@ public class BuffEffect
     }
 
     public E_Element Element => this.element;
-    public int Rate => this.rate;
+    public double Rate => this.rate;
     public int EffectTurn => this.effectTurn;
-}
-
-public class PassiveEffect
-{
-    public E_Element Element { get; }
-    public double Rate { get; }
-    public PassiveEffect(E_Element element, double rate)
-    {
-        Element = element; Rate = rate;
-    }
 }

@@ -19,18 +19,26 @@ public class BattleCharacter : MonoBehaviour
     private E_BattleActiveSkill[] battleActiveSkillID;
     private Character charaClass;
 
-
-    public List<BuffEffect> HpRate => this.hpRate;
-    public List<BuffEffect> SpdRate => this.spdRate;
-
-    public double PassiveHp { get; set; } //passive考慮したステータス charaClass.maxHP * battlePassiveSkill * itemPassiveSkill(enemyはchara.maxHP * enemy.HPRate)
-    public double PassiveAtk { get; set; }
-    public double PassiveSpd { get; set; }
-    public PassiveEffect PassiveToDamageRate { get; set; }
-    public PassiveEffect PassiveFromDamageRate { get; set; }
+    /* passiveのみ考慮したプロパティ */
+    public double PassiveMaxHp { get; set; } //passive考慮したステータス charaClass.maxHP * battlePassiveSkill * itemPassiveSkill
+    public double PassiveMaxAtk { get; set; }
+    public double PassiveMaxSpd { get; set; }
+    public Dictionary<E_Element, double> PassiveToDamageRate { get; set; }
+    public Dictionary<E_Element, double> PassiveFromDamageRate { get; set; }
     public double PassiveNormalAttackRate { get; set; } = 1;
 
 
+    /*  passiveとactiveを考慮したプロパティ */
+    public double MaxHp => PassiveMaxHp * GetRate(hpRate); //現在の(全て考慮した最終的な)最大HP
+    public double MaxAtk => PassiveMaxAtk * GetRate(atkRate);
+    public double MaxSpd => PassiveMaxSpd * GetRate(spdRate);
+    public Dictionary<E_Element, double> ToDamageRate => GetRate(PassiveToDamageRate, toDamageRate);
+    public Dictionary<E_Element, double> FromDamageRate => GetRate(PassiveFromDamageRate, fromDamageRate);
+
+
+
+    /* その他プロパティ */
+    public Character CharaClass => this.charaClass;
     //private int[] skillTurnFromActivate = new int[4]; //ActiveSkillのスキル発動までのターン
     public bool CanReborn { get; set; } //復活できる状態か
     public bool Reborned { get; set; } //復活効果を使ったか
@@ -42,9 +50,26 @@ public class BattleCharacter : MonoBehaviour
     private void Awake()
     {
         SetCharacter();
+        SetBaseStatus();
+        if (!isEnemy)
+        {
+            SetPassiveEffect(); //Passiveスキルの効果を反映
+        }
+
     }
-    
-    public void SetCharacter()
+    private void SetBaseStatus()
+    {
+        PassiveMaxHp = charaClass.MaxHp;
+        PassiveMaxAtk = charaClass.MaxAtk;
+        PassiveMaxSpd = charaClass.MaxSpd;
+        PassiveToDamageRate = new Dictionary<E_Element, double>() { { E_Element.Fire, 1.0 }, { E_Element.Aqua, 1.0 }, { E_Element.Tree, 1.0 } };
+        PassiveFromDamageRate = new Dictionary<E_Element, double>() { { E_Element.Fire, 1.0 }, { E_Element.Aqua, 1.0 }, { E_Element.Tree, 1.0 } };
+    }
+    private void SetPassiveEffect()
+    {
+        //本当はここで、BattlePassiveSkillとItemによる能力上昇がある
+    }
+    private void SetCharacter()
     {
         if (this.gameObject.CompareTag("Player"))
         {
@@ -55,6 +80,29 @@ public class BattleCharacter : MonoBehaviour
             this.charaClass = GetComponent<EnemyCharacter>().CharaClass;
             this.isEnemy = true;
         }
+    }
+    
+    public double GetRate(List<BuffEffect> bfList) //buffEffectのすべての倍率を計算して返す
+    {
+        double rate = 1.0;
+        foreach(BuffEffect bf in bfList)
+        {
+            rate *= bf.Rate;
+        }
+        return rate;
+    }
+    public Dictionary<E_Element, double> GetRate(Dictionary<E_Element, double> passive, List<BuffEffect> activeList) //各属性ダメージのpassiveとactiveを計算して返す
+    {
+        double fireRate = passive[E_Element.Fire], aquaRate = passive[E_Element.Aqua], treeRate = passive[E_Element.Tree];
+
+        foreach (BuffEffect bf in activeList)
+        {
+            if (ElementClass.IsFire(bf.Element)) fireRate *= bf.Rate;
+            if (ElementClass.IsAqua(bf.Element)) aquaRate *= bf.Rate;
+            if (ElementClass.IsTree(bf.Element)) treeRate *= bf.Rate;
+        }
+
+        return new Dictionary<E_Element, double>() { { E_Element.Fire, fireRate }, { E_Element.Aqua, aquaRate }, { E_Element.Tree, treeRate } };
     }
     public void AddHpRate(int rate, int effectTurn)
     {
