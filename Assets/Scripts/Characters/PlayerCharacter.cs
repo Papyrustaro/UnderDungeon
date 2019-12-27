@@ -60,6 +60,7 @@ public class PlayerCharacter : MonoBehaviour
     public int MaxLV => LVTable.GetMaxLV(this.Rarity, this.exceedLimitNum);
     public int LV => LVTable.GetLV(this.haveExp, this.MaxLV);
     public int MaxExp => LVTable.GetMaxExp(this.MaxLV);
+    public Character CharaClass => this.charaClass;
 
     public bool AddExp(int getExp) //MaxExpを超える:false, 超えない:true
     {

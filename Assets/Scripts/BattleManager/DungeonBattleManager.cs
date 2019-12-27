@@ -21,13 +21,13 @@ public class DungeonBattleManager : MonoBehaviour
         Debug.Log(charaList.Count);
         foreach(BattleCharacter bc in charaList)
         {
-            Debug.Log(bc.Spd);
+            //Debug.Log(bc.Spd);
         }
         SortCharacterBySpd();
         Debug.Log("ソート後");
         foreach(BattleCharacter bc in charaList)
         {
-            Debug.Log(bc.Spd);
+            //Debug.Log(bc.Spd);
         }
     }
 
@@ -38,7 +38,7 @@ public class DungeonBattleManager : MonoBehaviour
 
     private void SortCharacterBySpd()
     {
-        charaList.Sort((a, b) => b.Spd - a.Spd);
+        //charaList.Sort((a, b) => b.Spd - a.Spd);
     }
     public void SetCharacter()
     {

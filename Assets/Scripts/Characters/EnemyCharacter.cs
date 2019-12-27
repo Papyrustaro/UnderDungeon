@@ -33,4 +33,5 @@ public class EnemyCharacter : MonoBehaviour
     public int DropRate => this.dropRate;
     public E_BattleActiveSkill[] HaveBattleActtiveSkillID => this.haveBattleActiveSkillID;
     public bool HaveSpecialAI => this.haveSpecialAI;
+    public Character CharaClass => this.charaClass;
 }

@@ -15,11 +15,21 @@ public class BattleCharacter : MonoBehaviour
     private List<BuffEffect> normalAttackNum = new List<BuffEffect>(); //通常攻撃回数
     private List<BuffEffect> normalAttackRate = new List<BuffEffect>(); //通常攻撃の倍率
     private bool isEnemy = false;
-    private PlayerCharacter pc;
-    private EnemyCharacter ec;
+
+    private E_BattleActiveSkill[] battleActiveSkillID;
+    private Character charaClass;
+
 
     public List<BuffEffect> HpRate => this.hpRate;
     public List<BuffEffect> SpdRate => this.spdRate;
+
+    public double PassiveHp { get; set; } //passive考慮したステータス charaClass.maxHP * battlePassiveSkill * itemPassiveSkill(enemyはchara.maxHP * enemy.HPRate)
+    public double PassiveAtk { get; set; }
+    public double PassiveSpd { get; set; }
+    public PassiveEffect PassiveToDamageRate { get; set; }
+    public PassiveEffect PassiveFromDamageRate { get; set; }
+    public double PassiveNormalAttackRate { get; set; } = 1;
+
 
     //private int[] skillTurnFromActivate = new int[4]; //ActiveSkillのスキル発動までのターン
     public bool CanReborn { get; set; } //復活できる状態か
@@ -33,20 +43,16 @@ public class BattleCharacter : MonoBehaviour
     {
         SetCharacter();
     }
-    public int Spd { get
-        {
-            if (this.isEnemy) return ec.MaxSpd;
-            else return pc.MaxSpd;
-        } }
+    
     public void SetCharacter()
     {
         if (this.gameObject.CompareTag("Player"))
         {
-            pc = GetComponent<PlayerCharacter>();
+            this.charaClass = GetComponent<PlayerCharacter>().CharaClass;
         }
         else
         {
-            ec = GetComponent<EnemyCharacter>();
+            this.charaClass = GetComponent<EnemyCharacter>().CharaClass;
             this.isEnemy = true;
         }
     }

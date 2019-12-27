@@ -25,3 +25,13 @@ public class BuffEffect
     public int Rate => this.rate;
     public int EffectTurn => this.effectTurn;
 }
+
+public class PassiveEffect
+{
+    public E_Element Element { get; }
+    public double Rate { get; }
+    public PassiveEffect(E_Element element, double rate)
+    {
+        Element = element; Rate = rate;
+    }
+}
