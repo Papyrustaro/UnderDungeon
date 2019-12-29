@@ -3975,6 +3975,7 @@ MonoBehaviour:
   - {fileID: 2104032084}
   - {fileID: 558832530}
   - {fileID: 241843717}
+  announceText: {fileID: 1486616416}
 --- !u!4 &2045466973
 Transform:
   m_ObjectHideFlags: 0

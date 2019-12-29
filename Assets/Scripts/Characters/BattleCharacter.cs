@@ -18,6 +18,7 @@ public class BattleCharacter : MonoBehaviour
 
     private E_BattleActiveSkill[] battleActiveSkillID;
     private Character charaClass;
+    private double hp;
     
 
     /* passiveのみ考慮したプロパティ */
@@ -41,7 +42,7 @@ public class BattleCharacter : MonoBehaviour
 
     /* その他プロパティ */
     public bool StatusChange { get; set; } = false;
-    public double Hp { get; set; } //現在のHP
+    public double Hp { get { return this.hp; } set { this.hp = value; StatusChange = true; } } //現在のHP
     public Character CharaClass
     {
         get
@@ -145,31 +146,37 @@ public class BattleCharacter : MonoBehaviour
         this.noGetDamaged.Add(new BuffEffect(element, 0, effectTurn));
     }
 
-    public void RecoverHp(double value)
+    public double RecoverHp(double value)
     {
         if(Hp + value > MaxHp)
         {
-            Debug.Log(charaClass.CharaName + "の体力が満タンになった");
+            double diff = MaxHp - Hp;
+            //Debug.Log(charaClass.CharaName + "の体力が満タンになった");
             Hp = MaxHp;
+            return diff;
         }
         else
         {
-            Debug.Log(charaClass.CharaName + "の体力が" + value + "回復した");
+            //Debug.Log(charaClass.CharaName + "の体力が" + value + "回復した");
             Hp += value;
+            return value;
         }
     }
 
-    public void DecreaseHp(double damage_value)
+    public double DecreaseHp(double damage_value)
     {
         if(Hp - damage_value <= 0)
         {
-            Debug.Log(charaClass.CharaName + "は" + Hp + "のダメージを受けた");
+            double diff = Hp;
+            //Debug.Log(charaClass.CharaName + "は" + Hp + "のダメージを受けた");
             Hp = 0;
+            return diff;
         }
         else
         {
-            Debug.Log(charaClass.CharaName + "は" + damage_value + "のダメージを受けた");
+            //Debug.Log(charaClass.CharaName + "は" + damage_value + "のダメージを受けた");
             Hp -= damage_value;
+            return damage_value;
         }
     }
 }
