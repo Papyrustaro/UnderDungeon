@@ -33,5 +33,7 @@ public class ShowStatusInBattle : MonoBehaviour
             bc.StatusChange = false;
         }
     }
+
+    public BattleCharacter Chara => this.bc;
     
 }

@@ -16,3 +16,11 @@ public class EnumBattleActiveSkillID
 {
     public static int EnumSize => Enum.GetValues(typeof(E_BattleActiveSkill)).Length;
 }
+
+public enum E_TargetType
+{
+    OneEnemy,
+    AllEnemy,
+    OnePlayer,
+    AllPlayer,
+}

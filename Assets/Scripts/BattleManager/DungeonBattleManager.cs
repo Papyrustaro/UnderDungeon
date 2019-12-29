@@ -19,6 +19,7 @@ public class DungeonBattleManager : MonoBehaviour
     private int nextActionIndex = 99;
     private bool inputWaiting = false; //プレイヤーの入力まち
     public List<BattleCharacter> AliveCharaList => GetAliveList(this.charaList);
+    private int targetIndex;
 
 
     private void Awake()
@@ -49,17 +50,36 @@ public class DungeonBattleManager : MonoBehaviour
                 }
                 else
                 {
-                    ShowAnnounce("プレイヤーのばん");
+                    ShowAnnounce(charaList[nextActionIndex].CharaClass.CharaName + "のばん");
+                    //announceText.text = "こうげき対象を選択してください";
+                    this.inputWaiting = true;
+                    this.finishAction = false;
                 }
             }
             nextActionIndex++;
+        }
+        else
+        {
+            if(!this.inputWaiting) //finishAction == プレイヤーの行動が終わったと捉えたときのみ
+            {
+                NormalAttack(charaList[nextActionIndex], charaList[targetIndex]);
+                this.finishAction = true;
+            }
+        }
+    }
+    public void SetInputTarget(BattleCharacter bc, E_TargetType targetType)
+    {
+        if (bc.Hp < 0) { announceText.text = "そのキャラもう死んでるyo"; return; } //とりあえず
+        if((bc.IsEnemy && targetType == E_TargetType.OneEnemy) || (!bc.IsEnemy && targetType == E_TargetType.OnePlayer))
+        {
+            this.targetIndex = charaList.IndexOf(bc);
+            this.inputWaiting = false;
         }
     }
     private void DebugFunc()
     {
         Debug.Log(charaList[ListManager.GetRandomIndex<int>(playerAliveIndex)]);
     }
-    
     private List<BattleCharacter> GetAliveList(List<BattleCharacter> bcList)
     {
         //list.RemoveAll(bc => bc.Hp < 0);
