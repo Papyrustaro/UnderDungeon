@@ -14,7 +14,12 @@ public class EnemyCharacter : MonoBehaviour
     [SerializeField]
     private int dropRate = 50; //ドロップ率(%)
 
+    private bool finishSetStatus = false;
+
     private void Awake()
+    {
+    }
+    private void Start()
     {
         this.charaClass = GetComponent<Character>();
         SetStatusRate(); //ステータス倍率を反映
@@ -25,6 +30,7 @@ public class EnemyCharacter : MonoBehaviour
         charaClass.MaxHp = (int)(MaxHp * hpRate);
         charaClass.MaxAtk = (int)(MaxAtk * atkRate);
         charaClass.MaxSpd = (int)(MaxSpd * spdRate);
+        this.finishSetStatus = true;
     }
 
     public E_CharacterID ID => charaClass.ID;
@@ -41,5 +47,13 @@ public class EnemyCharacter : MonoBehaviour
     public int DropRate => this.dropRate;
     public E_BattleActiveSkill[] HaveBattleActtiveSkillID => this.haveBattleActiveSkillID;
     public bool HaveSpecialAI => this.haveSpecialAI;
-    public Character CharaClass => this.charaClass;
+    public Character CharaClass
+    {
+        get
+        {
+            if (charaClass == null) this.charaClass = GetComponent<Character>();
+            if (!this.finishSetStatus) SetStatusRate();
+            return charaClass;
+        }
+    }
 }

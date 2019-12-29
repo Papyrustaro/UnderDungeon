@@ -14,56 +14,72 @@ public class BattleCharacter : MonoBehaviour
     private BuffEffect elementChange;
     private List<BuffEffect> normalAttackNum = new List<BuffEffect>(); //通常攻撃回数
     private List<BuffEffect> normalAttackRate = new List<BuffEffect>(); //通常攻撃の倍率
-    private bool isEnemy = false;
+    //private bool isEnemy = false;
 
     private E_BattleActiveSkill[] battleActiveSkillID;
     private Character charaClass;
+    
 
     /* passiveのみ考慮したプロパティ */
     public double PassiveMaxHp { get; set; } //passive考慮したステータス charaClass.maxHP * battlePassiveSkill * itemPassiveSkill
-    public double PassiveMaxAtk { get; set; }
-    public double PassiveMaxSpd { get; set; }
+    public double PassiveAtk { get; set; }
+    public double PassiveSpd { get; set; }
     public Dictionary<E_Element, double> PassiveToDamageRate { get; set; }
     public Dictionary<E_Element, double> PassiveFromDamageRate { get; set; }
     public double PassiveNormalAttackRate { get; set; } = 1;
 
 
-    /*  passiveとactiveを考慮したプロパティ */
+    /*  passiveとactiveを反映したプロパティ */
     public double MaxHp => PassiveMaxHp * GetRate(hpRate); //現在の(全て考慮した最終的な)最大HP
-    public double MaxAtk => PassiveMaxAtk * GetRate(atkRate);
-    public double MaxSpd => PassiveMaxSpd * GetRate(spdRate);
+    public double Atk => PassiveAtk * GetRate(atkRate);
+    public double Spd => PassiveSpd * GetRate(spdRate);
     public Dictionary<E_Element, double> ToDamageRate => GetRate(PassiveToDamageRate, toDamageRate);
     public Dictionary<E_Element, double> FromDamageRate => GetRate(PassiveFromDamageRate, fromDamageRate);
+    public double NormalAttackRate => PassiveNormalAttackRate * GetRate(this.normalAttackRate);
 
 
 
     /* その他プロパティ */
-    public Character CharaClass => this.charaClass;
+    public bool StatusChange { get; set; } = false;
+    public double Hp { get; set; } //現在のHP
+    public Character CharaClass
+    {
+        get
+        {
+            if (charaClass == null) SetCharacter();
+            return charaClass;
+        }
+    }
     //private int[] skillTurnFromActivate = new int[4]; //ActiveSkillのスキル発動までのターン
     public bool CanReborn { get; set; } //復活できる状態か
     public bool Reborned { get; set; } //復活効果を使ったか
     public bool IsAttractingAffect { get; set; } //敵の攻撃を自分に集めているか
     public double HaveDamageThisTurn { get; set; } //1ターンで喰らったダメージ量
     public bool CanWholeAttack { get; set; } //全体攻撃効果が付与されているか
-    public double NormalAttackRate { get; set; } = 1.0; //通常攻撃の倍率
+    public bool IsEnemy { get; set; } = false;
+    //public double NormalAttackRate { get; set; } = 1.0; //通常攻撃の倍率
 
     private void Awake()
     {
+    }
+    private void Start()
+    {
         SetCharacter();
         SetBaseStatus();
-        if (!isEnemy)
+        if (!IsEnemy)
         {
             SetPassiveEffect(); //Passiveスキルの効果を反映
         }
-
+        StatusChange = true;
     }
     private void SetBaseStatus()
     {
         PassiveMaxHp = charaClass.MaxHp;
-        PassiveMaxAtk = charaClass.MaxAtk;
-        PassiveMaxSpd = charaClass.MaxSpd;
+        PassiveAtk = charaClass.MaxAtk;
+        PassiveSpd = charaClass.MaxSpd;
         PassiveToDamageRate = new Dictionary<E_Element, double>() { { E_Element.Fire, 1.0 }, { E_Element.Aqua, 1.0 }, { E_Element.Tree, 1.0 } };
         PassiveFromDamageRate = new Dictionary<E_Element, double>() { { E_Element.Fire, 1.0 }, { E_Element.Aqua, 1.0 }, { E_Element.Tree, 1.0 } };
+        Hp = MaxHp;
     }
     private void SetPassiveEffect()
     {
@@ -78,7 +94,7 @@ public class BattleCharacter : MonoBehaviour
         else
         {
             this.charaClass = GetComponent<EnemyCharacter>().CharaClass;
-            this.isEnemy = true;
+            this.IsEnemy = true;
         }
     }
     
@@ -127,5 +143,33 @@ public class BattleCharacter : MonoBehaviour
     public void AddNoGetDamaged(E_Element element, int effectTurn)
     {
         this.noGetDamaged.Add(new BuffEffect(element, 0, effectTurn));
+    }
+
+    public void RecoverHp(double value)
+    {
+        if(Hp + value > MaxHp)
+        {
+            Debug.Log(charaClass.CharaName + "の体力が満タンになった");
+            Hp = MaxHp;
+        }
+        else
+        {
+            Debug.Log(charaClass.CharaName + "の体力が" + value + "回復した");
+            Hp += value;
+        }
+    }
+
+    public void DecreaseHp(double damage_value)
+    {
+        if(Hp - damage_value <= 0)
+        {
+            Debug.Log(charaClass.CharaName + "は" + Hp + "のダメージを受けた");
+            Hp = 0;
+        }
+        else
+        {
+            Debug.Log(charaClass.CharaName + "は" + damage_value + "のダメージを受けた");
+            Hp -= damage_value;
+        }
     }
 }

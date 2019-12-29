@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &747896214091052387
+--- !u!1 &8466519816056502684
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,24 +8,24 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 747896214091052385}
-  - component: {fileID: 747896214091052384}
-  - component: {fileID: 5718644004716360450}
-  - component: {fileID: 3095886165874284127}
+  - component: {fileID: 8907733137830469952}
+  - component: {fileID: 8674814485772322632}
+  - component: {fileID: 8001310301530718265}
+  - component: {fileID: 8707441320245096014}
   m_Layer: 0
-  m_Name: 0_SlimeE
+  m_Name: 3_HagureMetalE
   m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &747896214091052385
+--- !u!4 &8907733137830469952
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 747896214091052387}
+  m_GameObject: {fileID: 8466519816056502684}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
@@ -33,52 +33,52 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &747896214091052384
+--- !u!114 &8674814485772322632
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 747896214091052387}
+  m_GameObject: {fileID: 8466519816056502684}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: deb572a7ec18e97438db026bdd81c089, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  id: 0
-  maxHp: 10
-  maxAtk: 10
-  maxSpd: 10
-  element: 1
-  rarity: 1
-  description: "\u3088\u304F\u3044\u308B\u3084\u3064"
---- !u!114 &5718644004716360450
+  id: 3
+  maxHp: 10000
+  maxAtk: 100
+  maxSpd: 20000
+  element: 4
+  rarity: 4
+  description: "\u8D85\u30EC\u30A2"
+--- !u!114 &8001310301530718265
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 747896214091052387}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4df33764f9e88614984ac46ea447764b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  hpRate: 0.5
-  atkRate: 0.5
-  spdRate: 0.5
-  haveSpecialAI: 0
-  haveBattleActiveSkillID: 00000000020000000300000004000000
-  dropRate: 50
---- !u!114 &3095886165874284127
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 747896214091052387}
+  m_GameObject: {fileID: 8466519816056502684}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d59831af2fbee794f9b86e1985b47357, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &8707441320245096014
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8466519816056502684}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4df33764f9e88614984ac46ea447764b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hpRate: 1
+  atkRate: 1
+  spdRate: 1
+  haveSpecialAI: 0
+  haveBattleActiveSkillID: 
+  dropRate: 50

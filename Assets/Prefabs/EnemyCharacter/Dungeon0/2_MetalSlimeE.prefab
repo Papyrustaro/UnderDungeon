@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &747896214091052387
+--- !u!1 &152651711077205048
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,24 +8,24 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 747896214091052385}
-  - component: {fileID: 747896214091052384}
-  - component: {fileID: 5718644004716360450}
-  - component: {fileID: 3095886165874284127}
+  - component: {fileID: 772485762655514840}
+  - component: {fileID: 4966059336718955476}
+  - component: {fileID: 8642841171715753288}
+  - component: {fileID: 5733513469560255904}
   m_Layer: 0
-  m_Name: 0_SlimeE
+  m_Name: 2_MetalSlimeE
   m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &747896214091052385
+--- !u!4 &772485762655514840
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 747896214091052387}
+  m_GameObject: {fileID: 152651711077205048}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
@@ -33,52 +33,52 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &747896214091052384
+--- !u!114 &4966059336718955476
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 747896214091052387}
+  m_GameObject: {fileID: 152651711077205048}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: deb572a7ec18e97438db026bdd81c089, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  id: 0
-  maxHp: 10
+  id: 2
+  maxHp: 1000
   maxAtk: 10
-  maxSpd: 10
-  element: 1
-  rarity: 1
-  description: "\u3088\u304F\u3044\u308B\u3084\u3064"
---- !u!114 &5718644004716360450
+  maxSpd: 10000
+  element: 2
+  rarity: 3
+  description: "\u30E1\u30BF\u30EB\u3002\u7D4C\u9A13\u5024\u9AD8\u3044\u304B\u3082\u306D"
+--- !u!114 &8642841171715753288
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 747896214091052387}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4df33764f9e88614984ac46ea447764b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  hpRate: 0.5
-  atkRate: 0.5
-  spdRate: 0.5
-  haveSpecialAI: 0
-  haveBattleActiveSkillID: 00000000020000000300000004000000
-  dropRate: 50
---- !u!114 &3095886165874284127
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 747896214091052387}
+  m_GameObject: {fileID: 152651711077205048}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d59831af2fbee794f9b86e1985b47357, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &5733513469560255904
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 152651711077205048}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4df33764f9e88614984ac46ea447764b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hpRate: 1
+  atkRate: 1
+  spdRate: 1
+  haveSpecialAI: 0
+  haveBattleActiveSkillID: 
+  dropRate: 50
