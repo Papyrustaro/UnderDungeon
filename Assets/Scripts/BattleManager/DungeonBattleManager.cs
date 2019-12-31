@@ -70,7 +70,7 @@ public class DungeonBattleManager : MonoBehaviour
     public void SetInputTarget(BattleCharacter bc, E_TargetType targetType)
     {
         if (bc.Hp < 0) { announceText.text = "そのキャラもう死んでるyo"; return; } //とりあえず
-        if((bc.IsEnemy && targetType == E_TargetType.OneEnemy) || (!bc.IsEnemy && targetType == E_TargetType.OnePlayer))
+        if((bc.IsEnemy && targetType == E_TargetType.OneEnemy) || (!bc.IsEnemy && targetType == E_TargetType.OneAlly))
         {
             this.targetIndex = charaList.IndexOf(bc);
             this.inputWaiting = false;

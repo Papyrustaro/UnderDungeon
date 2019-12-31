@@ -121,23 +121,23 @@ public class BattleCharacter : MonoBehaviour
 
         return new Dictionary<E_Element, double>() { { E_Element.Fire, fireRate }, { E_Element.Aqua, aquaRate }, { E_Element.Tree, treeRate } };
     }
-    public void AddHpRate(int rate, int effectTurn)
+    public void AddHpRate(double rate, int effectTurn)
     {
         this.hpRate.Add(new BuffEffect(rate, effectTurn));
     }
-    public void AddAtkRate(int rate, int effectTurn)
+    public void AddAtkRate(double rate, int effectTurn)
     {
         this.atkRate.Add(new BuffEffect(rate, effectTurn));
     }
-    public void AddSpdRate(int rate, int effectTurn)
+    public void AddSpdRate(double rate, int effectTurn)
     {
         this.spdRate.Add(new BuffEffect(rate, effectTurn));
     }
-    public void AddToDamageRate(E_Element element, int rate, int effectTurn)
+    public void AddToDamageRate(E_Element element, double rate, int effectTurn)
     {
         this.toDamageRate.Add(new BuffEffect(element, rate, effectTurn));
     }
-    public void AddFromDamageRate(E_Element element, int rate, int effectTurn)
+    public void AddFromDamageRate(E_Element element, double rate, int effectTurn)
     {
         this.fromDamageRate.Add(new BuffEffect(element, rate, effectTurn));
     }

@@ -16,6 +16,7 @@ public class Character : MonoBehaviour
     [SerializeField]
     private string description;
     //private Image image;
+    
 
     public E_CharacterID ID => id;
     public string CharaName => this.id.ToString();

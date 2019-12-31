@@ -15,8 +15,8 @@ public class BattleManager : MonoBehaviour
         try
         {
             Debug.Log(EnumBattleActiveSkillID.EnumSize);
-            BattleActiveSkillsFunc.SkillFunc(E_BattleActiveSkill.たいあたり);
-            BattleActiveSkillsFunc.SkillFunc(E_BattleActiveSkill.二段切り);
+            //BattleActiveSkillsFunc.SkillFunc(E_BattleActiveSkill.たいあたり);
+            //BattleActiveSkillsFunc.SkillFunc(E_BattleActiveSkill.二段切り);
         }catch(Exception e)
         {
             Debug.Log(e);
