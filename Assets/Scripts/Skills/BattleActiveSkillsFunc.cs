@@ -5,13 +5,13 @@ using System;
 
 public class BattleActiveSkillsFunc : MonoBehaviour
 {
-    private BattleCharacter invoker;
-    private List<BattleCharacter> target;
+    //private BattleCharacter invoker;
+    //private List<BattleCharacter> target;
 
     [SerializeField]
     private List<BattleActiveSkill> skillList = new List<BattleActiveSkill>();
 
-    public void SkillFunc(E_BattleActiveSkill id)
+    public void SkillFunc(E_BattleActiveSkill id, BattleCharacter invoker, List<BattleCharacter> target)
     {
         if((int)id > EnumBattleActiveSkillID.EnumSize)
         {

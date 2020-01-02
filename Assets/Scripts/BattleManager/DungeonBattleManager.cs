@@ -11,6 +11,7 @@ public class DungeonBattleManager : MonoBehaviour
     private double toDamageFirePassiveRate = 1, toDamageAquaPassiveRate = 1, toDamageTreePassiveRate = 1;
     [SerializeField]private List<BattleCharacter> charaList = new List<BattleCharacter>();
     [SerializeField] private Text announceText;
+    [SerializeField] private BattleActiveSkillsFunc activeSkillFuncs;
 
     private bool finishAction = true;
     private int charaNum; //戦闘に参加しているchara数
@@ -42,29 +43,29 @@ public class DungeonBattleManager : MonoBehaviour
                 nextActionIndex = 0;
                 SortCharacterBySpd();
             }
-            if(charaList[nextActionIndex].Hp > 0)
+            if (charaList[nextActionIndex].Hp > 0)
             {
                 if (charaList[nextActionIndex].IsEnemy)
                 {
                     NormalAttack(charaList[nextActionIndex], charaList[ListManager.GetRandomIndex<int>(playerAliveIndex)]);
+                    nextActionIndex++;
                 }
                 else
                 {
                     ShowAnnounce(charaList[nextActionIndex].CharaClass.CharaName + "のばん");
-                    //announceText.text = "こうげき対象を選択してください";
+                    ShowActiveSkillSelect(charaList[nextActionIndex]);
                     this.inputWaiting = true;
                     this.finishAction = false;
                 }
             }
-            nextActionIndex++;
+            else
+            {
+                nextActionIndex++;
+            }
         }
         else
         {
-            if(!this.inputWaiting) //finishAction == プレイヤーの行動が終わったと捉えたときのみ
-            {
-                NormalAttack(charaList[nextActionIndex], charaList[targetIndex]);
-                this.finishAction = true;
-            }
+            InputActuateSkill();
         }
     }
     public void SetInputTarget(BattleCharacter bc, E_TargetType targetType)
@@ -73,12 +74,70 @@ public class DungeonBattleManager : MonoBehaviour
         if((bc.IsEnemy && targetType == E_TargetType.OneEnemy) || (!bc.IsEnemy && targetType == E_TargetType.OneAlly))
         {
             this.targetIndex = charaList.IndexOf(bc);
-            this.inputWaiting = false;
+            //this.inputWaiting = false;
+            Debug.Log("target: " + bc.CharaClass.CharaName);
+        }
+    }
+    private void ShowActiveSkillSelect(BattleCharacter bc)
+    {
+        string s = "";
+        int i = 0;
+        foreach(E_BattleActiveSkill id in bc.BattleActiveSkillID)
+        {
+            s += " " + i.ToString() + ":" + id.ToString();
+            i++;
+        }
+        ShowAnnounce(s);
+    }
+    private void InputActuateSkill()
+    {
+        BattleCharacter invoker = charaList[nextActionIndex];
+        List<BattleCharacter> target = new List<BattleCharacter>() { charaList[targetIndex] };
+        if (Input.GetKeyDown(KeyCode.Alpha0))
+        {
+            this.activeSkillFuncs.SkillFunc(invoker.BattleActiveSkillID[0], invoker, target);
+            this.inputWaiting = false; this.finishAction = true;
+            this.nextActionIndex++;
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            this.activeSkillFuncs.SkillFunc(invoker.BattleActiveSkillID[1], invoker, target);
+            this.inputWaiting = false; this.finishAction = true;
+            this.nextActionIndex++;
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            if (invoker.BattleActiveSkillID.Count >= 3)
+            {
+                this.activeSkillFuncs.SkillFunc(invoker.BattleActiveSkillID[2], invoker, target);
+                this.inputWaiting = false; this.finishAction = true;
+                this.nextActionIndex++;
+            }
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha3))
+        {
+            if(invoker.BattleActiveSkillID.Count >= 4)
+            {
+                this.activeSkillFuncs.SkillFunc(invoker.BattleActiveSkillID[3], invoker, target);
+                this.inputWaiting = false; this.finishAction = true;
+                this.nextActionIndex++;
+            }
+                
+
         }
     }
     private void DebugFunc()
     {
-        Debug.Log(charaList[ListManager.GetRandomIndex<int>(playerAliveIndex)]);
+        foreach(BattleCharacter bc in charaList)
+        {
+            if (!bc.IsEnemy)
+            {
+                foreach(E_BattleActiveSkill id in bc.BattleActiveSkillID)
+                {
+                    Debug.Log(bc.CharaClass.CharaName + id.ToString());
+                }
+            }
+        }
     }
     private List<BattleCharacter> GetAliveList(List<BattleCharacter> bcList)
     {

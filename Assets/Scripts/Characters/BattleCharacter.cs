@@ -16,9 +16,11 @@ public class BattleCharacter : MonoBehaviour
     private List<BuffEffect> normalAttackRate = new List<BuffEffect>(); //通常攻撃の倍率
     //private bool isEnemy = false;
 
-    private E_BattleActiveSkill[] battleActiveSkillID;
+    private List<E_BattleActiveSkill> battleActiveSkillID = new List<E_BattleActiveSkill>();
     private Character charaClass;
     private double hp;
+    private PlayerCharacter pc;
+    private EnemyCharacter ec;
     
 
     /* passiveのみ考慮したプロパティ */
@@ -41,6 +43,7 @@ public class BattleCharacter : MonoBehaviour
 
 
     /* その他プロパティ */
+    public List<E_BattleActiveSkill> BattleActiveSkillID => this.battleActiveSkillID;
     public bool StatusChange { get; set; } = false;
     public double Hp { get { return this.hp; } set { this.hp = value; StatusChange = true; } } //現在のHP
     public Character CharaClass
@@ -71,6 +74,7 @@ public class BattleCharacter : MonoBehaviour
         {
             SetPassiveEffect(); //Passiveスキルの効果を反映
         }
+        SetActiveSkill();
         StatusChange = true;
     }
     private void SetBaseStatus()
@@ -90,12 +94,25 @@ public class BattleCharacter : MonoBehaviour
     {
         if (this.gameObject.CompareTag("Player"))
         {
-            this.charaClass = GetComponent<PlayerCharacter>().CharaClass;
+            this.pc = GetComponent<PlayerCharacter>();
+            this.charaClass = pc.CharaClass;
         }
         else
         {
-            this.charaClass = GetComponent<EnemyCharacter>().CharaClass;
+            this.ec = GetComponent<EnemyCharacter>();
+            this.charaClass = ec.CharaClass;
             this.IsEnemy = true;
+        }
+    }
+    private void SetActiveSkill()
+    {
+        if (!this.IsEnemy)
+        {
+            for(int i = 0; i < CharacterConstValue.MAX_HAVE_ACTIVE_SKILL; i++)
+            {
+                if (pc.LV >= pc.UseAbleBattleActiveSkillLV[i]) this.battleActiveSkillID.Add(pc.HaveBattleActiveSkillID[i]);
+                else break;
+            }
         }
     }
     
