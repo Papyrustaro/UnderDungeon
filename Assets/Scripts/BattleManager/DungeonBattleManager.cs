@@ -68,15 +68,15 @@ public class DungeonBattleManager : MonoBehaviour
             InputActuateSkill();
         }
     }
-    public void SetInputTarget(BattleCharacter bc, E_TargetType targetType)
+    public void SetInputTarget(BattleCharacter bc)
     {
         if (bc.Hp < 0) { announceText.text = "そのキャラもう死んでるyo"; return; } //とりあえず
-        if((bc.IsEnemy && targetType == E_TargetType.OneEnemy) || (!bc.IsEnemy && targetType == E_TargetType.OneAlly))
-        {
+        //if((bc.IsEnemy && targetType == E_TargetType.OneEnemy) || (!bc.IsEnemy && targetType == E_TargetType.OneAlly))
+        //{
             this.targetIndex = charaList.IndexOf(bc);
             //this.inputWaiting = false;
             Debug.Log("target: " + bc.CharaClass.CharaName);
-        }
+        //}
     }
     private void ShowActiveSkillSelect(BattleCharacter bc)
     {

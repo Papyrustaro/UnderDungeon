@@ -15,6 +15,6 @@ public class TargetSelectButton : MonoBehaviour
 
     public void PressedCharacter()
     {
-        dbm.SetInputTarget(this.bc, E_TargetType.OneEnemy);
+        dbm.SetInputTarget(this.bc);
     }
 }
