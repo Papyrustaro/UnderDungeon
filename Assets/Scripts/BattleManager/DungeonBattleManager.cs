@@ -78,6 +78,20 @@ public class DungeonBattleManager : MonoBehaviour
             Debug.Log("target: " + bc.CharaClass.CharaName);
         //}
     }
+
+    //なぜこの処理をこちら側でするか→oneAllyのときターゲット入力が必要だから→それが解決できたらFuncクラスでの実装でもいいか?
+    private void InvokeSkill(BattleActiveSkill skill)
+    {
+        switch (skill.TargetType)
+        {
+            case E_TargetType.All:
+                this.activeSkillFuncs.SkillFunc(skill, charaList[nextActionIndex], charaList);
+                break;
+            case E_TargetType.OneEnemy:
+                this.activeSkillFuncs.SkillFunc(skill, charaList[nextActionIndex], new List<BattleCharacter>() { charaList[targetIndex]});
+                break;
+        }
+    }
     private void ShowActiveSkillSelect(BattleCharacter bc)
     {
         string s = "";

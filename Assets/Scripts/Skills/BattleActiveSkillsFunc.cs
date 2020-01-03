@@ -11,6 +11,33 @@ public class BattleActiveSkillsFunc : MonoBehaviour
     [SerializeField]
     private List<BattleActiveSkill> skillList = new List<BattleActiveSkill>();
 
+    public void SkillFunc(BattleActiveSkill skill, BattleCharacter invoker, List<BattleCharacter> target)
+    {
+        Debug.Log(invoker.CharaClass.CharaName + "の" + skill.SkillName);
+
+        switch (skill.SkillType)
+        {
+            case E_SkillType.攻撃:
+                NormalElementAttack(invoker, target, skill.RateOrValue, skill.Element);
+                break;
+            case E_SkillType.HP回復:
+                NormalRecoverHp(target, skill.RateOrValue);
+                break;
+            case E_SkillType.ATKバフ:
+                BuffAttackStatus(target, skill.RateOrValue, skill.EffectTurn);
+                break;
+
+
+            case E_SkillType.その他:
+                switch (skill.ID)
+                {
+                    case E_BattleActiveSkill.ファイアA:
+                        //特別な処理
+                        break;
+                }
+                break;
+        }
+    }
     public void SkillFunc(E_BattleActiveSkill id, BattleCharacter invoker, List<BattleCharacter> target)
     {
         if((int)id > EnumBattleActiveSkillID.EnumSize)
@@ -50,7 +77,10 @@ public class BattleActiveSkillsFunc : MonoBehaviour
                 break;
         }
     }
-
+    public BattleActiveSkill GetBattleActiveSkill(E_BattleActiveSkill id)
+    {
+        return this.skillList[(int)id];
+    }
     private void NormalElementAttack(BattleCharacter attacker, List<BattleCharacter> target, double rate, E_Element element) //rateは通常攻撃を1としたときの威力,elementは技の属性
     {
         double damageValue = attacker.Atk * attacker.ToDamageRate[element] * rate;
