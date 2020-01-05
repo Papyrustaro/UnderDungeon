@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-//using System;
+using System;
 
 public class ListManager
 {
@@ -17,6 +17,6 @@ public class ListManager
     }
     public static T GetRandomIndex<T>(List<T> list)
     {
-        return list[Random.Range(0, list.Count)];
+        return list[UnityEngine.Random.Range(0, list.Count)];
     }
 }

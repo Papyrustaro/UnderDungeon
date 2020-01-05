@@ -11,6 +11,11 @@ public class BattleActiveSkillsFunc : MonoBehaviour
     [SerializeField]
     private List<BattleActiveSkill> skillList = new List<BattleActiveSkill>();
 
+    public void SkillFunc(E_BattleActiveSkill skillID, BattleCharacter invoker, List<BattleCharacter> target)
+    {
+        SkillFunc(skillList[(int)skillID], invoker, target);
+    }
+
     public void SkillFunc(BattleActiveSkill skill, BattleCharacter invoker, List<BattleCharacter> target)
     {
         Debug.Log(invoker.CharaClass.CharaName + "の" + skill.SkillName);
@@ -18,52 +23,56 @@ public class BattleActiveSkillsFunc : MonoBehaviour
         switch (skill.SkillType)
         {
             case E_SkillType.攻撃:
-                NormalElementAttack(invoker, target, skill.RateOrValue, skill.Element);
+                SkillToAllTarget(skill, invoker, target, NormalElementAttack);
                 break;
             case E_SkillType.HP回復:
-                NormalRecoverHp(target, skill.RateOrValue);
+                SkillToAllTarget(skill, target, NormalRecoverHp);
                 break;
             case E_SkillType.ATKバフ:
-                BuffAttackStatus(target, skill.RateOrValue, skill.EffectTurn);
+                SkillToAllTarget(skill, target, BuffAtkStatus);
                 break;
-
-
-            case E_SkillType.その他:
-                switch (skill.ID)
-                {
-                    case E_BattleActiveSkill.ファイアA:
-                        //特別な処理
-                        break;
-                }
+            case E_SkillType.SPDバフ:
+                SkillToAllTarget(skill, target, BuffSpdStatus);
                 break;
-        }
-    }
-    public void SkillFunc(E_BattleActiveSkill id, BattleCharacter invoker, List<BattleCharacter> target)
-    {
-        if((int)id > EnumBattleActiveSkillID.EnumSize)
-        {
-            Debug.Log("idがBattleActiveSkillIDの最大値を超えています");
-            throw new Exception();
-        }
-
-        BattleActiveSkill skill = skillList[(int)id];
-        Debug.Log(invoker.CharaClass.CharaName + "の" + skill.SkillName);
-
-        switch (skill.SkillType)
-        {
-            case E_SkillType.攻撃:
-                NormalElementAttack(invoker, target, skill.RateOrValue, skill.Element);
+            case E_SkillType.HPバフ:
+                SkillToAllTarget(skill, target, BuffHpStatus);
                 break;
-            case E_SkillType.HP回復:
-                NormalRecoverHp(target, skill.RateOrValue);
+            case E_SkillType.被ダメージ増減バフ:
+                SkillToAllTarget(skill, target, BuffFromDamageRate);
                 break;
-            case E_SkillType.ATKバフ:
-                BuffAttackStatus(target, skill.RateOrValue, skill.EffectTurn);
+            case E_SkillType.与ダメージ増減バフ:
+                SkillToAllTarget(skill, target, BuffToDamageRate);
                 break;
-
-
-
-
+            case E_SkillType.スキルターン短縮遅延:
+                SkillToAllTarget(skill, target, AddHaveSkillPoint);
+                break;
+            case E_SkillType.属性変化:
+                SkillToAllTarget(skill, target, SetElementChanged);
+                break;
+            case E_SkillType.復活付与:
+                SkillToAllTarget(skill, target, SetRebornEffect);
+                break;
+            case E_SkillType.無敵付与:
+                SkillToAllTarget(skill, target, SetNoGetDamaged);
+                break;
+            case E_SkillType.攻撃集中:
+                SkillToAllTarget(skill, target, SetAttractingAffect);
+                break;
+            case E_SkillType.カウンター:
+                SkillToAllTarget(skill, invoker, target, CounterAttack);
+                break;
+            case E_SkillType.通常攻撃全体攻撃化:
+                SkillToAllTarget(skill, target, AddNormalAttackToAllTurn);
+                break;
+            case E_SkillType.通常攻撃被ダメージ増減:
+                SkillToAllTarget(skill, target, AddFromNormalAttackRate);
+                break;
+            case E_SkillType.通常攻撃与ダメージ増減:
+                SkillToAllTarget(skill, target, AddToNormalAttackRate);
+                break;
+            case E_SkillType.通常攻撃回数追加:
+                SkillToAllTarget(skill, target, AddNormalAttackNum);
+                break;
 
 
 
@@ -81,34 +90,87 @@ public class BattleActiveSkillsFunc : MonoBehaviour
     {
         return this.skillList[(int)id];
     }
-    private void NormalElementAttack(BattleCharacter attacker, List<BattleCharacter> target, double rate, E_Element element) //rateは通常攻撃を1としたときの威力,elementは技の属性
+    private void NormalElementAttack(BattleCharacter attacker, BattleCharacter target, BattleActiveSkill skill) 
     {
-        double damageValue = attacker.Atk * attacker.ToDamageRate[element] * rate;
-        foreach(BattleCharacter bc in target)
+        target.DecreaseHp(attacker.Atk * attacker.ToDamageRate[skill.Element] * skill.RateOrValue * target.FromDamageRate[skill.Element]);
+    }
+    private void CounterAttack(BattleCharacter attacker, BattleCharacter target, BattleActiveSkill skill) 
+    {
+        target.DecreaseHp(attacker.HaveDamageThisTurn * attacker.ToDamageRate[skill.Element] * skill.RateOrValue * target.FromDamageRate[skill.Element]);
+    }
+    private void NormalRecoverHp(BattleCharacter target, BattleActiveSkill skill)
+    {
+        target.RecoverHp(skill.RateOrValue);
+    }
+    private void BuffAtkStatus(BattleCharacter target, BattleActiveSkill skill)
+    {
+        target.AddAtkRate(skill.RateOrValue, skill.EffectTurn);
+    }
+    private void BuffHpStatus(BattleCharacter target, BattleActiveSkill skill)
+    {
+        target.AddHpRate(skill.RateOrValue, skill.EffectTurn);
+    }
+    private void BuffSpdStatus(BattleCharacter target, BattleActiveSkill skill)
+    {
+        target.AddSpdRate(skill.RateOrValue, skill.EffectTurn);
+    }
+    private void BuffToDamageRate(BattleCharacter target, BattleActiveSkill skill)
+    {
+        target.AddToDamageRate(skill.Element, skill.RateOrValue, skill.EffectTurn);
+    }
+    private void BuffFromDamageRate(BattleCharacter target, BattleActiveSkill skill)
+    {
+        target.AddFromDamageRate(skill.Element, skill.RateOrValue, skill.EffectTurn);
+    }
+    private void SetNoGetDamaged(BattleCharacter target, BattleActiveSkill skill)
+    {
+        target.AddNoGetDamaged(skill.Element, skill.EffectTurn);
+    }
+    private void SetElementChanged(BattleCharacter target, BattleActiveSkill skill)
+    {
+        target.SetElementChanged(skill.Element, skill.EffectTurn);
+    }
+    private void SetRebornEffect(BattleCharacter target, BattleActiveSkill skill)
+    {
+        target.CanReborn = skill.RateOrValue;
+    }
+    private void SetAttractingAffect(BattleCharacter target, BattleActiveSkill skill)
+    {
+        target.AttractingAffectTurn = skill.EffectTurn;
+    }
+    private void AddHaveSkillPoint(BattleCharacter target, BattleActiveSkill skill)
+    {
+        target.AddHaveSkillPoint((int)skill.RateOrValue);
+    }
+    private void AddNormalAttackToAllTurn(BattleCharacter target, BattleActiveSkill skill)
+    {
+        target.NormalAttackToAllTurn = target.NormalAttackToAllTurn + (int)skill.RateOrValue;
+    }
+    private void AddToNormalAttackRate(BattleCharacter target, BattleActiveSkill skill)
+    {
+        target.AddToNormalAttackRate(skill.RateOrValue, skill.EffectTurn);
+    }
+    private void AddFromNormalAttackRate(BattleCharacter target, BattleActiveSkill skill)
+    {
+        target.AddFromNormalAttackRate(skill.RateOrValue, skill.EffectTurn);
+    }
+    private void AddNormalAttackNum(BattleCharacter target, BattleActiveSkill skill)
+    {
+        target.AddNormalAttackNum((int)skill.RateOrValue, skill.EffectTurn);
+    }
+
+    private void SkillToAllTarget(BattleActiveSkill skill, BattleCharacter invoker, List<BattleCharacter> targetList, Action<BattleCharacter, BattleCharacter, BattleActiveSkill> func)
+    {
+        foreach (BattleCharacter target in targetList)
         {
-            double damage = bc.DecreaseHp(damageValue);
-            Debug.Log(bc.CharaClass.CharaName + "は" + (int)damage + "のダメージを受けた");
+            func(invoker, target, skill);
         }
     }
-    /*private void NormalElementAttack(BattleCharacter attacker, List<BattleCharacter> target, BattleActiveSkill skill) 
+    private void SkillToAllTarget(BattleActiveSkill skill, List<BattleCharacter> targetList, Action<BattleCharacter, BattleActiveSkill> func)
     {
-        double damageValue = attacker.Atk * attacker.ToDamageRate[skill.Element] * skill.RateOrValue;
-        damageValue = target.DecreaseHp(damageValue);
-        Debug.Log(target.CharaClass.CharaName + "は" + (int)damageValue + "のダメージを受けた");
-    }*/
-    private void NormalRecoverHp(List<BattleCharacter> target, double value)
-    {
-        foreach (BattleCharacter bc in target)
+        foreach(BattleCharacter target in targetList)
         {
-            double recoverValue = bc.RecoverHp(value);
-            Debug.Log(bc.CharaClass.CharaName + "は" + (int)recoverValue + "体力を回復した");
-        }
-    }
-    private void BuffAttackStatus(List<BattleCharacter> target, double rate, int effectTurn)
-    {
-        foreach(BattleCharacter bc in target)
-        {
-            bc.AddAtkRate(rate, effectTurn);
+            func(target, skill);
         }
     }
 }
