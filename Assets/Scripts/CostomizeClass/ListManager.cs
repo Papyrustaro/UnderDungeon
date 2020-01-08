@@ -19,4 +19,13 @@ public class ListManager
     {
         return list[UnityEngine.Random.Range(0, list.Count)];
     }
+    public static List<T> MakeListFromBaseList<T>(List<T> baseList, List<int> indexList)
+    {
+        List<T> makeList = new List<T>();
+        foreach(int i in indexList)
+        {
+            makeList.Add(baseList[i]);
+        }
+        return makeList;
+    }
 }

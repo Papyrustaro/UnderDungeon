@@ -12,6 +12,7 @@ public class DungeonBattleManager : MonoBehaviour
     [SerializeField]private List<BattleCharacter> charaList = new List<BattleCharacter>();
     [SerializeField] private Text announceText;
     [SerializeField] private BattleActiveSkillsFunc activeSkillFuncs;
+    [SerializeField] private BattleUIManager uiManager;
 
     private bool finishAction = true;
     private int charaNum; //戦闘に参加しているchara数
@@ -19,9 +20,13 @@ public class DungeonBattleManager : MonoBehaviour
     private List<int> enemyIndex, enemyAliveIndex;
     private int nextActionIndex = 99;
     private bool inputWaiting = false; //プレイヤーの入力まち
+    private bool inputTargetWaiting = false;
+    private BattleActiveSkill waitingSkill = null;
     public List<BattleCharacter> AliveCharaList => GetAliveList(this.charaList);
     private int targetIndex;
 
+    private List<BattleCharacter> allyList = new List<BattleCharacter>();
+    private List<BattleCharacter> enemyList = new List<BattleCharacter>();
 
     private void Awake()
     {
@@ -30,10 +35,17 @@ public class DungeonBattleManager : MonoBehaviour
     private void Start()
     {
         charaNum = charaList.Count;
+        foreach(BattleCharacter bc in charaList)
+        {
+            if (bc.IsEnemy) this.enemyList.Add(bc);
+            else this.allyList.Add(bc);
+        }
     }
 
     private void Update()
     {
+        //DebugFunc();
+        //return;
         if (finishAction)
         {
             SetCharaIndex();
@@ -54,7 +66,7 @@ public class DungeonBattleManager : MonoBehaviour
                 {
                     ShowAnnounce(charaList[nextActionIndex].CharaClass.CharaName + "のばん");
                     ShowActiveSkillSelect(charaList[nextActionIndex]);
-                    this.inputWaiting = true;
+                    //this.inputWaiting = true;
                     this.finishAction = false;
                 }
             }
@@ -63,34 +75,58 @@ public class DungeonBattleManager : MonoBehaviour
                 nextActionIndex++;
             }
         }
-        else
+        else if(!this.inputTargetWaiting)
         {
             InputActuateSkill();
         }
     }
-    public void SetInputTarget(BattleCharacter bc)
+    public void SetInputTarget(BattleCharacter target)
     {
-        if (bc.Hp < 0) { announceText.text = "そのキャラもう死んでるyo"; return; } //とりあえず
-        //if((bc.IsEnemy && targetType == E_TargetType.OneEnemy) || (!bc.IsEnemy && targetType == E_TargetType.OneAlly))
-        //{
-            this.targetIndex = charaList.IndexOf(bc);
-            //this.inputWaiting = false;
-            Debug.Log("target: " + bc.CharaClass.CharaName);
-        //}
+        if (target.Hp < 0) { announceText.text = "そのキャラもう死んでるyo"; return; } //とりあえず
+        this.targetIndex = charaList.IndexOf(target);
+        BattleUIManager.ShowAnnounce("target: " + target.CharaClass.CharaName);
+        this.inputTargetWaiting = false;
+
+        if (!target.IsEnemy)
+        {
+            uiManager.SetActiveAllyTargetButtons(false);
+        }
     }
 
     //なぜこの処理をこちら側でするか→oneAllyのときターゲット入力が必要だから→それが解決できたらFuncクラスでの実装でもいいか?
-    private void InvokeSkill(BattleActiveSkill skill)
+    private void InvokeSkill(BattleCharacter invoker, BattleActiveSkill skill)
     {
         switch (skill.TargetType)
         {
             case E_TargetType.All:
-                this.activeSkillFuncs.SkillFunc(skill, charaList[nextActionIndex], charaList);
+                this.activeSkillFuncs.SkillFunc(skill, invoker, charaList);
                 break;
             case E_TargetType.OneEnemy:
-                this.activeSkillFuncs.SkillFunc(skill, charaList[nextActionIndex], new List<BattleCharacter>() { charaList[targetIndex]});
+                this.activeSkillFuncs.SkillFunc(skill, invoker, new List<BattleCharacter>() { charaList[targetIndex]});
+                break;
+            case E_TargetType.AllAlly:
+                this.activeSkillFuncs.SkillFunc(skill, invoker, allyList);
+                break;
+            case E_TargetType.AllEnemy:
+                this.activeSkillFuncs.SkillFunc(skill, invoker, enemyList);
+                break;
+            case E_TargetType.Self:
+                this.activeSkillFuncs.SkillFunc(skill, invoker, new List<BattleCharacter>() { invoker });
+                break;
+            case E_TargetType.OneAlly:
+                //プレイヤー入力によるtargetIndexの指定処理
+                if (charaList[targetIndex].IsEnemy)
+                {
+                    this.inputTargetWaiting = true;
+                    this.uiManager.PromptSelectTargetOneAlly();
+                    return;
+                }
+                this.activeSkillFuncs.SkillFunc(skill, invoker, new List<BattleCharacter>() { charaList[targetIndex] });
                 break;
         }
+
+        this.finishAction = true;
+        this.nextActionIndex++;
     }
     private void ShowActiveSkillSelect(BattleCharacter bc)
     {
@@ -106,51 +142,31 @@ public class DungeonBattleManager : MonoBehaviour
     private void InputActuateSkill()
     {
         BattleCharacter invoker = charaList[nextActionIndex];
-        List<BattleCharacter> target = new List<BattleCharacter>() { charaList[targetIndex] };
-        if (Input.GetKeyDown(KeyCode.Alpha0))
+        if(this.waitingSkill != null)
         {
-            this.activeSkillFuncs.SkillFunc(invoker.BattleActiveSkillID[0], invoker, target);
-            this.inputWaiting = false; this.finishAction = true;
-            this.nextActionIndex++;
+            InvokeSkill(invoker, this.waitingSkill);
+            this.waitingSkill = null;
+            return;
         }
-        if (Input.GetKeyDown(KeyCode.Alpha1))
-        {
-            this.activeSkillFuncs.SkillFunc(invoker.BattleActiveSkillID[1], invoker, target);
-            this.inputWaiting = false; this.finishAction = true;
-            this.nextActionIndex++;
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha2))
-        {
-            if (invoker.BattleActiveSkillID.Count >= 3)
-            {
-                this.activeSkillFuncs.SkillFunc(invoker.BattleActiveSkillID[2], invoker, target);
-                this.inputWaiting = false; this.finishAction = true;
-                this.nextActionIndex++;
-            }
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha3))
-        {
-            if(invoker.BattleActiveSkillID.Count >= 4)
-            {
-                this.activeSkillFuncs.SkillFunc(invoker.BattleActiveSkillID[3], invoker, target);
-                this.inputWaiting = false; this.finishAction = true;
-                this.nextActionIndex++;
-            }
-                
 
+
+        for(int i = 0; i < invoker.BattleActiveSkillID.Count; i++) //4で固定されちゃうかも
+        {
+            if (Input.GetKeyDown(i.ToString()))
+            {
+                InvokeSkill(invoker, this.activeSkillFuncs.GetBattleActiveSkill(invoker.BattleActiveSkillID[i]));
+                if (this.inputTargetWaiting)
+                {
+                    this.waitingSkill = this.activeSkillFuncs.GetBattleActiveSkill(invoker.BattleActiveSkillID[i]);
+                }
+            }
         }
     }
     private void DebugFunc()
     {
-        foreach(BattleCharacter bc in charaList)
+        foreach(BattleCharacter bc in this.allyList)
         {
-            if (!bc.IsEnemy)
-            {
-                foreach(E_BattleActiveSkill id in bc.BattleActiveSkillID)
-                {
-                    Debug.Log(bc.CharaClass.CharaName + id.ToString());
-                }
-            }
+            Debug.Log(bc.CharaClass.CharaName);
         }
     }
     private List<BattleCharacter> GetAliveList(List<BattleCharacter> bcList)
@@ -176,7 +192,7 @@ public class DungeonBattleManager : MonoBehaviour
     {
         ShowAnnounce(attacker.CharaClass.CharaName + "の攻撃");
         int damage = (int)target.DecreaseHp(attacker.Atk);
-        ShowAnnounce(target.CharaClass.CharaName + "は" + damage + "のダメージを受けた");
+        //ShowAnnounce(target.CharaClass.CharaName + "は" + damage + "のダメージを受けた");
     }
     private int DecideTargetIndexRandom()
     {

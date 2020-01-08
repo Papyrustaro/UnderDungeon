@@ -21,7 +21,7 @@ public class BattleCharacter : MonoBehaviour
 
     private List<E_BattleActiveSkill> battleActiveSkillID = new List<E_BattleActiveSkill>();
     private Character charaClass;
-    private double hp;
+    //private double hp;
     private PlayerCharacter pc;
     private EnemyCharacter ec;
     
@@ -50,7 +50,7 @@ public class BattleCharacter : MonoBehaviour
     /* その他プロパティ */
     public List<E_BattleActiveSkill> BattleActiveSkillID => this.battleActiveSkillID;
     public bool StatusChange { get; set; } = false;
-    public double Hp { get { return this.hp; } set { this.hp = value; StatusChange = true; } } //現在のHP
+    public double Hp { get; set; } //現在のHP
     public Character CharaClass
     {
         get
@@ -149,16 +149,19 @@ public class BattleCharacter : MonoBehaviour
     {
         this.hpRate.Add(new BuffEffect(rate, effectTurn));
         Debug.Log(CharaClass.CharaName + "の体力" + rate + "倍");
+        StatusChange = true;
     }
     public void AddAtkRate(double rate, int effectTurn)
     {
         this.atkRate.Add(new BuffEffect(rate, effectTurn));
         Debug.Log(CharaClass.CharaName + "の攻撃" + rate + "倍");
+        StatusChange = true;
     }
     public void AddSpdRate(double rate, int effectTurn)
     {
         this.spdRate.Add(new BuffEffect(rate, effectTurn));
         Debug.Log(CharaClass.CharaName + "の素早さ" + rate + "倍");
+        StatusChange = true;
     }
     public void AddToNormalAttackRate(double rate, int effectTurn)
     {
@@ -214,6 +217,7 @@ public class BattleCharacter : MonoBehaviour
     }
     public double RecoverHp(double value)
     {
+        StatusChange = true;
         if(Hp + value > MaxHp)
         {
             double diff = MaxHp - Hp;
@@ -231,6 +235,7 @@ public class BattleCharacter : MonoBehaviour
 
     public double DecreaseHp(double damage_value)
     {
+        StatusChange = true;
         if(Hp - damage_value <= 0)
         {
             double diff = Hp;
