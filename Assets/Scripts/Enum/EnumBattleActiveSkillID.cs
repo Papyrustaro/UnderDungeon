@@ -22,6 +22,17 @@ public enum E_BattleActiveSkill
     グランドA,
     ハイヒールA,
     バイキルト,
+    HpUpA,
+    SpdUpA,
+    攻撃集中A,
+    属性変化水A,
+    復活付与A,
+    無敵付与A,
+    カウンターA,
+    通常攻撃全体化A,
+    通常攻撃被ダメージ減A,
+    通常攻撃与ダメージ増A,
+    通常攻撃回数増A,
 }
 
 public class EnumBattleActiveSkillID
@@ -51,7 +62,7 @@ public enum E_SkillType
     HPバフ,
     ATKバフ,
     SPDバフ, //デバフも倍率と対象変えるだけ
-    スキルターン短縮遅延,
+    スキルポイント増減,
     攻撃集中,
     属性変化,
     復活付与,
@@ -61,6 +72,7 @@ public enum E_SkillType
     通常攻撃被ダメージ増減,
     通常攻撃与ダメージ増減,
     通常攻撃回数追加,
+    攻撃集中被ダメ減,
     その他,
 }
 

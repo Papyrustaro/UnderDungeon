@@ -27,4 +27,18 @@ public class ElementClass
     {
         return (element == E_Element.Tree || element == E_Element.AquaTree || element == E_Element.TreeFire || element == E_Element.FireAquaTree);
     }
+    public static string GetStringElement(E_Element element)
+    {
+        switch (element)
+        {
+            case E_Element.Fire: return "火";
+            case E_Element.Aqua: return "水";
+            case E_Element.Tree: return "木";
+            case E_Element.FireAqua: return "火・水";
+            case E_Element.AquaTree: return "水・木";
+            case E_Element.TreeFire: return "木・火";
+            case E_Element.FireAquaTree: return "全";
+            case E_Element _: return "エラー";
+        }
+    }
 }

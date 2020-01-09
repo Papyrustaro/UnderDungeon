@@ -43,7 +43,7 @@ public class BattleActiveSkillsFunc : MonoBehaviour
             case E_SkillType.与ダメージ増減バフ:
                 SkillToAllTarget(skill, target, BuffToDamageRate);
                 break;
-            case E_SkillType.スキルターン短縮遅延:
+            case E_SkillType.スキルポイント増減:
                 SkillToAllTarget(skill, target, AddHaveSkillPoint);
                 break;
             case E_SkillType.属性変化:
@@ -92,11 +92,11 @@ public class BattleActiveSkillsFunc : MonoBehaviour
     }
     private void NormalElementAttack(BattleCharacter attacker, BattleCharacter target, BattleActiveSkill skill) 
     {
-        target.DecreaseHp(attacker.Atk * attacker.ToDamageRate[skill.Element] * skill.RateOrValue * target.FromDamageRate[skill.Element]);
+        target.DecreaseHp(attacker.Atk * attacker.ToDamageRate[skill.SkillElement] * skill.RateOrValue * target.FromDamageRate[skill.SkillElement]);
     }
     private void CounterAttack(BattleCharacter attacker, BattleCharacter target, BattleActiveSkill skill) 
     {
-        target.DecreaseHp(attacker.HaveDamageThisTurn * attacker.ToDamageRate[skill.Element] * skill.RateOrValue * target.FromDamageRate[skill.Element]);
+        target.DecreaseHp(attacker.HaveDamageThisTurn * attacker.ToDamageRate[skill.SkillElement] * skill.RateOrValue * target.FromDamageRate[skill.SkillElement]);
     }
     private void NormalRecoverHp(BattleCharacter target, BattleActiveSkill skill)
     {
@@ -116,19 +116,19 @@ public class BattleActiveSkillsFunc : MonoBehaviour
     }
     private void BuffToDamageRate(BattleCharacter target, BattleActiveSkill skill)
     {
-        target.AddToDamageRate(skill.Element, skill.RateOrValue, skill.EffectTurn);
+        target.AddToDamageRate(skill.SkillElement, skill.RateOrValue, skill.EffectTurn);
     }
     private void BuffFromDamageRate(BattleCharacter target, BattleActiveSkill skill)
     {
-        target.AddFromDamageRate(skill.Element, skill.RateOrValue, skill.EffectTurn);
+        target.AddFromDamageRate(skill.SkillElement, skill.RateOrValue, skill.EffectTurn);
     }
     private void SetNoGetDamaged(BattleCharacter target, BattleActiveSkill skill)
     {
-        target.AddNoGetDamaged(skill.Element, skill.EffectTurn);
+        target.AddNoGetDamaged(skill.SkillElement, skill.EffectTurn);
     }
     private void SetElementChanged(BattleCharacter target, BattleActiveSkill skill)
     {
-        target.SetElementChanged(skill.Element, skill.EffectTurn);
+        target.SetElementChanged(skill.SkillElement, skill.EffectTurn);
     }
     private void SetRebornEffect(BattleCharacter target, BattleActiveSkill skill)
     {
