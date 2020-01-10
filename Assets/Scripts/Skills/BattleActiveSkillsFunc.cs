@@ -5,9 +5,6 @@ using System;
 
 public class BattleActiveSkillsFunc : MonoBehaviour
 {
-    //private BattleCharacter invoker;
-    //private List<BattleCharacter> target;
-
     [SerializeField]
     private List<BattleActiveSkill> skillList = new List<BattleActiveSkill>();
 
@@ -161,14 +158,14 @@ public class BattleActiveSkillsFunc : MonoBehaviour
 
     private void SkillToAllTarget(BattleActiveSkill skill, BattleCharacter invoker, List<BattleCharacter> targetList, Action<BattleCharacter, BattleCharacter, BattleActiveSkill> func)
     {
-        foreach (BattleCharacter target in targetList)
+        foreach (BattleCharacter target in ElementClass.GetListInElement(targetList, skill.TargetElement))
         {
             func(invoker, target, skill);
         }
     }
     private void SkillToAllTarget(BattleActiveSkill skill, List<BattleCharacter> targetList, Action<BattleCharacter, BattleActiveSkill> func)
     {
-        foreach(BattleCharacter target in targetList)
+        foreach(BattleCharacter target in ElementClass.GetListInElement(targetList, skill.TargetElement))
         {
             func(target, skill);
         }

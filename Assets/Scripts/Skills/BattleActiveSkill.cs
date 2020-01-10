@@ -54,6 +54,7 @@ public class BattleActiveSkill : MonoBehaviour
                 case E_TargetType.RandomAll: targetText += "全体からランダム"; break;
                 case E_TargetType.RandomAlly: targetText += "味方からランダム"; break;
                 case E_TargetType.RandomEnemy: targetText += "敵からランダム"; break;
+                case E_TargetType _: targetText = "エラー"; break;
             }
 
             switch (this.skillType)

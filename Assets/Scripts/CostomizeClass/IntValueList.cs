@@ -8,7 +8,7 @@ using UnityEngine;
 public class IntValueList
 {
     [SerializeField]
-    private List<IntValueList> valueListList = new List<IntValueList>(); //仕様例
+    private List<IntValueList> valueListList = new List<IntValueList>(); //使用例
 
     public List<int> list = new List<int>();
     public IntValueList(List<int> list)

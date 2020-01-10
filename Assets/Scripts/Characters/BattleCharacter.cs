@@ -68,6 +68,7 @@ public class BattleCharacter : MonoBehaviour
     public bool CanWholeAttack { get; set; } //全体攻撃効果が付与されているか
     public bool IsEnemy { get; set; } = false;
     public int HaveSkillPoint => this.haveSkillPoint;
+    public E_Element Element { get { if (this.elementChange == null) return CharaClass.Element; else return this.elementChange.Element; } }
     //public double NormalAttackRate { get; set; } = 1.0; //通常攻撃の倍率
 
     private void Awake()

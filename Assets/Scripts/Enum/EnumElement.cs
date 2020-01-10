@@ -41,4 +41,15 @@ public class ElementClass
             case E_Element _: return "エラー";
         }
     }
+    public static List<BattleCharacter> GetListInElement(List<BattleCharacter> baseList, E_Element searchElement)
+    {
+        List<BattleCharacter> list = new List<BattleCharacter>();
+        foreach(BattleCharacter bc in baseList)
+        {
+            if (ElementClass.IsFire(searchElement) && ElementClass.IsFire(bc.Element)) list.Add(bc);
+            else if (ElementClass.IsAqua(searchElement) && ElementClass.IsAqua(bc.Element)) list.Add(bc);
+            else if (ElementClass.IsTree(searchElement) && ElementClass.IsTree(bc.Element)) list.Add(bc);
+        }
+        return list;
+    }
 }

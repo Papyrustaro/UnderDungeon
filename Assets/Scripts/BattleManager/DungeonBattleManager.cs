@@ -28,6 +28,8 @@ public class DungeonBattleManager : MonoBehaviour
     private List<BattleCharacter> allyList = new List<BattleCharacter>();
     private List<BattleCharacter> enemyList = new List<BattleCharacter>();
 
+    private bool debug = true;
+
     private void Awake()
     {
         //SetCharacter();
@@ -44,8 +46,11 @@ public class DungeonBattleManager : MonoBehaviour
 
     private void Update()
     {
-        //DebugFunc();
-        //return;
+        if (debug)
+        {
+            DebugFunc(); debug = false;
+        }
+        return;
         if (finishAction)
         {
             SetCharaIndex();
@@ -164,14 +169,38 @@ public class DungeonBattleManager : MonoBehaviour
     }
     private void DebugFunc()
     {
-        foreach(BattleCharacter bc in this.allyList)
+        List<BattleCharacter> fireList = ElementClass.GetListInElement(charaList, E_Element.Fire);
+        List<BattleCharacter> aquaList = ElementClass.GetListInElement(charaList, E_Element.Aqua);
+        List<BattleCharacter> treeList = ElementClass.GetListInElement(charaList, E_Element.Tree);
+        List<BattleCharacter> fireAquaList = ElementClass.GetListInElement(charaList, E_Element.FireAqua);
+        Debug.Log("firelist");
+        foreach (BattleCharacter bc in fireList)
+        {
+            Debug.Log(bc.CharaClass.CharaName);
+        }
+        Debug.Log("aqualist");
+        foreach (BattleCharacter bc in aquaList)
+        {
+            Debug.Log(bc.CharaClass.CharaName);
+        }
+        Debug.Log("treelist");
+        foreach (BattleCharacter bc in treeList)
+        {
+            Debug.Log(bc.CharaClass.CharaName);
+        }
+        Debug.Log("fireaqualist");
+        foreach (BattleCharacter bc in fireAquaList)
+        {
+            Debug.Log(bc.CharaClass.CharaName);
+        }
+        Debug.Log("all");
+        foreach(BattleCharacter bc in charaList)
         {
             Debug.Log(bc.CharaClass.CharaName);
         }
     }
     private List<BattleCharacter> GetAliveList(List<BattleCharacter> bcList)
     {
-        //list.RemoveAll(bc => bc.Hp < 0);
         List<BattleCharacter> list = new List<BattleCharacter>();
         foreach(BattleCharacter bc in bcList)
         {
