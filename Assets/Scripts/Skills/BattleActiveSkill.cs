@@ -107,4 +107,9 @@ public class BattleActiveSkill : MonoBehaviour
             }
         }
     }
+
+    public void OtherSkillFunc(BattleCharacter invoker, List<BattleCharacter> target)
+    {
+        GetComponent<OtherBattleActiveSkillsFunc>().SkillFunc(invoker, target, this);
+    }
 }

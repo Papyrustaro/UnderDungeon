@@ -79,14 +79,8 @@ public class BattleActiveSkillsFunc : MonoBehaviour
                 break;
 
 
-
             case E_SkillType.その他:
-                switch (skill.ID)
-                {
-                    case E_BattleActiveSkill.ファイアA:
-                        //特別な処理
-                        break;
-                }
+                skill.OtherSkillFunc(invoker, target);
                 break;
         }
     }

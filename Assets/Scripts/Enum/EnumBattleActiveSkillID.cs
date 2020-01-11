@@ -34,6 +34,7 @@ public enum E_BattleActiveSkill
     通常攻撃与ダメージ増A,
     通常攻撃回数増A,
     デバッグ,
+    その他A,
 }
 
 public class EnumBattleActiveSkillID
