@@ -99,6 +99,8 @@ public class BattleActiveSkill : MonoBehaviour
                     return targetText + "の通常攻撃回数を" + this.effectTurn + "ターン" + this.rateOrValue + "回増やす";
                 case E_SkillType.通常攻撃被ダメージ増減:
                     return targetText + "の通常攻撃で受けるダメージを" + this.effectTurn + "ターン" + this.rateOrValue + "倍にする";
+                case E_SkillType.固定ダメージ:
+                    return targetText + "に" + (int)this.rateOrValue + "の固定ダメージを与える";
                 case E_SkillType _:
                     return "エラー";
                 

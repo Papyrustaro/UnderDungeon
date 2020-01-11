@@ -22,6 +22,9 @@ public class BattleActiveSkillsFunc : MonoBehaviour
             case E_SkillType.攻撃:
                 SkillToAllTarget(skill, invoker, target, NormalElementAttack);
                 break;
+            case E_SkillType.固定ダメージ:
+                SkillToAllTarget(skill, target, FixedDamageAttack);
+                break;
             case E_SkillType.HP回復:
                 SkillToAllTarget(skill, target, NormalRecoverHp);
                 break;
@@ -70,6 +73,10 @@ public class BattleActiveSkillsFunc : MonoBehaviour
             case E_SkillType.通常攻撃回数追加:
                 SkillToAllTarget(skill, target, AddNormalAttackNum);
                 break;
+            case E_SkillType.攻撃集中被ダメ減:
+                SkillToAllTarget(skill, target, SetAttractingAffect);
+                SkillToAllTarget(skill, target, BuffFromDamageRate);
+                break;
 
 
 
@@ -98,6 +105,10 @@ public class BattleActiveSkillsFunc : MonoBehaviour
     private void NormalRecoverHp(BattleCharacter target, BattleActiveSkill skill)
     {
         target.RecoverHp(skill.RateOrValue);
+    }
+    private void FixedDamageAttack(BattleCharacter target, BattleActiveSkill skill)
+    {
+        target.DecreaseHp(skill.RateOrValue);
     }
     private void BuffAtkStatus(BattleCharacter target, BattleActiveSkill skill)
     {
@@ -133,7 +144,7 @@ public class BattleActiveSkillsFunc : MonoBehaviour
     }
     private void SetAttractingAffect(BattleCharacter target, BattleActiveSkill skill)
     {
-        target.AttractingAffectTurn = skill.EffectTurn;
+        target.AddAttractEffectTurn(skill.SkillElement, skill.EffectTurn);
     }
     private void AddHaveSkillPoint(BattleCharacter target, BattleActiveSkill skill)
     {
@@ -141,7 +152,7 @@ public class BattleActiveSkillsFunc : MonoBehaviour
     }
     private void AddNormalAttackToAllTurn(BattleCharacter target, BattleActiveSkill skill)
     {
-        target.NormalAttackToAllTurn = target.NormalAttackToAllTurn + (int)skill.RateOrValue;
+        target.NormalAttackToAllTurn += skill.EffectTurn;
     }
     private void AddToNormalAttackRate(BattleCharacter target, BattleActiveSkill skill)
     {

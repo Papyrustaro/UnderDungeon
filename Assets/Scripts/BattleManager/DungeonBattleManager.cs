@@ -46,11 +46,11 @@ public class DungeonBattleManager : MonoBehaviour
 
     private void Update()
     {
-        if (debug)
+        /*if (debug)
         {
             DebugFunc(); debug = false;
         }
-        return;
+        return;*/
         if (finishAction)
         {
             SetCharaIndex();
@@ -98,6 +98,10 @@ public class DungeonBattleManager : MonoBehaviour
         }
     }
 
+    private void DebugFunc(BattleCharacter target)
+    {
+        Debug.Log(target.Hp + "/" + target.MaxHp);
+    }
     //なぜこの処理をこちら側でするか→oneAllyのときターゲット入力が必要だから→それが解決できたらFuncクラスでの実装でもいいか?
     private void InvokeSkill(BattleCharacter invoker, BattleActiveSkill skill)
     {
@@ -106,8 +110,11 @@ public class DungeonBattleManager : MonoBehaviour
             case E_TargetType.All:
                 this.activeSkillFuncs.SkillFunc(skill, invoker, charaList);
                 break;
-            case E_TargetType.OneEnemy:
+            case E_TargetType.OneEnemy:                
+                DebugFunc(charaList[targetIndex]);
+                Debug.Log(skill.Description);
                 this.activeSkillFuncs.SkillFunc(skill, invoker, new List<BattleCharacter>() { charaList[targetIndex]});
+                DebugFunc(charaList[targetIndex]);
                 break;
             case E_TargetType.AllAlly:
                 this.activeSkillFuncs.SkillFunc(skill, invoker, allyList);
@@ -165,38 +172,6 @@ public class DungeonBattleManager : MonoBehaviour
                     this.waitingSkill = this.activeSkillFuncs.GetBattleActiveSkill(invoker.BattleActiveSkillID[i]);
                 }
             }
-        }
-    }
-    private void DebugFunc()
-    {
-        List<BattleCharacter> fireList = ElementClass.GetListInElement(charaList, E_Element.Fire);
-        List<BattleCharacter> aquaList = ElementClass.GetListInElement(charaList, E_Element.Aqua);
-        List<BattleCharacter> treeList = ElementClass.GetListInElement(charaList, E_Element.Tree);
-        List<BattleCharacter> fireAquaList = ElementClass.GetListInElement(charaList, E_Element.FireAqua);
-        Debug.Log("firelist");
-        foreach (BattleCharacter bc in fireList)
-        {
-            Debug.Log(bc.CharaClass.CharaName);
-        }
-        Debug.Log("aqualist");
-        foreach (BattleCharacter bc in aquaList)
-        {
-            Debug.Log(bc.CharaClass.CharaName);
-        }
-        Debug.Log("treelist");
-        foreach (BattleCharacter bc in treeList)
-        {
-            Debug.Log(bc.CharaClass.CharaName);
-        }
-        Debug.Log("fireaqualist");
-        foreach (BattleCharacter bc in fireAquaList)
-        {
-            Debug.Log(bc.CharaClass.CharaName);
-        }
-        Debug.Log("all");
-        foreach(BattleCharacter bc in charaList)
-        {
-            Debug.Log(bc.CharaClass.CharaName);
         }
     }
     private List<BattleCharacter> GetAliveList(List<BattleCharacter> bcList)

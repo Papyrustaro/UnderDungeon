@@ -3298,6 +3298,7 @@ MonoBehaviour:
   - {fileID: 1247588671128719206, guid: d3e49c385b8b50346b3f00b2f40453f3, type: 3}
   - {fileID: 15404112752241378, guid: 07254d4cab21f274aa6e395aebac79d2, type: 3}
   - {fileID: 5441437083751511923, guid: 4ecf915adb195e04f95c14d3cabad997, type: 3}
+  - {fileID: 504490509275494238, guid: 810f89c127023b84b951224a9ab3f286, type: 3}
 --- !u!4 &1242917787
 Transform:
   m_ObjectHideFlags: 0
@@ -6118,6 +6119,11 @@ PrefabInstance:
         type: 3}
       propertyPath: exceedLimitNum
       value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 4324497793931535174, guid: 181192d4754373448bff3e620fe79796,
+        type: 3}
+      propertyPath: haveBattleActiveSkillID.Array.data[0]
+      value: 24
       objectReference: {fileID: 0}
     - target: {fileID: 6832071821252253256, guid: 181192d4754373448bff3e620fe79796,
         type: 3}

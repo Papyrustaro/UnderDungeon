@@ -10,11 +10,12 @@ public class BattleCharacter : MonoBehaviour
     private List<BuffEffect> spdRate = new List<BuffEffect>();
     private List<BuffEffect> toDamageRate = new List<BuffEffect>();
     private List<BuffEffect> fromDamageRate = new List<BuffEffect>();
-    private List<BuffEffect> noGetDamaged = new List<BuffEffect>();
+    private Dictionary<E_Element, int> noGetDamaged = new Dictionary<E_Element, int>() { { E_Element.Fire, 0 },{ E_Element.Aqua, 0 },{E_Element.Tree, 0} };
     private BuffEffect elementChange;
     private List<BuffEffect> normalAttackNum = new List<BuffEffect>(); //通常攻撃回数
     private List<BuffEffect> toNormalAttackRate = new List<BuffEffect>(); //通常攻撃の与ダメージ倍率
     private List<BuffEffect> fromNormalAttackRate = new List<BuffEffect>();
+    private Dictionary<E_Element, int> attractingEffectTurn = new Dictionary<E_Element, int>() { { E_Element.Fire, 0 }, { E_Element.Aqua, 0 }, { E_Element.Tree, 0 } };
 
     private int haveSkillPoint = 0;
     //private bool isEnemy = false;
@@ -62,13 +63,14 @@ public class BattleCharacter : MonoBehaviour
     //private int[] skillTurnFromActivate = new int[4]; //ActiveSkillのスキル発動までのターン
     public double CanReborn { get; set; } = 0; //復活できる状態か(0で復活しない。0.1など復活したときのHP割合を保持)
     public bool Reborned { get; set; } //復活効果を使ったか
-    public int AttractingAffectTurn { get; set; } = 0; //敵の攻撃を自分に集めているターン
+    public Dictionary<E_Element, int> AttractingEffectTurn => this.attractingEffectTurn; //敵の攻撃を自分に集めているターン
     public int NormalAttackToAllTurn { get; set; } = 0; //通常攻撃が全体攻撃になるターン
-    public double HaveDamageThisTurn { get; set; } //1ターンで喰らったダメージ量
-    public bool CanWholeAttack { get; set; } //全体攻撃効果が付与されているか
+    public double HaveDamageThisTurn { get; set; } = 100; //1ターンで喰らったダメージ量
+    public int NormalAttackNum => (int)GetRate(this.normalAttackNum);
     public bool IsEnemy { get; set; } = false;
     public int HaveSkillPoint => this.haveSkillPoint;
     public E_Element Element { get { if (this.elementChange == null) return CharaClass.Element; else return this.elementChange.Element; } }
+    public Dictionary<E_Element, int> NoGetDamaged => this.noGetDamaged;
     //public double NormalAttackRate { get; set; } = 1.0; //通常攻撃の倍率
 
     private void Awake()
@@ -191,8 +193,17 @@ public class BattleCharacter : MonoBehaviour
     }
     public void AddNoGetDamaged(E_Element element, int effectTurn)
     {
-        this.noGetDamaged.Add(new BuffEffect(element, 0, effectTurn));
-        Debug.Log(CharaClass.CharaName + "が" + effectTurn + "無敵");
+        if (ElementClass.IsFire(element)) this.noGetDamaged[E_Element.Fire] += effectTurn;
+        if (ElementClass.IsAqua(element)) this.noGetDamaged[E_Element.Aqua] += effectTurn;
+        if (ElementClass.IsTree(element)) this.noGetDamaged[E_Element.Tree] += effectTurn;
+        //this.noGetDamaged
+        //Debug.Log(CharaClass.CharaName + "が" + effectTurn + "無敵");
+    }
+    public void AddAttractEffectTurn(E_Element element, int effectTurn)
+    {
+        if (ElementClass.IsFire(element)) this.attractingEffectTurn[E_Element.Fire] += effectTurn;
+        if (ElementClass.IsAqua(element)) this.attractingEffectTurn[E_Element.Aqua] += effectTurn;
+        if (ElementClass.IsTree(element)) this.attractingEffectTurn[E_Element.Tree] += effectTurn;
     }
     public void SetElementChanged(E_Element element, int effectTurn)
     {
@@ -203,16 +214,16 @@ public class BattleCharacter : MonoBehaviour
     {
         if(this.haveSkillPoint + addValue < 0)
         {
-            Debug.Log(CharaClass.CharaName + "のスキルターンが" + this.haveSkillPoint + "遅延された");
+            Debug.Log(CharaClass.CharaName + "のスキルポイントが" + this.haveSkillPoint + "減少した");
             this.haveSkillPoint = 0;
         }else if(addValue < 0)
         {
-            Debug.Log(CharaClass.CharaName + "のスキルターンが" + addValue + "遅延された");
+            Debug.Log(CharaClass.CharaName + "のスキルポイントが" + addValue + "減少した");
             this.haveSkillPoint += addValue;
         }
         else
         {
-            Debug.Log(CharaClass.CharaName + "のスキルターンが" + addValue + "短縮された");
+            Debug.Log(CharaClass.CharaName + "のスキルポイントが" + addValue + "増加した");
             this.haveSkillPoint += addValue;
         }
     }
