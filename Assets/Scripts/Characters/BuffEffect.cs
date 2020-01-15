@@ -6,7 +6,7 @@ public class BuffEffect
 {
     private readonly E_Element element;
     private readonly double rate; //効果倍率
-    private readonly int effectTurn; //効果持続ターン
+    private int effectTurn; //効果持続ターン
 
     public BuffEffect(E_Element element, double rate, int effectTurn)
     {
@@ -23,5 +23,5 @@ public class BuffEffect
 
     public E_Element Element => this.element;
     public double Rate => this.rate;
-    public int EffectTurn => this.effectTurn;
+    public int EffectTurn { get { return this.effectTurn; } set { this.effectTurn = value; } }
 }

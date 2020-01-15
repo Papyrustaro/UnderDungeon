@@ -210,6 +210,22 @@ public class BattleCharacter : MonoBehaviour
         this.elementChange = new BuffEffect(element, 0, effectTurn);
         Debug.Log(CharaClass.CharaName + "の属性が" + effectTurn + "ターン" + element.ToString());
     }
+    public void DamagedByElementAttack(double power, E_Element atkElement) // power = 攻撃側の最終的な威力(atk * skillRate * elementRate)
+    {
+        if(this.noGetDamaged[atkElement] > 0)
+        {
+            Debug.Log(CharaClass.CharaName + "に" + ElementClass.GetStringElement(atkElement) + "属性の攻撃が効かない");
+            return;
+        }
+        else
+        {
+            DecreaseHp(power * this.FromDamageRate[atkElement]);
+        }
+    }
+    public void DamagedByNormalAttack(double power) // power = atk * normalAttackRate
+    {
+        DecreaseHp(power * FromNormalAttackRate);
+    }
     public void AddHaveSkillPoint(int addValue)
     {
         if(this.haveSkillPoint + addValue < 0)
@@ -262,4 +278,36 @@ public class BattleCharacter : MonoBehaviour
             return damage_value;
         }
     }
+    public void ElapseTurn(List<BuffEffect> buffList)
+    {
+        foreach(BuffEffect bf in buffList)
+        {
+            bf.EffectTurn--;
+        }
+        buffList.RemoveAll(bf => bf.EffectTurn < 1);
+    }
+    public void ElapseTurn(Dictionary<E_Element, int> dic)
+    {
+        if (dic[E_Element.Fire] > 0) dic[E_Element.Fire]--;
+        if (dic[E_Element.Aqua] > 0) dic[E_Element.Aqua]--;
+        if (dic[E_Element.Tree] > 0) dic[E_Element.Tree]--;
+    }
+    public void ElapseTurn(int turnValue)
+    {
+        if (turnValue > 0) turnValue--;
+    }
+    public void ElapseTurn(BuffEffect buff)
+    {
+        if (buff.EffectTurn > 0) buff.EffectTurn--;
+    }
+
+    public void ElapseAllTurn()
+    {
+        ElapseTurn(this.hpRate); ElapseTurn(this.atkRate); ElapseTurn(this.spdRate);
+        ElapseTurn(this.toDamageRate); ElapseTurn(this.fromDamageRate); ElapseTurn(this.noGetDamaged);
+        ElapseTurn(this.elementChange); ElapseTurn(this.normalAttackNum); ElapseTurn(this.toNormalAttackRate);
+        ElapseTurn(this.fromNormalAttackRate); ElapseTurn(this.attractingEffectTurn);
+        ElapseTurn(NormalAttackToAllTurn);
+    }
+
 }
