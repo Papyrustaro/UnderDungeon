@@ -5,8 +5,6 @@ using UnityEngine.UI;
 
 public class DungeonBattleManager : MonoBehaviour
 {
-    //[SerializeField]private List<BattlePlayerCharacter> playerList = new List<BattlePlayerCharacter>(); //自分のパーティ
-    //[SerializeField]private List<BattleEnemyCharacter> enemyList = new List<BattleEnemyCharacter>(); //敵のパーティ
     private double hpPassiveRate = 2, atkPassiveRate = 1, spdPassiveRate = 2; 
     private double toDamageFirePassiveRate = 1, toDamageAquaPassiveRate = 1, toDamageTreePassiveRate = 1;
     [SerializeField]private List<BattleCharacter> charaList = new List<BattleCharacter>();
@@ -110,11 +108,9 @@ public class DungeonBattleManager : MonoBehaviour
             case E_TargetType.All:
                 this.activeSkillFuncs.SkillFunc(skill, invoker, charaList);
                 break;
-            case E_TargetType.OneEnemy:                
-                DebugFunc(charaList[targetIndex]);
-                Debug.Log(skill.Description);
-                this.activeSkillFuncs.SkillFunc(skill, invoker, new List<BattleCharacter>() { charaList[targetIndex]});
-                DebugFunc(charaList[targetIndex]);
+            case E_TargetType.OneEnemy:
+                if (GetAttractingCharacter(skill.SkillElement, this.enemyList) == null) this.activeSkillFuncs.SkillFunc(skill, invoker, new List<BattleCharacter>() { charaList[targetIndex] });
+                else this.activeSkillFuncs.SkillFunc(skill, invoker, new List<BattleCharacter>() { GetAttractingCharacter(skill.SkillElement, this.enemyList) });
                 break;
             case E_TargetType.AllAlly:
                 this.activeSkillFuncs.SkillFunc(skill, invoker, allyList);
@@ -166,6 +162,11 @@ public class DungeonBattleManager : MonoBehaviour
         {
             if (Input.GetKeyDown(i.ToString()))
             {
+                if(this.activeSkillFuncs.GetBattleActiveSkill(invoker.BattleActiveSkillID[i]).NeedSkillPoint > invoker.HaveSkillPoint)
+                {
+                    ShowAnnounce("スキルポイントが足りません");
+                    this.finishAction = true; return;
+                }
                 InvokeSkill(invoker, this.activeSkillFuncs.GetBattleActiveSkill(invoker.BattleActiveSkillID[i]));
                 if (this.inputTargetWaiting)
                 {
@@ -194,9 +195,8 @@ public class DungeonBattleManager : MonoBehaviour
     }
     private void NormalAttack(BattleCharacter attacker, BattleCharacter target)
     {
-        ShowAnnounce(attacker.CharaClass.CharaName + "の攻撃");
-        int damage = (int)target.DecreaseHp(attacker.Atk);
-        //ShowAnnounce(target.CharaClass.CharaName + "は" + damage + "のダメージを受けた");
+        ShowAnnounce(attacker.CharaClass.CharaName + "の通常攻撃");
+        target.DamagedByNormalAttack(attacker.NormalAttackPower, attacker.Element);
     }
     private int DecideTargetIndexRandom()
     {
@@ -253,5 +253,32 @@ public class DungeonBattleManager : MonoBehaviour
             //this.enemyList.Add(enemy.GetComponent<BattleEnemyCharacter>());
             this.charaList.Add(enemy.GetComponent<BattleCharacter>());
         }
+    }
+    private void ShowAnnounce(E_BattleSituation scene)
+    {
+        switch (scene)
+        {
+            case E_BattleSituation.PlayerSelectAction:
+                ShowAnnounce(charaList[nextActionIndex].CharaClass.CharaName + "はどうする");
+                ShowAnnounce("0:通常攻撃 1:防御 2:スキル 3:アイテム");
+                break;
+            case E_BattleSituation.PlayerSelectActiveSkill:
+                ShowActiveSkillSelect(charaList[nextActionIndex]);
+                break;
+            case E_BattleSituation.PlayerSelectItem:
+                ShowAnnounce("アイテムを選択してください(未実装)");
+                break;
+            case E_BattleSituation.PlayerSelectSkillTarget:
+                ShowAnnounce("スキルの対象を選択してください");
+                break;
+        }
+    }
+    public BattleCharacter GetAttractingCharacter(E_Element attractElement, List<BattleCharacter> charaList) //charaListの先頭から検索していくため、sortされないlistを渡す必要がある
+    {
+        foreach(BattleCharacter bc in charaList)
+        {
+            if (bc.Hp > 0 && bc.AttractingEffectTurn[attractElement] > 0) return bc;
+        }
+        return null;
     }
 }

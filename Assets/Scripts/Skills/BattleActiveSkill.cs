@@ -14,7 +14,7 @@ public class BattleActiveSkill : MonoBehaviour
     [SerializeField]
     private string description; //スキルの説明
     [SerializeField]
-    private int needTurn; //必要なターン
+    private int needSkillPoint; //必要なスキルポイント
     [SerializeField]
     private E_Element skillElement; //技の属性
     [SerializeField]
@@ -25,7 +25,7 @@ public class BattleActiveSkill : MonoBehaviour
     public E_BattleActiveSkill ID => this.id;
     public string SkillName => this.id.ToString();
     //public string Description => description;
-    public int NeedTurn => this.needTurn;
+    public int NeedSkillPoint => this.needSkillPoint;
     public E_Element SkillElement => this.skillElement;
     public E_Element TargetElement => this.targetElement;
     public E_TargetType TargetType => this.targetType;

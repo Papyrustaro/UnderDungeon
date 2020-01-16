@@ -48,7 +48,7 @@ MonoBehaviour:
   rateOrValue: 100
   effectTurn: 5
   description: 
-  needTurn: 1
+  needSkillPoint: 1
   skillElement: 0
   targetElement: 0
   targetType: 0

@@ -134,7 +134,7 @@ public class BattleActiveSkillsFunc : MonoBehaviour
     }
     private void SetRebornEffect(BattleCharacter target, BattleActiveSkill skill)
     {
-        target.CanReborn = skill.RateOrValue;
+        target.RebornHpRate = skill.RateOrValue;
     }
     private void SetAttractingAffect(BattleCharacter target, BattleActiveSkill skill)
     {

@@ -10,7 +10,7 @@ public class BattleCharacter : MonoBehaviour
     private List<BuffEffect> spdRate = new List<BuffEffect>();
     private List<BuffEffect> toDamageRate = new List<BuffEffect>();
     private List<BuffEffect> fromDamageRate = new List<BuffEffect>();
-    private Dictionary<E_Element, int> noGetDamaged = new Dictionary<E_Element, int>() { { E_Element.Fire, 0 },{ E_Element.Aqua, 0 },{E_Element.Tree, 0} };
+    private Dictionary<E_Element, int> noGetDamagedTurn = new Dictionary<E_Element, int>() { { E_Element.Fire, 0 },{ E_Element.Aqua, 0 },{E_Element.Tree, 0} };
     private BuffEffect elementChange;
     private List<BuffEffect> normalAttackNum = new List<BuffEffect>(); //通常攻撃回数
     private List<BuffEffect> toNormalAttackRate = new List<BuffEffect>(); //通常攻撃の与ダメージ倍率
@@ -61,7 +61,7 @@ public class BattleCharacter : MonoBehaviour
         }
     }
     //private int[] skillTurnFromActivate = new int[4]; //ActiveSkillのスキル発動までのターン
-    public double CanReborn { get; set; } = 0; //復活できる状態か(0で復活しない。0.1など復活したときのHP割合を保持)
+    public double RebornHpRate { get; set; } = 0; //復活できる状態か(0で復活しない。0.1など復活したときのHP割合を保持)
     public bool Reborned { get; set; } //復活効果を使ったか
     public Dictionary<E_Element, int> AttractingEffectTurn => this.attractingEffectTurn; //敵の攻撃を自分に集めているターン
     public int NormalAttackToAllTurn { get; set; } = 0; //通常攻撃が全体攻撃になるターン
@@ -70,8 +70,8 @@ public class BattleCharacter : MonoBehaviour
     public bool IsEnemy { get; set; } = false;
     public int HaveSkillPoint => this.haveSkillPoint;
     public E_Element Element { get { if (this.elementChange == null) return CharaClass.Element; else return this.elementChange.Element; } }
-    public Dictionary<E_Element, int> NoGetDamaged => this.noGetDamaged;
-    //public double NormalAttackRate { get; set; } = 1.0; //通常攻撃の倍率
+    public Dictionary<E_Element, int> NoGetDamagedTurn => this.noGetDamagedTurn;
+    public double NormalAttackPower => Atk * ToNormalAttackRate * ToDamageRate[Element];
 
     private void Awake()
     {
@@ -193,10 +193,10 @@ public class BattleCharacter : MonoBehaviour
     }
     public void AddNoGetDamaged(E_Element element, int effectTurn)
     {
-        if (ElementClass.IsFire(element)) this.noGetDamaged[E_Element.Fire] += effectTurn;
-        if (ElementClass.IsAqua(element)) this.noGetDamaged[E_Element.Aqua] += effectTurn;
-        if (ElementClass.IsTree(element)) this.noGetDamaged[E_Element.Tree] += effectTurn;
-        //this.noGetDamaged
+        if (ElementClass.IsFire(element)) this.noGetDamagedTurn[E_Element.Fire] += effectTurn;
+        if (ElementClass.IsAqua(element)) this.noGetDamagedTurn[E_Element.Aqua] += effectTurn;
+        if (ElementClass.IsTree(element)) this.noGetDamagedTurn[E_Element.Tree] += effectTurn;
+        //this.noGetDamagedTurn
         //Debug.Log(CharaClass.CharaName + "が" + effectTurn + "無敵");
     }
     public void AddAttractEffectTurn(E_Element element, int effectTurn)
@@ -212,19 +212,27 @@ public class BattleCharacter : MonoBehaviour
     }
     public void DamagedByElementAttack(double power, E_Element atkElement) // power = 攻撃側の最終的な威力(atk * skillRate * elementRate)
     {
-        if(this.noGetDamaged[atkElement] > 0)
+        if(this.noGetDamagedTurn[atkElement] > 0)
         {
             Debug.Log(CharaClass.CharaName + "に" + ElementClass.GetStringElement(atkElement) + "属性の攻撃が効かない");
             return;
         }
         else
         {
-            DecreaseHp(power * this.FromDamageRate[atkElement]);
+            DecreaseHp(power * this.FromDamageRate[atkElement] * ElementClass.GetElementRate(atkElement, this.Element)); // 威力*属性被ダメ減*属性相性
         }
     }
-    public void DamagedByNormalAttack(double power) // power = atk * normalAttackRate
+    public void DamagedByNormalAttack(double power, E_Element atkElement) // power = atk * normalAttackRate * elementRate
     {
-        DecreaseHp(power * FromNormalAttackRate);
+        if (this.noGetDamagedTurn[atkElement] > 0)
+        {
+            Debug.Log(CharaClass.CharaName + "に" + ElementClass.GetStringElement(atkElement) + "属性の攻撃が効かない");
+            return;
+        }
+        else
+        {
+            DecreaseHp(power * this.FromDamageRate[atkElement] * ElementClass.GetElementRate(atkElement, this.Element) * FromNormalAttackRate); // 威力*属性被ダメ減*属性相性*通常被ダメ
+        }
     }
     public void AddHaveSkillPoint(int addValue)
     {
@@ -269,6 +277,7 @@ public class BattleCharacter : MonoBehaviour
             double diff = Hp;
             Debug.Log(charaClass.CharaName + "は" + (int)Hp + "のダメージを受けた");
             Hp = 0;
+            Reborn();
             return diff;
         }
         else
@@ -276,6 +285,16 @@ public class BattleCharacter : MonoBehaviour
             Debug.Log(charaClass.CharaName + "は" + (int)damage_value + "のダメージを受けた");
             Hp -= damage_value;
             return damage_value;
+        }
+    }
+    public void Reborn()
+    {
+        if (!Reborned && RebornHpRate > 0)
+        {
+            this.Hp = MaxHp * RebornHpRate;
+            RebornHpRate = 0;
+            Debug.Log(CharaClass.CharaName + "は復活した");
+            Reborned = true;
         }
     }
     public void ElapseTurn(List<BuffEffect> buffList)
@@ -298,13 +317,14 @@ public class BattleCharacter : MonoBehaviour
     }
     public void ElapseTurn(BuffEffect buff)
     {
-        if (buff.EffectTurn > 0) buff.EffectTurn--;
+        buff.EffectTurn--;
+        if (buff.EffectTurn < 1) buff = null;
     }
 
     public void ElapseAllTurn()
     {
         ElapseTurn(this.hpRate); ElapseTurn(this.atkRate); ElapseTurn(this.spdRate);
-        ElapseTurn(this.toDamageRate); ElapseTurn(this.fromDamageRate); ElapseTurn(this.noGetDamaged);
+        ElapseTurn(this.toDamageRate); ElapseTurn(this.fromDamageRate); ElapseTurn(this.noGetDamagedTurn);
         ElapseTurn(this.elementChange); ElapseTurn(this.normalAttackNum); ElapseTurn(this.toNormalAttackRate);
         ElapseTurn(this.fromNormalAttackRate); ElapseTurn(this.attractingEffectTurn);
         ElapseTurn(NormalAttackToAllTurn);

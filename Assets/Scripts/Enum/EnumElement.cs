@@ -52,4 +52,26 @@ public class ElementClass
         }
         return list;
     }
+
+    /* 属性倍率を返す */
+    public static double GetElementRate(E_Element attackElement, E_Element targetElement)
+    {
+        double rate = 1.0;
+        if (ElementClass.IsFire(attackElement))
+        {
+            if (ElementClass.IsAqua(targetElement)) rate /= 2;
+            if (ElementClass.IsTree(targetElement)) rate *= 2;
+        }
+        if (ElementClass.IsAqua(attackElement))
+        {
+            if (ElementClass.IsFire(targetElement)) rate *= 2;
+            if (ElementClass.IsTree(targetElement)) rate /= 2;
+        }
+        if (ElementClass.IsTree(attackElement))
+        {
+            if (ElementClass.IsFire(targetElement)) rate /= 2;
+            if (ElementClass.IsAqua(targetElement)) rate *= 2;
+        }
+        return rate;
+    }
 }

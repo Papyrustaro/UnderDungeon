@@ -48,8 +48,8 @@ MonoBehaviour:
   skillType: 19
   rateOrValue: 100
   effectTurn: 5
-  description: 
-  needTurn: 1
+  description: "\u30B9\u30AD\u30EB\u306E\u8AAC\u660E\u3060\u3088\u30FC"
+  needSkillPoint: 0
   skillElement: 0
   targetElement: 0
   targetType: 0
