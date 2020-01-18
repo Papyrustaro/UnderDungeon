@@ -22,6 +22,7 @@ public class DungeonBattleManager : MonoBehaviour
     private BattleActiveSkill waitingSkill = null;
     public List<BattleCharacter> AliveCharaList => GetAliveList(this.charaList);
     private int targetIndex;
+    private E_BattleSituation currentSituation;
 
     private List<BattleCharacter> allyList = new List<BattleCharacter>();
     private List<BattleCharacter> enemyList = new List<BattleCharacter>();
@@ -51,32 +52,13 @@ public class DungeonBattleManager : MonoBehaviour
         return;*/
         if (finishAction)
         {
-            SetCharaIndex();
             //DebugFunc(); finishAction = false;
             if (charaNum <= nextActionIndex) //1週したら
             {
                 nextActionIndex = 0;
                 SortCharacterBySpd();
             }
-            if (charaList[nextActionIndex].Hp > 0)
-            {
-                if (charaList[nextActionIndex].IsEnemy)
-                {
-                    NormalAttack(charaList[nextActionIndex], charaList[ListManager.GetRandomIndex<int>(playerAliveIndex)]);
-                    nextActionIndex++;
-                }
-                else
-                {
-                    ShowAnnounce(charaList[nextActionIndex].CharaClass.CharaName + "のばん");
-                    ShowActiveSkillSelect(charaList[nextActionIndex]);
-                    //this.inputWaiting = true;
-                    this.finishAction = false;
-                }
-            }
-            else
-            {
-                nextActionIndex++;
-            }
+            CharacterAction();
         }
         else if(!this.inputTargetWaiting)
         {
@@ -95,7 +77,29 @@ public class DungeonBattleManager : MonoBehaviour
             uiManager.SetActiveAllyTargetButtons(false);
         }
     }
-
+    private void CharacterAction()
+    {
+        if (charaList[nextActionIndex].IsAlive)
+        {
+            if (charaList[nextActionIndex].IsEnemy)
+            {
+                //Debug.Log(ListManager.GetRandomIndex<BattleCharacter>(GetAliveList(this.allyList)).CharaClass.CharaName);
+                NormalAttack(charaList[nextActionIndex], ListManager.GetRandomIndex<BattleCharacter>(GetAliveList(this.allyList)));
+                nextActionIndex++;
+            }
+            else
+            {
+                ShowAnnounce(charaList[nextActionIndex].CharaClass.CharaName + "のばん");
+                ShowActiveSkillSelect(charaList[nextActionIndex]);
+                //this.inputWaiting = true;
+                this.finishAction = false;
+            }
+        }
+        else
+        {
+            nextActionIndex++;
+        }
+    }
     private void DebugFunc(BattleCharacter target)
     {
         Debug.Log(target.Hp + "/" + target.MaxHp);
@@ -180,7 +184,7 @@ public class DungeonBattleManager : MonoBehaviour
         List<BattleCharacter> list = new List<BattleCharacter>();
         foreach(BattleCharacter bc in bcList)
         {
-            if (bc.Hp > 0) list.Add(bc);
+            if (bc.IsAlive) list.Add(bc);
         }
         return list;
     }
@@ -236,7 +240,7 @@ public class DungeonBattleManager : MonoBehaviour
     private void SortCharacterBySpd()
     {
         charaList.Sort((a, b) => (int)(b.Spd - a.Spd));
-        SetCharaIndex();
+        //SetCharaIndex();
     }
     public void SetCharacter()
     {
@@ -277,7 +281,7 @@ public class DungeonBattleManager : MonoBehaviour
     {
         foreach(BattleCharacter bc in charaList)
         {
-            if (bc.Hp > 0 && bc.AttractingEffectTurn[attractElement] > 0) return bc;
+            if (bc.IsAlive && bc.IsAttracting(attractElement)) return bc;
         }
         return null;
     }

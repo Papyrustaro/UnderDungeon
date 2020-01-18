@@ -90,11 +90,11 @@ public class BattleActiveSkillsFunc : MonoBehaviour
     }
     private void NormalElementAttack(BattleCharacter attacker, BattleCharacter target, BattleActiveSkill skill) 
     {
-        target.DamagedByElementAttack(attacker.Atk * attacker.ToDamageRate[skill.SkillElement] * skill.RateOrValue, skill.SkillElement);
+        target.DamagedByElementAttack(attacker.Atk * attacker.GetToDamageRate(skill.SkillElement) * skill.RateOrValue, skill.SkillElement);
     }
     private void CounterAttack(BattleCharacter attacker, BattleCharacter target, BattleActiveSkill skill) 
     {
-        target.DamagedByElementAttack(attacker.HaveDamageThisTurn * attacker.ToDamageRate[skill.SkillElement] * skill.RateOrValue, skill.SkillElement);
+        target.DamagedByElementAttack(attacker.HaveDamageThisTurn * attacker.GetToDamageRate(skill.SkillElement) * skill.RateOrValue, skill.SkillElement);
     }
     private void NormalRecoverHp(BattleCharacter target, BattleActiveSkill skill)
     {

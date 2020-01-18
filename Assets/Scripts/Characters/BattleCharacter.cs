@@ -41,8 +41,8 @@ public class BattleCharacter : MonoBehaviour
     public double MaxHp => PassiveMaxHp * GetRate(hpRate); //現在の(全て考慮した最終的な)最大HP
     public double Atk => PassiveAtk * GetRate(atkRate);
     public double Spd => PassiveSpd * GetRate(spdRate);
-    public Dictionary<E_Element, double> ToDamageRate => GetRate(PassiveToDamageRate, toDamageRate);
-    public Dictionary<E_Element, double> FromDamageRate => GetRate(PassiveFromDamageRate, fromDamageRate);
+    private Dictionary<E_Element, double> ToDamageRate => GetRate(PassiveToDamageRate, toDamageRate);
+    private Dictionary<E_Element, double> FromDamageRate => GetRate(PassiveFromDamageRate, fromDamageRate);
     public double ToNormalAttackRate => PassiveToNormalAttackRate * GetRate(this.toNormalAttackRate);
     public double FromNormalAttackRate => PassiveFromNormalAttackRate * GetRate(this.fromNormalAttackRate);
 
@@ -63,15 +63,15 @@ public class BattleCharacter : MonoBehaviour
     //private int[] skillTurnFromActivate = new int[4]; //ActiveSkillのスキル発動までのターン
     public double RebornHpRate { get; set; } = 0; //復活できる状態か(0で復活しない。0.1など復活したときのHP割合を保持)
     public bool Reborned { get; set; } //復活効果を使ったか
-    public Dictionary<E_Element, int> AttractingEffectTurn => this.attractingEffectTurn; //敵の攻撃を自分に集めているターン
     public int NormalAttackToAllTurn { get; set; } = 0; //通常攻撃が全体攻撃になるターン
     public double HaveDamageThisTurn { get; set; } = 100; //1ターンで喰らったダメージ量
     public int NormalAttackNum => (int)GetRate(this.normalAttackNum);
     public bool IsEnemy { get; set; } = false;
     public int HaveSkillPoint => this.haveSkillPoint;
     public E_Element Element { get { if (this.elementChange == null) return CharaClass.Element; else return this.elementChange.Element; } }
-    public Dictionary<E_Element, int> NoGetDamagedTurn => this.noGetDamagedTurn;
-    public double NormalAttackPower => Atk * ToNormalAttackRate * ToDamageRate[Element];
+    //public int NoGetDamagedTurn => ElementClass.GetDictionaryValue(this.noGetDamagedTurn;
+    public double NormalAttackPower => Atk * ToNormalAttackRate * GetToDamageRate(Element);
+    public bool IsAlive => Hp > 0;
 
     private void Awake()
     {
@@ -212,26 +212,26 @@ public class BattleCharacter : MonoBehaviour
     }
     public void DamagedByElementAttack(double power, E_Element atkElement) // power = 攻撃側の最終的な威力(atk * skillRate * elementRate)
     {
-        if(this.noGetDamagedTurn[atkElement] > 0)
+        if(IsNoDamaged(atkElement))
         {
             Debug.Log(CharaClass.CharaName + "に" + ElementClass.GetStringElement(atkElement) + "属性の攻撃が効かない");
             return;
         }
         else
         {
-            DecreaseHp(power * this.FromDamageRate[atkElement] * ElementClass.GetElementRate(atkElement, this.Element)); // 威力*属性被ダメ減*属性相性
+            DecreaseHp(power * GetFromDamageRate(atkElement) * ElementClass.GetElementCompatibilityRate(atkElement, this.Element)); // 威力*属性被ダメ減*属性相性
         }
     }
     public void DamagedByNormalAttack(double power, E_Element atkElement) // power = atk * normalAttackRate * elementRate
     {
-        if (this.noGetDamagedTurn[atkElement] > 0)
+        if (IsNoDamaged(atkElement))
         {
             Debug.Log(CharaClass.CharaName + "に" + ElementClass.GetStringElement(atkElement) + "属性の攻撃が効かない");
             return;
         }
         else
         {
-            DecreaseHp(power * this.FromDamageRate[atkElement] * ElementClass.GetElementRate(atkElement, this.Element) * FromNormalAttackRate); // 威力*属性被ダメ減*属性相性*通常被ダメ
+            DecreaseHp(power * this.GetFromDamageRate(atkElement) * ElementClass.GetElementCompatibilityRate(atkElement, this.Element) * FromNormalAttackRate); // 威力*属性被ダメ減*属性相性*通常被ダメ
         }
     }
     public void AddHaveSkillPoint(int addValue)
@@ -276,6 +276,7 @@ public class BattleCharacter : MonoBehaviour
         {
             double diff = Hp;
             Debug.Log(charaClass.CharaName + "は" + (int)Hp + "のダメージを受けた");
+            Debug.Log(charaClass.CharaName + "は倒れた");
             Hp = 0;
             Reborn();
             return diff;
@@ -296,6 +297,22 @@ public class BattleCharacter : MonoBehaviour
             Debug.Log(CharaClass.CharaName + "は復活した");
             Reborned = true;
         }
+    }
+    public bool IsNoDamaged(E_Element damageElement) //damageElementの攻撃を無効にしているかどうか
+    {
+        return ElementClass.GetTurn(this.noGetDamagedTurn, damageElement) > 0;
+    }
+    public bool IsAttracting(E_Element attackElement)
+    {
+        return ElementClass.GetTurn(this.attractingEffectTurn, attackElement) > 0;
+    }
+    public double GetToDamageRate(E_Element attackElement)
+    {
+        return ElementClass.GetRate(ToDamageRate, attackElement);
+    }
+    public double GetFromDamageRate(E_Element damageElement)
+    {
+        return ElementClass.GetRate(FromDamageRate, damageElement);
     }
     public void ElapseTurn(List<BuffEffect> buffList)
     {

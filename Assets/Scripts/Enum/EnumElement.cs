@@ -54,7 +54,7 @@ public class ElementClass
     }
 
     /* 属性倍率を返す */
-    public static double GetElementRate(E_Element attackElement, E_Element targetElement)
+    public static double GetElementCompatibilityRate(E_Element attackElement, E_Element targetElement)
     {
         double rate = 1.0;
         if (ElementClass.IsFire(attackElement))
@@ -72,6 +72,22 @@ public class ElementClass
             if (ElementClass.IsFire(targetElement)) rate /= 2;
             if (ElementClass.IsAqua(targetElement)) rate *= 2;
         }
+        return rate;
+    }
+    public static int GetTurn(Dictionary<E_Element, int> dic, E_Element searchElement)
+    {
+        int turn = 0;
+        if (IsFire(searchElement)) turn += dic[E_Element.Fire];
+        if (IsAqua(searchElement)) turn += dic[E_Element.Aqua];
+        if (IsTree(searchElement)) turn += dic[E_Element.Tree];
+        return turn;
+    }
+    public static double GetRate(Dictionary<E_Element, double> dic, E_Element searchElement)
+    {
+        double rate = 1;
+        if (IsFire(searchElement)) rate *= dic[E_Element.Fire];
+        if (IsAqua(searchElement)) rate *= dic[E_Element.Aqua];
+        if (IsTree(searchElement)) rate *= dic[E_Element.Tree];
         return rate;
     }
 }
