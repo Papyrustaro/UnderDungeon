@@ -111,35 +111,35 @@ public class DungeonBattleManager : MonoBehaviour
         switch (skill.TargetType)
         {
             case E_TargetType.All:
-                this.activeSkillFuncs.SkillFunc(skill, invoker, charaList);
+                this.activeSkillFuncs.EffectFunc(skill, invoker, charaList);
                 break;
             case E_TargetType.OneEnemy:
                 if (invoker.IsEnemy)
                 {
-                    if (GetAttractingCharacter(skill.SkillElement, this.allyList) == null) this.activeSkillFuncs.SkillFunc(skill, invoker, new List<BattleCharacter>() { ListManager.GetRandomIndex<BattleCharacter>(GetAliveList(this.allyList)) });
-                    else this.activeSkillFuncs.SkillFunc(skill, invoker, new List<BattleCharacter>() { GetAttractingCharacter(skill.SkillElement, this.allyList) });
+                    if (GetAttractingCharacter(skill.EffectElement, this.allyList) == null) this.activeSkillFuncs.EffectFunc(skill, invoker, new List<BattleCharacter>() { ListManager.GetRandomIndex<BattleCharacter>(GetAliveList(this.allyList)) });
+                    else this.activeSkillFuncs.EffectFunc(skill, invoker, new List<BattleCharacter>() { GetAttractingCharacter(skill.EffectElement, this.allyList) });
                 }
                 else
                 {
-                    if (GetAttractingCharacter(skill.SkillElement, this.enemyList) == null) this.activeSkillFuncs.SkillFunc(skill, invoker, new List<BattleCharacter>() { charaList[targetIndex] });
-                    else this.activeSkillFuncs.SkillFunc(skill, invoker, new List<BattleCharacter>() { GetAttractingCharacter(skill.SkillElement, this.enemyList) });
+                    if (GetAttractingCharacter(skill.EffectElement, this.enemyList) == null) this.activeSkillFuncs.EffectFunc(skill, invoker, new List<BattleCharacter>() { charaList[targetIndex] });
+                    else this.activeSkillFuncs.EffectFunc(skill, invoker, new List<BattleCharacter>() { GetAttractingCharacter(skill.EffectElement, this.enemyList) });
                 }
                 break;
             case E_TargetType.AllAlly:
-                if (invoker.IsEnemy) this.activeSkillFuncs.SkillFunc(skill, invoker, this.enemyList);
-                else this.activeSkillFuncs.SkillFunc(skill, invoker, allyList);
+                if (invoker.IsEnemy) this.activeSkillFuncs.EffectFunc(skill, invoker, this.enemyList);
+                else this.activeSkillFuncs.EffectFunc(skill, invoker, allyList);
                 break;
             case E_TargetType.AllEnemy:
-                if (invoker.IsEnemy) this.activeSkillFuncs.SkillFunc(skill, invoker, this.allyList);
-                else this.activeSkillFuncs.SkillFunc(skill, invoker, enemyList);
+                if (invoker.IsEnemy) this.activeSkillFuncs.EffectFunc(skill, invoker, this.allyList);
+                else this.activeSkillFuncs.EffectFunc(skill, invoker, enemyList);
                 break;
             case E_TargetType.Self:
-                this.activeSkillFuncs.SkillFunc(skill, invoker, new List<BattleCharacter>() { invoker });
+                this.activeSkillFuncs.EffectFunc(skill, invoker, new List<BattleCharacter>() { invoker });
                 break;
             case E_TargetType.OneAlly:
                 if (invoker.IsEnemy)
                 {
-                    this.activeSkillFuncs.SkillFunc(skill, invoker, new List<BattleCharacter>() { ListManager.GetRandomIndex<BattleCharacter>(GetAliveList(this.allyList)) });
+                    this.activeSkillFuncs.EffectFunc(skill, invoker, new List<BattleCharacter>() { ListManager.GetRandomIndex<BattleCharacter>(GetAliveList(this.allyList)) });
                 }
                 else
                 {
@@ -150,7 +150,7 @@ public class DungeonBattleManager : MonoBehaviour
                         this.uiManager.PromptSelectTargetOneAlly();
                         return;
                     }
-                    this.activeSkillFuncs.SkillFunc(skill, invoker, new List<BattleCharacter>() { charaList[targetIndex] });
+                    this.activeSkillFuncs.EffectFunc(skill, invoker, new List<BattleCharacter>() { charaList[targetIndex] });
                 }
                 break;
         }

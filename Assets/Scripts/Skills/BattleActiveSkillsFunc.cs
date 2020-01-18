@@ -7,80 +7,86 @@ public class BattleActiveSkillsFunc : MonoBehaviour
 {
     [SerializeField]
     private List<BattleActiveSkill> skillList = new List<BattleActiveSkill>();
+    [SerializeField]
+    private List<BattleActiveItem> itemList = new List<BattleActiveItem>();
 
     public void SkillFunc(E_BattleActiveSkill skillID, BattleCharacter invoker, List<BattleCharacter> target)
     {
-        SkillFunc(skillList[(int)skillID], invoker, target);
+        EffectFunc(skillList[(int)skillID], invoker, target);
+    }
+    public void ItemFunc(E_BattleActiveItem itemID, BattleCharacter invoker, List<BattleCharacter> target)
+    {
+        EffectFunc(itemList[(int)itemID], invoker, target);
     }
 
-    public void SkillFunc(BattleActiveSkill skill, BattleCharacter invoker, List<BattleCharacter> target)
+    public void EffectFunc(BattleActiveEffect effect, BattleCharacter invoker, List<BattleCharacter> target)
     {
-        Debug.Log(invoker.CharaClass.CharaName + "の" + skill.SkillName);
+        Debug.Log(invoker.CharaClass.CharaName + "の" + effect.EffectName);
 
-        switch (skill.SkillType)
+        switch (effect.EffectType)
         {
-            case E_SkillType.攻撃:
-                SkillToAllTarget(skill, invoker, target, NormalElementAttack);
+            case E_ActiveEffectType.攻撃:
+                EffectToAllTarget(effect, invoker, target, NormalElementAttack);
                 break;
-            case E_SkillType.固定ダメージ:
-                SkillToAllTarget(skill, target, FixedDamageAttack);
+            case E_ActiveEffectType.固定ダメージ:
+                EffectToAllTarget(effect, target, FixedDamageAttack);
                 break;
-            case E_SkillType.HP回復:
-                SkillToAllTarget(skill, target, NormalRecoverHp);
+            case E_ActiveEffectType.HP回復:
+                EffectToAllTarget(effect, target, NormalRecoverHp);
                 break;
-            case E_SkillType.ATKバフ:
-                SkillToAllTarget(skill, target, BuffAtkStatus);
+            case E_ActiveEffectType.ATKバフ:
+                EffectToAllTarget(effect, target, BuffAtkStatus);
                 break;
-            case E_SkillType.SPDバフ:
-                SkillToAllTarget(skill, target, BuffSpdStatus);
+            case E_ActiveEffectType.SPDバフ:
+                EffectToAllTarget(effect, target, BuffSpdStatus);
                 break;
-            case E_SkillType.HPバフ:
-                SkillToAllTarget(skill, target, BuffHpStatus);
+            case E_ActiveEffectType.HPバフ:
+                EffectToAllTarget(effect, target, BuffHpStatus);
                 break;
-            case E_SkillType.被ダメージ増減バフ:
-                SkillToAllTarget(skill, target, BuffFromDamageRate);
+            case E_ActiveEffectType.被ダメージ増減バフ:
+                EffectToAllTarget(effect, target, BuffFromDamageRate);
                 break;
-            case E_SkillType.与ダメージ増減バフ:
-                SkillToAllTarget(skill, target, BuffToDamageRate);
+            case E_ActiveEffectType.与ダメージ増減バフ:
+                EffectToAllTarget(effect, target, BuffToDamageRate);
                 break;
-            case E_SkillType.スキルポイント増減:
-                SkillToAllTarget(skill, target, AddHaveSkillPoint);
+            case E_ActiveEffectType.スキルポイント増減:
+                EffectToAllTarget(effect, target, AddHaveSkillPoint);
                 break;
-            case E_SkillType.属性変化:
-                SkillToAllTarget(skill, target, SetElementChanged);
+            case E_ActiveEffectType.属性変化:
+                EffectToAllTarget(effect, target, SetElementChanged);
                 break;
-            case E_SkillType.復活付与:
-                SkillToAllTarget(skill, target, SetRebornEffect);
+            case E_ActiveEffectType.復活付与:
+                EffectToAllTarget(effect, target, SetRebornEffect);
                 break;
-            case E_SkillType.無敵付与:
-                SkillToAllTarget(skill, target, SetNoGetDamaged);
+            case E_ActiveEffectType.無敵付与:
+                EffectToAllTarget(effect, target, SetNoGetDamaged);
                 break;
-            case E_SkillType.攻撃集中:
-                SkillToAllTarget(skill, target, SetAttractingAffect);
+            case E_ActiveEffectType.攻撃集中:
+                EffectToAllTarget(effect, target, SetAttractingAffect);
                 break;
-            case E_SkillType.カウンター:
-                SkillToAllTarget(skill, invoker, target, CounterAttack);
+            case E_ActiveEffectType.カウンター:
+                EffectToAllTarget(effect, invoker, target, CounterAttack);
                 break;
-            case E_SkillType.通常攻撃全体攻撃化:
-                SkillToAllTarget(skill, target, AddNormalAttackToAllTurn);
+            case E_ActiveEffectType.通常攻撃全体攻撃化:
+                EffectToAllTarget(effect, target, AddNormalAttackToAllTurn);
                 break;
-            case E_SkillType.通常攻撃被ダメージ増減:
-                SkillToAllTarget(skill, target, AddFromNormalAttackRate);
+            case E_ActiveEffectType.通常攻撃被ダメージ増減:
+                EffectToAllTarget(effect, target, AddFromNormalAttackRate);
                 break;
-            case E_SkillType.通常攻撃与ダメージ増減:
-                SkillToAllTarget(skill, target, AddToNormalAttackRate);
+            case E_ActiveEffectType.通常攻撃与ダメージ増減:
+                EffectToAllTarget(effect, target, AddToNormalAttackRate);
                 break;
-            case E_SkillType.通常攻撃回数追加:
-                SkillToAllTarget(skill, target, AddNormalAttackNum);
+            case E_ActiveEffectType.通常攻撃回数追加:
+                EffectToAllTarget(effect, target, AddNormalAttackNum);
                 break;
-            case E_SkillType.攻撃集中被ダメ減:
-                SkillToAllTarget(skill, target, SetAttractingAffect);
-                SkillToAllTarget(skill, target, BuffFromDamageRate);
+            case E_ActiveEffectType.攻撃集中被ダメ減:
+                EffectToAllTarget(effect, target, SetAttractingAffect);
+                EffectToAllTarget(effect, target, BuffFromDamageRate);
                 break;
 
 
-            case E_SkillType.その他:
-                skill.OtherSkillFunc(invoker, target);
+            case E_ActiveEffectType.その他:
+                effect.OtherFunc(invoker, target);
                 break;
         }
     }
@@ -88,91 +94,91 @@ public class BattleActiveSkillsFunc : MonoBehaviour
     {
         return this.skillList[(int)id];
     }
-    private void NormalElementAttack(BattleCharacter attacker, BattleCharacter target, BattleActiveSkill skill) 
+    private void NormalElementAttack(BattleCharacter attacker, BattleCharacter target, BattleActiveEffect effect) 
     {
-        target.DamagedByElementAttack(attacker.Atk * attacker.GetToDamageRate(skill.SkillElement) * skill.RateOrValue, skill.SkillElement);
+        target.DamagedByElementAttack(attacker.Atk * attacker.GetToDamageRate(effect.EffectElement) * effect.RateOrValue, effect.EffectElement);
     }
-    private void CounterAttack(BattleCharacter attacker, BattleCharacter target, BattleActiveSkill skill) 
+    private void CounterAttack(BattleCharacter attacker, BattleCharacter target, BattleActiveEffect effect) 
     {
-        target.DamagedByElementAttack(attacker.HaveDamageThisTurn * attacker.GetToDamageRate(skill.SkillElement) * skill.RateOrValue, skill.SkillElement);
+        target.DamagedByElementAttack(attacker.HaveDamageThisTurn * attacker.GetToDamageRate(effect.EffectElement) * effect.RateOrValue, effect.EffectElement);
     }
-    private void NormalRecoverHp(BattleCharacter target, BattleActiveSkill skill)
+    private void NormalRecoverHp(BattleCharacter target, BattleActiveEffect effect)
     {
-        target.RecoverHp(skill.RateOrValue);
+        target.RecoverHp(effect.RateOrValue);
     }
-    private void FixedDamageAttack(BattleCharacter target, BattleActiveSkill skill)
+    private void FixedDamageAttack(BattleCharacter target, BattleActiveEffect effect)
     {
-        target.DecreaseHp(skill.RateOrValue);
+        target.DecreaseHp(effect.RateOrValue);
     }
-    private void BuffAtkStatus(BattleCharacter target, BattleActiveSkill skill)
+    private void BuffAtkStatus(BattleCharacter target, BattleActiveEffect effect)
     {
-        target.AddAtkRate(skill.RateOrValue, skill.EffectTurn);
+        target.AddAtkRate(effect.RateOrValue, effect.EffectTurn);
     }
-    private void BuffHpStatus(BattleCharacter target, BattleActiveSkill skill)
+    private void BuffHpStatus(BattleCharacter target, BattleActiveEffect effect)
     {
-        target.AddHpRate(skill.RateOrValue, skill.EffectTurn);
+        target.AddHpRate(effect.RateOrValue, effect.EffectTurn);
     }
-    private void BuffSpdStatus(BattleCharacter target, BattleActiveSkill skill)
+    private void BuffSpdStatus(BattleCharacter target, BattleActiveEffect effect)
     {
-        target.AddSpdRate(skill.RateOrValue, skill.EffectTurn);
+        target.AddSpdRate(effect.RateOrValue, effect.EffectTurn);
     }
-    private void BuffToDamageRate(BattleCharacter target, BattleActiveSkill skill)
+    private void BuffToDamageRate(BattleCharacter target, BattleActiveEffect effect)
     {
-        target.AddToDamageRate(skill.SkillElement, skill.RateOrValue, skill.EffectTurn);
+        target.AddToDamageRate(effect.EffectElement, effect.RateOrValue, effect.EffectTurn);
     }
-    private void BuffFromDamageRate(BattleCharacter target, BattleActiveSkill skill)
+    private void BuffFromDamageRate(BattleCharacter target, BattleActiveEffect effect)
     {
-        target.AddFromDamageRate(skill.SkillElement, skill.RateOrValue, skill.EffectTurn);
+        target.AddFromDamageRate(effect.EffectElement, effect.RateOrValue, effect.EffectTurn);
     }
-    private void SetNoGetDamaged(BattleCharacter target, BattleActiveSkill skill)
+    private void SetNoGetDamaged(BattleCharacter target, BattleActiveEffect effect)
     {
-        target.AddNoGetDamaged(skill.SkillElement, skill.EffectTurn);
+        target.AddNoGetDamaged(effect.EffectElement, effect.EffectTurn);
     }
-    private void SetElementChanged(BattleCharacter target, BattleActiveSkill skill)
+    private void SetElementChanged(BattleCharacter target, BattleActiveEffect effect)
     {
-        target.SetElementChanged(skill.SkillElement, skill.EffectTurn);
+        target.SetElementChanged(effect.EffectElement, effect.EffectTurn);
     }
-    private void SetRebornEffect(BattleCharacter target, BattleActiveSkill skill)
+    private void SetRebornEffect(BattleCharacter target, BattleActiveEffect effect)
     {
-        target.RebornHpRate = skill.RateOrValue;
+        target.RebornHpRate = effect.RateOrValue;
     }
-    private void SetAttractingAffect(BattleCharacter target, BattleActiveSkill skill)
+    private void SetAttractingAffect(BattleCharacter target, BattleActiveEffect effect)
     {
-        target.AddAttractEffectTurn(skill.SkillElement, skill.EffectTurn);
+        target.AddAttractEffectTurn(effect.EffectElement, effect.EffectTurn);
     }
-    private void AddHaveSkillPoint(BattleCharacter target, BattleActiveSkill skill)
+    private void AddHaveSkillPoint(BattleCharacter target, BattleActiveEffect effect)
     {
-        target.AddHaveSkillPoint((int)skill.RateOrValue);
+        target.AddHaveSkillPoint((int)effect.RateOrValue);
     }
-    private void AddNormalAttackToAllTurn(BattleCharacter target, BattleActiveSkill skill)
+    private void AddNormalAttackToAllTurn(BattleCharacter target, BattleActiveEffect effect)
     {
-        target.NormalAttackToAllTurn += skill.EffectTurn;
+        target.NormalAttackToAllTurn += effect.EffectTurn;
     }
-    private void AddToNormalAttackRate(BattleCharacter target, BattleActiveSkill skill)
+    private void AddToNormalAttackRate(BattleCharacter target, BattleActiveEffect effect)
     {
-        target.AddToNormalAttackRate(skill.RateOrValue, skill.EffectTurn);
+        target.AddToNormalAttackRate(effect.RateOrValue, effect.EffectTurn);
     }
-    private void AddFromNormalAttackRate(BattleCharacter target, BattleActiveSkill skill)
+    private void AddFromNormalAttackRate(BattleCharacter target, BattleActiveEffect effect)
     {
-        target.AddFromNormalAttackRate(skill.RateOrValue, skill.EffectTurn);
+        target.AddFromNormalAttackRate(effect.RateOrValue, effect.EffectTurn);
     }
-    private void AddNormalAttackNum(BattleCharacter target, BattleActiveSkill skill)
+    private void AddNormalAttackNum(BattleCharacter target, BattleActiveEffect effect)
     {
-        target.AddNormalAttackNum((int)skill.RateOrValue, skill.EffectTurn);
+        target.AddNormalAttackNum((int)effect.RateOrValue, effect.EffectTurn);
     }
 
-    private void SkillToAllTarget(BattleActiveSkill skill, BattleCharacter invoker, List<BattleCharacter> targetList, Action<BattleCharacter, BattleCharacter, BattleActiveSkill> func)
+    private void EffectToAllTarget(BattleActiveEffect effect, BattleCharacter invoker, List<BattleCharacter> targetList, Action<BattleCharacter, BattleCharacter, BattleActiveEffect> func)
     {
-        foreach (BattleCharacter target in ElementClass.GetListInElement(targetList, skill.TargetElement))
+        foreach (BattleCharacter target in ElementClass.GetListInElement(targetList, effect.TargetElement))
         {
-            func(invoker, target, skill);
+            func(invoker, target, effect);
         }
     }
-    private void SkillToAllTarget(BattleActiveSkill skill, List<BattleCharacter> targetList, Action<BattleCharacter, BattleActiveSkill> func)
+    private void EffectToAllTarget(BattleActiveEffect effect, List<BattleCharacter> targetList, Action<BattleCharacter, BattleActiveEffect> func)
     {
-        foreach(BattleCharacter target in ElementClass.GetListInElement(targetList, skill.TargetElement))
+        foreach(BattleCharacter target in ElementClass.GetListInElement(targetList, effect.TargetElement))
         {
-            func(target, skill);
+            func(target, effect);
         }
     }
 }
