@@ -1387,6 +1387,31 @@ PrefabInstance:
       propertyPath: m_Name
       value: 3_HagureMetalE
       objectReference: {fileID: 0}
+    - target: {fileID: 8707441320245096014, guid: f1bb903aa89bb5b4c98631d39c6fc8b6,
+        type: 3}
+      propertyPath: haveBattleActiveSkillID.Array.size
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 8707441320245096014, guid: f1bb903aa89bb5b4c98631d39c6fc8b6,
+        type: 3}
+      propertyPath: haveSpecialAI
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8707441320245096014, guid: f1bb903aa89bb5b4c98631d39c6fc8b6,
+        type: 3}
+      propertyPath: haveBattleActiveSkillID.Array.data[1]
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8707441320245096014, guid: f1bb903aa89bb5b4c98631d39c6fc8b6,
+        type: 3}
+      propertyPath: haveBattleActiveSkillID.Array.data[2]
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 8707441320245096014, guid: f1bb903aa89bb5b4c98631d39c6fc8b6,
+        type: 3}
+      propertyPath: haveBattleActiveSkillID.Array.data[3]
+      value: 11
+      objectReference: {fileID: 0}
     - target: {fileID: 8907733137830469952, guid: f1bb903aa89bb5b4c98631d39c6fc8b6,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -1456,7 +1481,7 @@ MonoBehaviour:
     type: 3}
   m_PrefabInstance: {fileID: 524732591}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 863370770}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d59831af2fbee794f9b86e1985b47357, type: 3}
@@ -2166,6 +2191,24 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 828738615}
   m_CullTransparentMesh: 0
+--- !u!1 &863370770 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8466519816056502684, guid: f1bb903aa89bb5b4c98631d39c6fc8b6,
+    type: 3}
+  m_PrefabInstance: {fileID: 524732591}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &863370773
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 863370770}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a4a3e14da9fa7534f952779d61d61488, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &863931520
 PrefabInstance:
   m_ObjectHideFlags: 0

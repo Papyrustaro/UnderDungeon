@@ -84,8 +84,9 @@ public class DungeonBattleManager : MonoBehaviour
             if (charaList[nextActionIndex].IsEnemy)
             {
                 //Debug.Log(ListManager.GetRandomIndex<BattleCharacter>(GetAliveList(this.allyList)).CharaClass.CharaName);
-                NormalAttack(charaList[nextActionIndex], ListManager.GetRandomIndex<BattleCharacter>(GetAliveList(this.allyList)));
-                nextActionIndex++;
+                //NormalAttack(charaList[nextActionIndex], ListManager.GetRandomIndex<BattleCharacter>(GetAliveList(this.allyList)));
+                EnemyAction(charaList[nextActionIndex]);
+                //nextActionIndex++;
             }
             else
             {
@@ -113,32 +114,50 @@ public class DungeonBattleManager : MonoBehaviour
                 this.activeSkillFuncs.SkillFunc(skill, invoker, charaList);
                 break;
             case E_TargetType.OneEnemy:
-                if (GetAttractingCharacter(skill.SkillElement, this.enemyList) == null) this.activeSkillFuncs.SkillFunc(skill, invoker, new List<BattleCharacter>() { charaList[targetIndex] });
-                else this.activeSkillFuncs.SkillFunc(skill, invoker, new List<BattleCharacter>() { GetAttractingCharacter(skill.SkillElement, this.enemyList) });
+                if (invoker.IsEnemy)
+                {
+                    if (GetAttractingCharacter(skill.SkillElement, this.allyList) == null) this.activeSkillFuncs.SkillFunc(skill, invoker, new List<BattleCharacter>() { ListManager.GetRandomIndex<BattleCharacter>(GetAliveList(this.allyList)) });
+                    else this.activeSkillFuncs.SkillFunc(skill, invoker, new List<BattleCharacter>() { GetAttractingCharacter(skill.SkillElement, this.allyList) });
+                }
+                else
+                {
+                    if (GetAttractingCharacter(skill.SkillElement, this.enemyList) == null) this.activeSkillFuncs.SkillFunc(skill, invoker, new List<BattleCharacter>() { charaList[targetIndex] });
+                    else this.activeSkillFuncs.SkillFunc(skill, invoker, new List<BattleCharacter>() { GetAttractingCharacter(skill.SkillElement, this.enemyList) });
+                }
                 break;
             case E_TargetType.AllAlly:
-                this.activeSkillFuncs.SkillFunc(skill, invoker, allyList);
+                if (invoker.IsEnemy) this.activeSkillFuncs.SkillFunc(skill, invoker, this.enemyList);
+                else this.activeSkillFuncs.SkillFunc(skill, invoker, allyList);
                 break;
             case E_TargetType.AllEnemy:
-                this.activeSkillFuncs.SkillFunc(skill, invoker, enemyList);
+                if (invoker.IsEnemy) this.activeSkillFuncs.SkillFunc(skill, invoker, this.allyList);
+                else this.activeSkillFuncs.SkillFunc(skill, invoker, enemyList);
                 break;
             case E_TargetType.Self:
                 this.activeSkillFuncs.SkillFunc(skill, invoker, new List<BattleCharacter>() { invoker });
                 break;
             case E_TargetType.OneAlly:
-                //プレイヤー入力によるtargetIndexの指定処理
-                if (charaList[targetIndex].IsEnemy)
+                if (invoker.IsEnemy)
                 {
-                    this.inputTargetWaiting = true;
-                    this.uiManager.PromptSelectTargetOneAlly();
-                    return;
+                    this.activeSkillFuncs.SkillFunc(skill, invoker, new List<BattleCharacter>() { ListManager.GetRandomIndex<BattleCharacter>(GetAliveList(this.allyList)) });
                 }
-                this.activeSkillFuncs.SkillFunc(skill, invoker, new List<BattleCharacter>() { charaList[targetIndex] });
+                else
+                {
+                    //プレイヤー入力によるtargetIndexの指定処理
+                    if (charaList[targetIndex].IsEnemy)
+                    {
+                        this.inputTargetWaiting = true;
+                        this.uiManager.PromptSelectTargetOneAlly();
+                        return;
+                    }
+                    this.activeSkillFuncs.SkillFunc(skill, invoker, new List<BattleCharacter>() { charaList[targetIndex] });
+                }
                 break;
         }
-
+        charaList[nextActionIndex].AddHaveSkillPoint(1);
         this.finishAction = true;
         this.nextActionIndex++;
+
     }
     private void ShowActiveSkillSelect(BattleCharacter bc)
     {
@@ -201,14 +220,9 @@ public class DungeonBattleManager : MonoBehaviour
     {
         ShowAnnounce(attacker.CharaClass.CharaName + "の通常攻撃");
         target.DamagedByNormalAttack(attacker.NormalAttackPower, attacker.Element);
-    }
-    private int DecideTargetIndexRandom()
-    {
-        if(this.playerAliveIndex == null)
-        {
-            Debug.Log("プレイヤーのキャラ全滅してるよ");
-        }
-        return playerAliveIndex[UnityEngine.Random.Range(0, playerAliveIndex.Count)];
+        this.charaList[nextActionIndex].AddHaveSkillPoint(1);
+        this.finishAction = true;
+        this.nextActionIndex++;
     }
     private void ShowAnnounce(string s)
     {
@@ -284,5 +298,30 @@ public class DungeonBattleManager : MonoBehaviour
             if (bc.IsAlive && bc.IsAttracting(attractElement)) return bc;
         }
         return null;
+    }
+    private void EnemyAction(BattleCharacter actionEnemy)
+    {
+        if (!actionEnemy.EC.HaveSpecialAI)
+        {
+            List<BattleActiveSkill> useableSkill = new List<BattleActiveSkill>();
+            foreach(E_BattleActiveSkill skillID in actionEnemy.EC.HaveBattleActtiveSkillID)
+            {
+                if(actionEnemy.HaveSkillPoint >= this.activeSkillFuncs.GetBattleActiveSkill(skillID).NeedSkillPoint)
+                {
+                    useableSkill.Add(this.activeSkillFuncs.GetBattleActiveSkill(skillID));
+                }
+            }
+            int action = UnityEngine.Random.Range(0, useableSkill.Count + 1);
+            if (action == useableSkill.Count) NormalAttack(actionEnemy, ListManager.GetRandomIndex<BattleCharacter>(GetAliveList(this.allyList)));
+            else InvokeSkill(actionEnemy, useableSkill[action]); //スキル発動
+        }
+        else
+        {
+            //特殊な処理
+            actionEnemy.EC.EnemyAI.EnemyActionFunc(this.enemyList, this.allyList, actionEnemy, this.activeSkillFuncs);
+            this.charaList[nextActionIndex].AddHaveSkillPoint(1);
+            this.finishAction = true;
+            this.nextActionIndex++;
+        }
     }
 }

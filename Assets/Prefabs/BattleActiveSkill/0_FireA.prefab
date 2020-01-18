@@ -48,6 +48,7 @@ MonoBehaviour:
   rateOrValue: 1.2
   effectTurn: 0
   description: "\u5F31\u706B\u653B\u6483"
-  needTurn: 1
-  element: 0
+  needSkillPoint: 1
+  skillElement: 0
+  targetElement: 6
   targetType: 0

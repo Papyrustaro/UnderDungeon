@@ -60,6 +60,8 @@ public class BattleCharacter : MonoBehaviour
             return charaClass;
         }
     }
+    public PlayerCharacter PC => this.pc;
+    public EnemyCharacter EC => this.ec;
     //private int[] skillTurnFromActivate = new int[4]; //ActiveSkillのスキル発動までのターン
     public double RebornHpRate { get; set; } = 0; //復活できる状態か(0で復活しない。0.1など復活したときのHP割合を保持)
     public bool Reborned { get; set; } //復活効果を使ったか

@@ -15,6 +15,7 @@ public class EnemyCharacter : MonoBehaviour
     private int dropRate = 50; //ドロップ率(%)
 
     private bool finishSetStatus = false;
+    private BaseEnemyAI enemyAI;
 
     private void Awake()
     {
@@ -54,6 +55,14 @@ public class EnemyCharacter : MonoBehaviour
             if (charaClass == null) this.charaClass = GetComponent<Character>();
             if (!this.finishSetStatus) SetStatusRate();
             return charaClass;
+        }
+    }
+    public BaseEnemyAI EnemyAI
+    {
+        get
+        {
+            if (this.enemyAI == null) this.enemyAI = GetComponent<BaseEnemyAI>();
+            return this.enemyAI;
         }
     }
 }
