@@ -12,6 +12,8 @@ public class DungeonBattleManager : MonoBehaviour
     [SerializeField] private BattleActiveSkillsFunc activeSkillFuncs;
     [SerializeField] private BattleUIManager uiManager;
 
+    [SerializeField] private List<BattleActiveItem> haveItems;
+
     private bool finishAction = true;
     private int charaNum; //戦闘に参加しているchara数
     private List<int> playerIndex, playerAliveIndex;
@@ -19,10 +21,10 @@ public class DungeonBattleManager : MonoBehaviour
     private int nextActionIndex = 99;
     private bool inputWaiting = false; //プレイヤーの入力まち
     private bool inputTargetWaiting = false;
-    private BattleActiveSkill waitingSkill = null;
+    private BattleActiveEffect waitingEffect = null;
     public List<BattleCharacter> AliveCharaList => GetAliveList(this.charaList);
     private int targetIndex;
-    private E_BattleSituation currentSituation;
+    private E_BattleSituation currentSituation = E_BattleSituation.WaitFinishAction;
 
     private List<BattleCharacter> allyList = new List<BattleCharacter>();
     private List<BattleCharacter> enemyList = new List<BattleCharacter>();
@@ -59,10 +61,9 @@ public class DungeonBattleManager : MonoBehaviour
                 SortCharacterBySpd();
             }
             CharacterAction();
-        }
-        else if(!this.inputTargetWaiting)
+        }else
         {
-            InputActuateSkill();
+            PlayerSelect();
         }
     }
     public void SetInputTarget(BattleCharacter target)
@@ -83,16 +84,13 @@ public class DungeonBattleManager : MonoBehaviour
         {
             if (charaList[nextActionIndex].IsEnemy)
             {
-                //Debug.Log(ListManager.GetRandomIndex<BattleCharacter>(GetAliveList(this.allyList)).CharaClass.CharaName);
-                //NormalAttack(charaList[nextActionIndex], ListManager.GetRandomIndex<BattleCharacter>(GetAliveList(this.allyList)));
                 EnemyAction(charaList[nextActionIndex]);
-                //nextActionIndex++;
             }
             else
             {
-                ShowAnnounce(charaList[nextActionIndex].CharaClass.CharaName + "のばん");
-                ShowActiveSkillSelect(charaList[nextActionIndex]);
-                //this.inputWaiting = true;
+                ShowPlayerActionSelect();
+                //ShowAnnounce(charaList[nextActionIndex].CharaClass.CharaName + "のばん");
+                //ShowActiveSkillSelect(charaList[nextActionIndex]);
                 this.finishAction = false;
             }
         }
@@ -105,41 +103,86 @@ public class DungeonBattleManager : MonoBehaviour
     {
         Debug.Log(target.Hp + "/" + target.MaxHp);
     }
-    //なぜこの処理をこちら側でするか→oneAllyのときターゲット入力が必要だから→それが解決できたらFuncクラスでの実装でもいいか?
-    private void InvokeSkill(BattleCharacter invoker, BattleActiveSkill skill)
+    private void PlayerSelect()
     {
-        switch (skill.TargetType)
+        switch (this.currentSituation)
+        {
+            case E_BattleSituation.PlayerSelectAction:
+                InputPlayerAction();
+                break;
+            case E_BattleSituation.PlayerSelectActiveSkill:
+                //ShowActiveSkillSelect(charaList[nextActionIndex]);
+                InputActuateSkill();
+                break;
+            case E_BattleSituation.PlayerSelectActiveItem:
+                InputActuateItem();
+                break;
+            case E_BattleSituation.PlayerSelectSkillTarget:
+                if(!this.inputTargetWaiting) InputActuateSkill();
+                break;
+            case E_BattleSituation.PlayerSelectItemTarget:
+                if(!this.inputTargetWaiting) InputActuateItem();
+                break;
+            case E_BattleSituation.WaitFinishAction:
+                break;
+        }
+    }
+    private void InputPlayerAction()
+    {
+        if (Input.GetKeyDown(((int)E_PlayerAction.NormalAttack).ToString()))
+        {
+            NormalAttack(charaList[nextActionIndex], charaList[targetIndex]);
+        }
+        if (Input.GetKeyDown(((int)E_PlayerAction.InvokeSkill).ToString()))
+        {
+            this.currentSituation = E_BattleSituation.PlayerSelectActiveSkill;
+            ShowActiveSkillSelect(charaList[nextActionIndex]);
+        }
+        if (Input.GetKeyDown(((int)E_PlayerAction.UseItem).ToString()))
+        {
+            this.currentSituation = E_BattleSituation.PlayerSelectActiveItem;
+            ShowActiveItemSelect();
+        }
+        if (Input.GetKeyDown(((int)E_PlayerAction.Protect).ToString()))
+        {
+            Debug.Log("防御した(未実装)");
+        }
+    }
+    //なぜこの処理をこちら側でするか→oneAllyのときターゲット入力が必要だから→それが解決できたらFuncクラスでの実装でもいいか?
+    private void InvokeEffect(BattleCharacter invoker, BattleActiveEffect effect)
+    {
+        switch (effect.TargetType)
         {
             case E_TargetType.All:
-                this.activeSkillFuncs.EffectFunc(skill, invoker, charaList);
+                this.activeSkillFuncs.EffectFunc(effect, invoker, charaList);
                 break;
             case E_TargetType.OneEnemy:
                 if (invoker.IsEnemy)
                 {
-                    if (GetAttractingCharacter(skill.EffectElement, this.allyList) == null) this.activeSkillFuncs.EffectFunc(skill, invoker, new List<BattleCharacter>() { ListManager.GetRandomIndex<BattleCharacter>(GetAliveList(this.allyList)) });
-                    else this.activeSkillFuncs.EffectFunc(skill, invoker, new List<BattleCharacter>() { GetAttractingCharacter(skill.EffectElement, this.allyList) });
+                    if (GetAttractingCharacter(effect.EffectElement, this.allyList) == null) this.activeSkillFuncs.EffectFunc(effect, invoker, new List<BattleCharacter>() { ListManager.GetRandomIndex<BattleCharacter>(GetAliveList(this.allyList)) });
+                    else this.activeSkillFuncs.EffectFunc(effect, invoker, new List<BattleCharacter>() { GetAttractingCharacter(effect.EffectElement, this.allyList) });
                 }
                 else
                 {
-                    if (GetAttractingCharacter(skill.EffectElement, this.enemyList) == null) this.activeSkillFuncs.EffectFunc(skill, invoker, new List<BattleCharacter>() { charaList[targetIndex] });
-                    else this.activeSkillFuncs.EffectFunc(skill, invoker, new List<BattleCharacter>() { GetAttractingCharacter(skill.EffectElement, this.enemyList) });
+                    if (GetAttractingCharacter(effect.EffectElement, this.enemyList) == null) this.activeSkillFuncs.EffectFunc(effect, invoker, new List<BattleCharacter>() { charaList[targetIndex] });
+                    else this.activeSkillFuncs.EffectFunc(effect, invoker, new List<BattleCharacter>() { GetAttractingCharacter(effect.EffectElement, this.enemyList) });
                 }
                 break;
             case E_TargetType.AllAlly:
-                if (invoker.IsEnemy) this.activeSkillFuncs.EffectFunc(skill, invoker, this.enemyList);
-                else this.activeSkillFuncs.EffectFunc(skill, invoker, allyList);
+                if (invoker.IsEnemy) this.activeSkillFuncs.EffectFunc(effect, invoker, this.enemyList);
+                else this.activeSkillFuncs.EffectFunc(effect, invoker, allyList);
                 break;
             case E_TargetType.AllEnemy:
-                if (invoker.IsEnemy) this.activeSkillFuncs.EffectFunc(skill, invoker, this.allyList);
-                else this.activeSkillFuncs.EffectFunc(skill, invoker, enemyList);
+                if (invoker.IsEnemy) this.activeSkillFuncs.EffectFunc(effect, invoker, this.allyList);
+                else this.activeSkillFuncs.EffectFunc(effect, invoker, enemyList);
                 break;
             case E_TargetType.Self:
-                this.activeSkillFuncs.EffectFunc(skill, invoker, new List<BattleCharacter>() { invoker });
+                this.activeSkillFuncs.EffectFunc(effect, invoker, new List<BattleCharacter>() { invoker });
                 break;
             case E_TargetType.OneAlly:
                 if (invoker.IsEnemy)
                 {
-                    this.activeSkillFuncs.EffectFunc(skill, invoker, new List<BattleCharacter>() { ListManager.GetRandomIndex<BattleCharacter>(GetAliveList(this.allyList)) });
+                    this.activeSkillFuncs.EffectFunc(effect, invoker, new List<BattleCharacter>() { ListManager.GetRandomIndex<BattleCharacter>(GetAliveList(this.allyList)) });
                 }
                 else
                 {
@@ -147,10 +190,12 @@ public class DungeonBattleManager : MonoBehaviour
                     if (charaList[targetIndex].IsEnemy)
                     {
                         this.inputTargetWaiting = true;
+                        if (this.currentSituation == E_BattleSituation.PlayerSelectActiveSkill) this.currentSituation = E_BattleSituation.PlayerSelectSkillTarget;
+                        else if (this.currentSituation == E_BattleSituation.PlayerSelectActiveItem) this.currentSituation = E_BattleSituation.PlayerSelectItemTarget;
                         this.uiManager.PromptSelectTargetOneAlly();
                         return;
                     }
-                    this.activeSkillFuncs.EffectFunc(skill, invoker, new List<BattleCharacter>() { charaList[targetIndex] });
+                    this.activeSkillFuncs.EffectFunc(effect, invoker, new List<BattleCharacter>() { charaList[targetIndex] });
                 }
                 break;
         }
@@ -158,6 +203,13 @@ public class DungeonBattleManager : MonoBehaviour
         this.finishAction = true;
         this.nextActionIndex++;
 
+    }
+    private void ShowPlayerActionSelect()
+    {
+        ShowAnnounce(charaList[nextActionIndex].CharaClass.CharaName + "のばん");
+        ShowAnnounce((int)E_PlayerAction.NormalAttack+":通常攻撃 "+(int)E_PlayerAction.InvokeSkill+":スキル "+(int)E_PlayerAction.UseItem+":アイテム "+(int)E_PlayerAction.Protect+":防御");
+        this.currentSituation = E_BattleSituation.PlayerSelectAction;
+        this.finishAction = false;
     }
     private void ShowActiveSkillSelect(BattleCharacter bc)
     {
@@ -170,13 +222,24 @@ public class DungeonBattleManager : MonoBehaviour
         }
         ShowAnnounce(s);
     }
+    private void ShowActiveItemSelect()
+    {
+        string s = "";
+        int i = 0; 
+        foreach(BattleActiveItem item in this.haveItems)
+        {
+            s += " " + i.ToString() + ":" + item.EffectName;
+            i++;
+        }
+        ShowAnnounce(s);
+    }
     private void InputActuateSkill()
     {
         BattleCharacter invoker = charaList[nextActionIndex];
-        if(this.waitingSkill != null)
+        if(this.waitingEffect != null)
         {
-            InvokeSkill(invoker, this.waitingSkill);
-            this.waitingSkill = null;
+            InvokeEffect(invoker, this.waitingEffect);
+            this.waitingEffect = null;
             return;
         }
 
@@ -190,10 +253,31 @@ public class DungeonBattleManager : MonoBehaviour
                     ShowAnnounce("スキルポイントが足りません");
                     this.finishAction = true; return;
                 }
-                InvokeSkill(invoker, this.activeSkillFuncs.GetBattleActiveSkill(invoker.BattleActiveSkillID[i]));
-                if (this.inputTargetWaiting)
+                InvokeEffect(invoker, this.activeSkillFuncs.GetBattleActiveSkill(invoker.BattleActiveSkillID[i]));
+                if (this.currentSituation == E_BattleSituation.PlayerSelectSkillTarget)
                 {
-                    this.waitingSkill = this.activeSkillFuncs.GetBattleActiveSkill(invoker.BattleActiveSkillID[i]);
+                    this.waitingEffect = this.activeSkillFuncs.GetBattleActiveSkill(invoker.BattleActiveSkillID[i]);
+                }
+            }
+        }
+    }
+    private void InputActuateItem()
+    {
+        BattleCharacter invoker = charaList[nextActionIndex];
+        if (this.waitingEffect != null)
+        {
+            InvokeEffect(invoker, this.waitingEffect);
+            this.waitingEffect = null;
+            return;
+        }
+        for (int i = 0; i < this.haveItems.Count; i++) 
+        {
+            if (Input.GetKeyDown(i.ToString()))
+            {
+                InvokeEffect(invoker, this.haveItems[i]);
+                if (this.currentSituation == E_BattleSituation.PlayerSelectItemTarget)
+                {
+                    this.waitingEffect = this.haveItems[i];
                 }
             }
         }
@@ -283,7 +367,7 @@ public class DungeonBattleManager : MonoBehaviour
             case E_BattleSituation.PlayerSelectActiveSkill:
                 ShowActiveSkillSelect(charaList[nextActionIndex]);
                 break;
-            case E_BattleSituation.PlayerSelectItem:
+            case E_BattleSituation.PlayerSelectActiveItem:
                 ShowAnnounce("アイテムを選択してください(未実装)");
                 break;
             case E_BattleSituation.PlayerSelectSkillTarget:
@@ -313,7 +397,7 @@ public class DungeonBattleManager : MonoBehaviour
             }
             int action = UnityEngine.Random.Range(0, useableSkill.Count + 1);
             if (action == useableSkill.Count) NormalAttack(actionEnemy, ListManager.GetRandomIndex<BattleCharacter>(GetAliveList(this.allyList)));
-            else InvokeSkill(actionEnemy, useableSkill[action]); //スキル発動
+            else InvokeEffect(actionEnemy, useableSkill[action]); //スキル発動
         }
         else
         {

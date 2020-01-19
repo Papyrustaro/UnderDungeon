@@ -6060,6 +6060,8 @@ MonoBehaviour:
   announceText: {fileID: 1486616416}
   activeSkillFuncs: {fileID: 1242917786}
   uiManager: {fileID: 694735801}
+  haveItems:
+  - {fileID: 9151111040061661890, guid: b6cedaabb8e69804abe81954b8235854, type: 3}
 --- !u!4 &2045466973
 Transform:
   m_ObjectHideFlags: 0
@@ -6245,6 +6247,26 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 504490509275494238, guid: 810f89c127023b84b951224a9ab3f286,
+        type: 3}
+      propertyPath: effectType
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 504490509275494238, guid: 810f89c127023b84b951224a9ab3f286,
+        type: 3}
+      propertyPath: targetType
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 504490509275494238, guid: 810f89c127023b84b951224a9ab3f286,
+        type: 3}
+      propertyPath: needSkillPoint
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 504490509275494238, guid: 810f89c127023b84b951224a9ab3f286,
+        type: 3}
+      propertyPath: rateOrValue
+      value: 10000
       objectReference: {fileID: 0}
     - target: {fileID: 504490509275494239, guid: 810f89c127023b84b951224a9ab3f286,
         type: 3}
