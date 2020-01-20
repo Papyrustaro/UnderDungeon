@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class SampleEnemyAI : BaseEnemyAI
 {
-    public override void EnemyActionFunc(List<BattleCharacter> enemyList, List<BattleCharacter> playerList, BattleCharacter self, BattleActiveSkillsFunc skillFunc)
+    public override void EnemyActionFunc(List<BattleCharacter> enemyList, List<BattleCharacter> playerList, BattleCharacter self, BattleActiveEffectsFunc skillFunc)
     {
         Debug.Log(self.CharaClass.CharaName + "の特殊行動");
         self.RecoverHp(100);

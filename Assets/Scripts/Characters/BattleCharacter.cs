@@ -152,12 +152,15 @@ public class BattleCharacter : MonoBehaviour
     }
     public void AddHpRate(double rate, int effectTurn)
     {
+        Debug.Log("効果前のMaxHP:" + MaxHp);
         this.hpRate.Add(new BuffEffect(rate, effectTurn));
         Debug.Log(CharaClass.CharaName + "の体力" + rate + "倍");
+        Debug.Log("効果後のMaxHP:" + MaxHp);
         StatusChange = true;
     }
     public void AddAtkRate(double rate, int effectTurn)
     {
+        Debug.Log("効果前のAtkRate:" + GetRate(this.atkRate));
         this.atkRate.Add(new BuffEffect(rate, effectTurn));
         Debug.Log(CharaClass.CharaName + "の攻撃" + rate + "倍");
         StatusChange = true;

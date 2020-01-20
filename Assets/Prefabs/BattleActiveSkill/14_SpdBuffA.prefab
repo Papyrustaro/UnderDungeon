@@ -43,11 +43,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 891cb5911a54b024cbfbdf065bfd1d96, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  id: 14
-  skillType: 6
+  effectType: 6
   rateOrValue: 1.5
   effectTurn: 2
   description: "\u81EA\u8EAB\u306E\u7D20\u65E9\u3055\u30922\u30BF\u30FC\u30F3\u306E\u95931.5\u500D\u306B\u3059\u308B"
-  needTurn: 1
-  element: 2
+  effectElement: 2
+  targetElement: 6
   targetType: 4
+  id: 14
+  needSkillPoint: 0

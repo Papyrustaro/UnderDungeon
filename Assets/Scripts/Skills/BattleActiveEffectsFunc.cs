@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
-public class BattleActiveSkillsFunc : MonoBehaviour
+public class BattleActiveEffectsFunc : MonoBehaviour
 {
     [SerializeField]
     private List<BattleActiveSkill> skillList = new List<BattleActiveSkill>();

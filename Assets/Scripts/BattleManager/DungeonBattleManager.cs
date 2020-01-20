@@ -9,7 +9,7 @@ public class DungeonBattleManager : MonoBehaviour
     private double toDamageFirePassiveRate = 1, toDamageAquaPassiveRate = 1, toDamageTreePassiveRate = 1;
     [SerializeField]private List<BattleCharacter> charaList = new List<BattleCharacter>();
     [SerializeField] private Text announceText;
-    [SerializeField] private BattleActiveSkillsFunc activeSkillFuncs;
+    [SerializeField] private BattleActiveEffectsFunc activeEffectFuncs;
     [SerializeField] private BattleUIManager uiManager;
 
     [SerializeField] private List<BattleActiveItem> haveItems;
@@ -88,6 +88,7 @@ public class DungeonBattleManager : MonoBehaviour
             }
             else
             {
+                if (!this.charaList[targetIndex].IsEnemy || !this.charaList[targetIndex].IsAlive) this.targetIndex = this.charaList.IndexOf(GetAliveList(this.enemyList)[0]);
                 ShowPlayerActionSelect();
                 //ShowAnnounce(charaList[nextActionIndex].CharaClass.CharaName + "のばん");
                 //ShowActiveSkillSelect(charaList[nextActionIndex]);
@@ -154,35 +155,35 @@ public class DungeonBattleManager : MonoBehaviour
         switch (effect.TargetType)
         {
             case E_TargetType.All:
-                this.activeSkillFuncs.EffectFunc(effect, invoker, charaList);
+                this.activeEffectFuncs.EffectFunc(effect, invoker, charaList);
                 break;
             case E_TargetType.OneEnemy:
                 if (invoker.IsEnemy)
                 {
-                    if (GetAttractingCharacter(effect.EffectElement, this.allyList) == null) this.activeSkillFuncs.EffectFunc(effect, invoker, new List<BattleCharacter>() { ListManager.GetRandomIndex<BattleCharacter>(GetAliveList(this.allyList)) });
-                    else this.activeSkillFuncs.EffectFunc(effect, invoker, new List<BattleCharacter>() { GetAttractingCharacter(effect.EffectElement, this.allyList) });
+                    if (GetAttractingCharacter(effect.EffectElement, this.allyList) == null) this.activeEffectFuncs.EffectFunc(effect, invoker, new List<BattleCharacter>() { ListManager.GetRandomIndex<BattleCharacter>(GetAliveList(this.allyList)) });
+                    else this.activeEffectFuncs.EffectFunc(effect, invoker, new List<BattleCharacter>() { GetAttractingCharacter(effect.EffectElement, this.allyList) });
                 }
                 else
                 {
-                    if (GetAttractingCharacter(effect.EffectElement, this.enemyList) == null) this.activeSkillFuncs.EffectFunc(effect, invoker, new List<BattleCharacter>() { charaList[targetIndex] });
-                    else this.activeSkillFuncs.EffectFunc(effect, invoker, new List<BattleCharacter>() { GetAttractingCharacter(effect.EffectElement, this.enemyList) });
+                    if (GetAttractingCharacter(effect.EffectElement, this.enemyList) == null) this.activeEffectFuncs.EffectFunc(effect, invoker, new List<BattleCharacter>() { charaList[targetIndex] });
+                    else this.activeEffectFuncs.EffectFunc(effect, invoker, new List<BattleCharacter>() { GetAttractingCharacter(effect.EffectElement, this.enemyList) });
                 }
                 break;
             case E_TargetType.AllAlly:
-                if (invoker.IsEnemy) this.activeSkillFuncs.EffectFunc(effect, invoker, this.enemyList);
-                else this.activeSkillFuncs.EffectFunc(effect, invoker, allyList);
+                if (invoker.IsEnemy) this.activeEffectFuncs.EffectFunc(effect, invoker, this.enemyList);
+                else this.activeEffectFuncs.EffectFunc(effect, invoker, allyList);
                 break;
             case E_TargetType.AllEnemy:
-                if (invoker.IsEnemy) this.activeSkillFuncs.EffectFunc(effect, invoker, this.allyList);
-                else this.activeSkillFuncs.EffectFunc(effect, invoker, enemyList);
+                if (invoker.IsEnemy) this.activeEffectFuncs.EffectFunc(effect, invoker, this.allyList);
+                else this.activeEffectFuncs.EffectFunc(effect, invoker, enemyList);
                 break;
             case E_TargetType.Self:
-                this.activeSkillFuncs.EffectFunc(effect, invoker, new List<BattleCharacter>() { invoker });
+                this.activeEffectFuncs.EffectFunc(effect, invoker, new List<BattleCharacter>() { invoker });
                 break;
             case E_TargetType.OneAlly:
                 if (invoker.IsEnemy)
                 {
-                    this.activeSkillFuncs.EffectFunc(effect, invoker, new List<BattleCharacter>() { ListManager.GetRandomIndex<BattleCharacter>(GetAliveList(this.allyList)) });
+                    this.activeEffectFuncs.EffectFunc(effect, invoker, new List<BattleCharacter>() { ListManager.GetRandomIndex<BattleCharacter>(GetAliveList(this.allyList)) });
                 }
                 else
                 {
@@ -195,7 +196,7 @@ public class DungeonBattleManager : MonoBehaviour
                         this.uiManager.PromptSelectTargetOneAlly();
                         return;
                     }
-                    this.activeSkillFuncs.EffectFunc(effect, invoker, new List<BattleCharacter>() { charaList[targetIndex] });
+                    this.activeEffectFuncs.EffectFunc(effect, invoker, new List<BattleCharacter>() { charaList[targetIndex] });
                 }
                 break;
         }
@@ -248,15 +249,15 @@ public class DungeonBattleManager : MonoBehaviour
         {
             if (Input.GetKeyDown(i.ToString()))
             {
-                if(this.activeSkillFuncs.GetBattleActiveSkill(invoker.BattleActiveSkillID[i]).NeedSkillPoint > invoker.HaveSkillPoint)
+                if(this.activeEffectFuncs.GetBattleActiveSkill(invoker.BattleActiveSkillID[i]).NeedSkillPoint > invoker.HaveSkillPoint)
                 {
                     ShowAnnounce("スキルポイントが足りません");
                     this.finishAction = true; return;
                 }
-                InvokeEffect(invoker, this.activeSkillFuncs.GetBattleActiveSkill(invoker.BattleActiveSkillID[i]));
+                InvokeEffect(invoker, this.activeEffectFuncs.GetBattleActiveSkill(invoker.BattleActiveSkillID[i]));
                 if (this.currentSituation == E_BattleSituation.PlayerSelectSkillTarget)
                 {
-                    this.waitingEffect = this.activeSkillFuncs.GetBattleActiveSkill(invoker.BattleActiveSkillID[i]);
+                    this.waitingEffect = this.activeEffectFuncs.GetBattleActiveSkill(invoker.BattleActiveSkillID[i]);
                 }
             }
         }
@@ -390,9 +391,9 @@ public class DungeonBattleManager : MonoBehaviour
             List<BattleActiveSkill> useableSkill = new List<BattleActiveSkill>();
             foreach(E_BattleActiveSkill skillID in actionEnemy.EC.HaveBattleActtiveSkillID)
             {
-                if(actionEnemy.HaveSkillPoint >= this.activeSkillFuncs.GetBattleActiveSkill(skillID).NeedSkillPoint)
+                if(actionEnemy.HaveSkillPoint >= this.activeEffectFuncs.GetBattleActiveSkill(skillID).NeedSkillPoint)
                 {
-                    useableSkill.Add(this.activeSkillFuncs.GetBattleActiveSkill(skillID));
+                    useableSkill.Add(this.activeEffectFuncs.GetBattleActiveSkill(skillID));
                 }
             }
             int action = UnityEngine.Random.Range(0, useableSkill.Count + 1);
@@ -402,7 +403,7 @@ public class DungeonBattleManager : MonoBehaviour
         else
         {
             //特殊な処理
-            actionEnemy.EC.EnemyAI.EnemyActionFunc(this.enemyList, this.allyList, actionEnemy, this.activeSkillFuncs);
+            actionEnemy.EC.EnemyAI.EnemyActionFunc(this.enemyList, this.allyList, actionEnemy, this.activeEffectFuncs);
             this.charaList[nextActionIndex].AddHaveSkillPoint(1);
             this.finishAction = true;
             this.nextActionIndex++;
