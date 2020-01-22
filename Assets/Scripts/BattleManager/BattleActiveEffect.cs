@@ -4,8 +4,8 @@ using UnityEngine;
 
 public enum E_ActiveEffectType
 {
-    攻撃,
-    HP回復,
+    攻撃, //RateOrValueが1以下でHP割合ダメージ
+    HP回復, //RateOrValueが1以下でHP割合回復
     被ダメージ増減バフ,
     与ダメージ増減バフ,
     HPバフ,
@@ -23,6 +23,8 @@ public enum E_ActiveEffectType
     通常攻撃回数追加,
     攻撃集中被ダメ減,
     固定ダメージ,
+    HPリジェネ,
+    SPリジェネ,
     その他,
 }
 public class BattleActiveEffect : MonoBehaviour

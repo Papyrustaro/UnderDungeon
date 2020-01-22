@@ -26,13 +26,13 @@ public class BattleActiveEffectsFunc : MonoBehaviour
         switch (effect.EffectType)
         {
             case E_ActiveEffectType.攻撃:
-                EffectToAllTarget(effect, invoker, target, NormalElementAttack);
+                EffectToAllTarget(effect, invoker, target, Attack);
                 break;
             case E_ActiveEffectType.固定ダメージ:
                 EffectToAllTarget(effect, target, FixedDamageAttack);
                 break;
             case E_ActiveEffectType.HP回復:
-                EffectToAllTarget(effect, target, NormalRecoverHp);
+                EffectToAllTarget(effect, target, RecoverHp);
                 break;
             case E_ActiveEffectType.ATKバフ:
                 EffectToAllTarget(effect, target, BuffAtkStatus);
@@ -83,6 +83,12 @@ public class BattleActiveEffectsFunc : MonoBehaviour
                 EffectToAllTarget(effect, target, SetAttractingAffect);
                 EffectToAllTarget(effect, target, BuffFromDamageRate);
                 break;
+            case E_ActiveEffectType.HPリジェネ:
+                EffectToAllTarget(effect, target, AddHpRegeneration);
+                break;
+            case E_ActiveEffectType.SPリジェネ:
+                EffectToAllTarget(effect, target, AddSpRegeneration);
+                break;
 
 
             case E_ActiveEffectType.その他:
@@ -94,7 +100,7 @@ public class BattleActiveEffectsFunc : MonoBehaviour
     {
         return this.skillList[(int)id];
     }
-    private void NormalElementAttack(BattleCharacter attacker, BattleCharacter target, BattleActiveEffect effect) 
+    private void Attack(BattleCharacter attacker, BattleCharacter target, BattleActiveEffect effect) 
     {
         target.DamagedByElementAttack(attacker.Atk * attacker.GetToDamageRate(effect.EffectElement) * effect.RateOrValue, effect.EffectElement);
     }
@@ -102,13 +108,15 @@ public class BattleActiveEffectsFunc : MonoBehaviour
     {
         target.DamagedByElementAttack(attacker.HaveDamageThisTurn * attacker.GetToDamageRate(effect.EffectElement) * effect.RateOrValue, effect.EffectElement);
     }
-    private void NormalRecoverHp(BattleCharacter target, BattleActiveEffect effect)
+    private void RecoverHp(BattleCharacter target, BattleActiveEffect effect)
     {
-        target.RecoverHp(effect.RateOrValue);
+        if (effect.RateOrValue > 1) target.RecoverHp(effect.RateOrValue);
+        else target.RecoverHpByRate(effect.RateOrValue);
     }
-    private void FixedDamageAttack(BattleCharacter target, BattleActiveEffect effect)
+    private void FixedDamageAttack(BattleCharacter target, BattleActiveEffect effect) //固定ダメージ(RateOrValueが1以下で最大HPの割合ダメージ)
     {
-        target.DecreaseHp(effect.RateOrValue);
+        if (effect.RateOrValue > 1) target.DecreaseHp(effect.RateOrValue);
+        else target.DecreaseHpByRate(effect.RateOrValue);
     }
     private void BuffAtkStatus(BattleCharacter target, BattleActiveEffect effect)
     {
@@ -166,7 +174,14 @@ public class BattleActiveEffectsFunc : MonoBehaviour
     {
         target.AddNormalAttackNum((int)effect.RateOrValue, effect.EffectTurn);
     }
-
+    private void AddHpRegeneration(BattleCharacter target, BattleActiveEffect effect)
+    {
+        target.AddHpRegeneration(effect.RateOrValue, effect.EffectTurn);
+    }
+    private void AddSpRegeneration(BattleCharacter target, BattleActiveEffect effect)
+    {
+        target.AddSpRegeneration((int)effect.RateOrValue, effect.EffectTurn);
+    }
     private void EffectToAllTarget(BattleActiveEffect effect, BattleCharacter invoker, List<BattleCharacter> targetList, Action<BattleCharacter, BattleCharacter, BattleActiveEffect> func)
     {
         foreach (BattleCharacter target in ElementClass.GetListInElement(targetList, effect.TargetElement))

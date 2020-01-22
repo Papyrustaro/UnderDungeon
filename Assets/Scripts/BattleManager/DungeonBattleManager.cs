@@ -63,6 +63,7 @@ public class DungeonBattleManager : MonoBehaviour
                 nextActionIndex = 0;
                 SortCharacterBySpd();
             }
+            this.charaList[nextActionIndex].SetBeforeAction();
             CharacterAction();
         }else
         {
@@ -328,7 +329,7 @@ public class DungeonBattleManager : MonoBehaviour
     }
     private void AdvanceTurn()
     {
-        if(this.charaList[nextActionIndex].IsAlive) this.charaList[nextActionIndex].AddHaveSkillPoint(1);
+        //if (this.charaList[nextActionIndex].IsAlive) this.charaList[nextActionIndex].SetAfterActiton();
         this.finishAction = true;
         this.nextActionIndex++;
     }

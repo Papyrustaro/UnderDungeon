@@ -16,6 +16,8 @@ public class BattleCharacter : MonoBehaviour
     private List<BuffEffect> toNormalAttackRate = new List<BuffEffect>(); //通常攻撃の与ダメージ倍率
     private List<BuffEffect> fromNormalAttackRate = new List<BuffEffect>();
     private Dictionary<E_Element, int> attractingEffectTurn = new Dictionary<E_Element, int>() { { E_Element.Fire, 0 }, { E_Element.Aqua, 0 }, { E_Element.Tree, 0 } };
+    private List<BuffEffect> hpRegeneration = new List<BuffEffect>();
+    private List<BuffEffect> spRegeneration = new List<BuffEffect>();
 
     private int haveSkillPoint = 0;
     //private bool isEnemy = false;
@@ -282,6 +284,15 @@ public class BattleCharacter : MonoBehaviour
             this.haveSkillPoint += addValue;
         }
     }
+
+    public void AddHpRegeneration(double rateOrValue, int effectTurn)
+    {
+        this.hpRegeneration.Add(new BuffEffect(rateOrValue, effectTurn));
+    }
+    public void AddSpRegeneration(int value, int effectTurn)
+    {
+        this.spRegeneration.Add(new BuffEffect((double)value, effectTurn));
+    }
     public double RecoverHp(double value)
     {
         StatusChange = true;
@@ -298,6 +309,10 @@ public class BattleCharacter : MonoBehaviour
             Hp += value;
             return value;
         }
+    }
+    public double RecoverHpByRate(double rate)
+    {
+        return RecoverHp(MaxHp * rate);
     }
 
     public double DecreaseHp(double damage_value)
@@ -319,6 +334,10 @@ public class BattleCharacter : MonoBehaviour
             Hp -= damage_value;
             return damage_value;
         }
+    }
+    public double DecreaseHpByRate(double rate)
+    {
+        return DecreaseHp(MaxHp * rate);
     }
     public void Reborn()
     {
@@ -379,4 +398,23 @@ public class BattleCharacter : MonoBehaviour
         ElapseTurn(NormalAttackToAllTurn);
     }
 
+    public void SetBeforeAction() //行動前に呼ぶ関数
+    {
+        foreach(BuffEffect bf in this.hpRegeneration)
+        {
+            if (bf.Rate > 1) RecoverHp(bf.Rate);
+            else RecoverHpByRate(bf.Rate);
+        }
+        foreach(BuffEffect bf in this.spRegeneration)
+        {
+            AddHaveSkillPoint((int)bf.Rate);
+        }
+        ElapseTurn(this.hpRegeneration);
+        ElapseTurn(this.spRegeneration);
+    }
+    public void SetAfterActiton() //行動後に呼ぶ関数
+    {
+        ElapseAllTurn();
+        AddHaveSkillPoint(1);
+    }
 }
