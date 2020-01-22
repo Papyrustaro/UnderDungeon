@@ -24,6 +24,7 @@ public class DungeonBattleManager : MonoBehaviour
     private BattleActiveEffect waitingEffect = null;
     public List<BattleCharacter> AliveCharaList => GetAliveList(this.charaList);
     private int targetIndex;
+    private BattleCharacter target;
     private E_BattleSituation currentSituation = E_BattleSituation.WaitFinishAction;
 
     private List<BattleCharacter> allyList = new List<BattleCharacter>();
@@ -43,6 +44,8 @@ public class DungeonBattleManager : MonoBehaviour
             if (bc.IsEnemy) this.enemyList.Add(bc);
             else this.allyList.Add(bc);
         }
+        //this.targetIndex = this.charaList.IndexOf(GetAliveList(this.enemyList)[0]);
+        this.target = this.GetAliveList(this.enemyList)[0];
     }
 
     private void Update()
@@ -68,8 +71,9 @@ public class DungeonBattleManager : MonoBehaviour
     }
     public void SetInputTarget(BattleCharacter target)
     {
-        if (target.Hp < 0) { announceText.text = "そのキャラもう死んでるyo"; return; } //とりあえず
-        this.targetIndex = charaList.IndexOf(target);
+        if (!target.IsAlive) { Debug.Log("もう死んでいます"); return; } //とりあえず
+        //this.targetIndex = charaList.IndexOf(target);
+        this.target = target;
         BattleUIManager.ShowAnnounce("target: " + target.CharaClass.CharaName);
         this.inputTargetWaiting = false;
 
@@ -88,7 +92,7 @@ public class DungeonBattleManager : MonoBehaviour
             }
             else
             {
-                if (!this.charaList[targetIndex].IsEnemy || !this.charaList[targetIndex].IsAlive) this.targetIndex = this.charaList.IndexOf(GetAliveList(this.enemyList)[0]);
+                if (!this.target.IsEnemy || !this.target.IsAlive) this.target = GetAliveList(this.enemyList)[0];
                 ShowPlayerActionSelect();
                 //ShowAnnounce(charaList[nextActionIndex].CharaClass.CharaName + "のばん");
                 //ShowActiveSkillSelect(charaList[nextActionIndex]);
@@ -97,7 +101,7 @@ public class DungeonBattleManager : MonoBehaviour
         }
         else
         {
-            nextActionIndex++;
+            AdvanceTurn();
         }
     }
     private void DebugFunc(BattleCharacter target)
@@ -132,7 +136,9 @@ public class DungeonBattleManager : MonoBehaviour
     {
         if (Input.GetKeyDown(((int)E_PlayerAction.NormalAttack).ToString()))
         {
-            NormalAttack(charaList[nextActionIndex], charaList[targetIndex]);
+            if (charaList[nextActionIndex].NormalAttackToAllTurn > 0) NormalAttack(charaList[nextActionIndex], GetAliveList(this.enemyList));
+            else if (GetAttractingCharacter(this.charaList[nextActionIndex].Element, this.enemyList) == null) NormalAttack(charaList[nextActionIndex], target);
+            else NormalAttack(charaList[nextActionIndex], GetAttractingCharacter(this.charaList[nextActionIndex].Element, this.enemyList));
         }
         if (Input.GetKeyDown(((int)E_PlayerAction.InvokeSkill).ToString()))
         {
@@ -165,7 +171,7 @@ public class DungeonBattleManager : MonoBehaviour
                 }
                 else
                 {
-                    if (GetAttractingCharacter(effect.EffectElement, this.enemyList) == null) this.activeEffectFuncs.EffectFunc(effect, invoker, new List<BattleCharacter>() { charaList[targetIndex] });
+                    if (GetAttractingCharacter(effect.EffectElement, this.enemyList) == null) this.activeEffectFuncs.EffectFunc(effect, invoker, new List<BattleCharacter>() { target });
                     else this.activeEffectFuncs.EffectFunc(effect, invoker, new List<BattleCharacter>() { GetAttractingCharacter(effect.EffectElement, this.enemyList) });
                 }
                 break;
@@ -183,12 +189,12 @@ public class DungeonBattleManager : MonoBehaviour
             case E_TargetType.OneAlly:
                 if (invoker.IsEnemy)
                 {
-                    this.activeEffectFuncs.EffectFunc(effect, invoker, new List<BattleCharacter>() { ListManager.GetRandomIndex<BattleCharacter>(GetAliveList(this.allyList)) });
+                    this.activeEffectFuncs.EffectFunc(effect, invoker, new List<BattleCharacter>() { ListManager.GetRandomIndex<BattleCharacter>(GetAliveList(this.enemyList)) });
                 }
                 else
                 {
-                    //プレイヤー入力によるtargetIndexの指定処理
-                    if (charaList[targetIndex].IsEnemy)
+                    //プレイヤー入力によるtargetの指定処理
+                    if (this.target.IsEnemy)
                     {
                         this.inputTargetWaiting = true;
                         if (this.currentSituation == E_BattleSituation.PlayerSelectActiveSkill) this.currentSituation = E_BattleSituation.PlayerSelectSkillTarget;
@@ -196,13 +202,11 @@ public class DungeonBattleManager : MonoBehaviour
                         this.uiManager.PromptSelectTargetOneAlly();
                         return;
                     }
-                    this.activeEffectFuncs.EffectFunc(effect, invoker, new List<BattleCharacter>() { charaList[targetIndex] });
+                    this.activeEffectFuncs.EffectFunc(effect, invoker, new List<BattleCharacter>() { this.target });
                 }
                 break;
         }
-        charaList[nextActionIndex].AddHaveSkillPoint(1);
-        this.finishAction = true;
-        this.nextActionIndex++;
+        AdvanceTurn();
 
     }
     private void ShowPlayerActionSelect()
@@ -304,8 +308,27 @@ public class DungeonBattleManager : MonoBehaviour
     private void NormalAttack(BattleCharacter attacker, BattleCharacter target)
     {
         ShowAnnounce(attacker.CharaClass.CharaName + "の通常攻撃");
-        target.DamagedByNormalAttack(attacker.NormalAttackPower, attacker.Element);
-        this.charaList[nextActionIndex].AddHaveSkillPoint(1);
+        for(int i = 0; i < attacker.NormalAttackNum; i++)
+        {
+            target.DamagedByNormalAttack(attacker.NormalAttackPower, attacker.Element);
+        }
+        AdvanceTurn();
+    }
+    private void NormalAttack(BattleCharacter attacker, List<BattleCharacter> targetList)
+    {
+        ShowAnnounce(attacker.CharaClass.CharaName + "の通常攻撃");
+        for(int i = 0; i < attacker.NormalAttackNum; i++)
+        {
+            foreach (BattleCharacter target in targetList)
+            {
+                target.DamagedByNormalAttack(attacker.NormalAttackPower, attacker.Element);
+            }
+        }
+        AdvanceTurn();
+    }
+    private void AdvanceTurn()
+    {
+        if(this.charaList[nextActionIndex].IsAlive) this.charaList[nextActionIndex].AddHaveSkillPoint(1);
         this.finishAction = true;
         this.nextActionIndex++;
     }
@@ -397,16 +420,22 @@ public class DungeonBattleManager : MonoBehaviour
                 }
             }
             int action = UnityEngine.Random.Range(0, useableSkill.Count + 1);
-            if (action == useableSkill.Count) NormalAttack(actionEnemy, ListManager.GetRandomIndex<BattleCharacter>(GetAliveList(this.allyList)));
-            else InvokeEffect(actionEnemy, useableSkill[action]); //スキル発動
+            if (action == useableSkill.Count)
+            {   //通常攻撃
+                if (actionEnemy.NormalAttackToAllTurn > 0) NormalAttack(actionEnemy, GetAliveList(this.allyList));
+                else if (GetAttractingCharacter(actionEnemy.Element, this.allyList) != null) NormalAttack(actionEnemy, GetAttractingCharacter(actionEnemy.Element, this.allyList));
+                else NormalAttack(actionEnemy, ListManager.GetRandomIndex<BattleCharacter>(GetAliveList(this.allyList)));
+            }
+            else
+            {
+                InvokeEffect(actionEnemy, useableSkill[action]); //スキル発動
+            }
         }
         else
         {
             //特殊な処理
             actionEnemy.EC.EnemyAI.EnemyActionFunc(this.enemyList, this.allyList, actionEnemy, this.activeEffectFuncs);
-            this.charaList[nextActionIndex].AddHaveSkillPoint(1);
-            this.finishAction = true;
-            this.nextActionIndex++;
+            AdvanceTurn();
         }
     }
 }

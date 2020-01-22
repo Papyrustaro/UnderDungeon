@@ -1390,7 +1390,7 @@ PrefabInstance:
     - target: {fileID: 8707441320245096014, guid: f1bb903aa89bb5b4c98631d39c6fc8b6,
         type: 3}
       propertyPath: haveBattleActiveSkillID.Array.size
-      value: 4
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8707441320245096014, guid: f1bb903aa89bb5b4c98631d39c6fc8b6,
         type: 3}
@@ -1411,6 +1411,11 @@ PrefabInstance:
         type: 3}
       propertyPath: haveBattleActiveSkillID.Array.data[3]
       value: 11
+      objectReference: {fileID: 0}
+    - target: {fileID: 8707441320245096014, guid: f1bb903aa89bb5b4c98631d39c6fc8b6,
+        type: 3}
+      propertyPath: haveBattleActiveSkillID.Array.data[0]
+      value: 24
       objectReference: {fileID: 0}
     - target: {fileID: 8907733137830469952, guid: f1bb903aa89bb5b4c98631d39c6fc8b6,
         type: 3}
@@ -4959,6 +4964,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1253843308}
     m_Modifications:
+    - target: {fileID: 747896214091052384, guid: f742b5ca6598aac48b1d0d53292133ec,
+        type: 3}
+      propertyPath: maxSpd
+      value: 100000
+      objectReference: {fileID: 0}
     - target: {fileID: 747896214091052385, guid: f742b5ca6598aac48b1d0d53292133ec,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -5026,6 +5036,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5718644004716360450, guid: f742b5ca6598aac48b1d0d53292133ec,
         type: 3}
+      propertyPath: haveBattleActiveSkillID.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5718644004716360450, guid: f742b5ca6598aac48b1d0d53292133ec,
+        type: 3}
       propertyPath: hpRate
       value: 1
       objectReference: {fileID: 0}
@@ -5038,6 +5053,11 @@ PrefabInstance:
         type: 3}
       propertyPath: spdRate
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5718644004716360450, guid: f742b5ca6598aac48b1d0d53292133ec,
+        type: 3}
+      propertyPath: haveBattleActiveSkillID.Array.data[0]
+      value: 24
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f742b5ca6598aac48b1d0d53292133ec, type: 3}
@@ -6156,7 +6176,7 @@ PrefabInstance:
     - target: {fileID: 4324497793931535174, guid: 181192d4754373448bff3e620fe79796,
         type: 3}
       propertyPath: haveBattleActiveSkillID.Array.data[2]
-      value: 9
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 4324497793931535174, guid: 181192d4754373448bff3e620fe79796,
         type: 3}

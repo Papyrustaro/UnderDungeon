@@ -171,6 +171,7 @@ public class BattleActiveEffectsFunc : MonoBehaviour
     {
         foreach (BattleCharacter target in ElementClass.GetListInElement(targetList, effect.TargetElement))
         {
+            if (!target.IsAlive) continue; //とりあえず倒れているキャラに効果は付与しないことにする
             func(invoker, target, effect);
         }
     }
@@ -178,6 +179,7 @@ public class BattleActiveEffectsFunc : MonoBehaviour
     {
         foreach(BattleCharacter target in ElementClass.GetListInElement(targetList, effect.TargetElement))
         {
+            if (!target.IsAlive) continue; //とりあえず倒れているキャラに効果は付与しないことにする
             func(target, effect);
         }
     }
