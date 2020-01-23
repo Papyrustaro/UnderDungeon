@@ -151,9 +151,9 @@ public class DungeonBattleManager : MonoBehaviour
             this.currentSituation = E_BattleSituation.PlayerSelectActiveItem;
             ShowActiveItemSelect();
         }
-        if (Input.GetKeyDown(((int)E_PlayerAction.Protect).ToString()))
+        if (Input.GetKeyDown(((int)E_PlayerAction.Defend).ToString()))
         {
-            Debug.Log("防御した(未実装)");
+            Defend(charaList[nextActionIndex]);
         }
     }
     //なぜこの処理をこちら側でするか→oneAllyのときターゲット入力が必要だから→それが解決できたらFuncクラスでの実装でもいいか?
@@ -210,10 +210,16 @@ public class DungeonBattleManager : MonoBehaviour
         AdvanceTurn();
 
     }
+    private void Defend(BattleCharacter defendChara)
+    {
+        defendChara.IsDefending = true;
+        ShowAnnounce(defendChara.CharaClass.CharaName + "は防御している");
+        AdvanceTurn();
+    }
     private void ShowPlayerActionSelect()
     {
         ShowAnnounce(charaList[nextActionIndex].CharaClass.CharaName + "のばん");
-        ShowAnnounce((int)E_PlayerAction.NormalAttack+":通常攻撃 "+(int)E_PlayerAction.InvokeSkill+":スキル "+(int)E_PlayerAction.UseItem+":アイテム "+(int)E_PlayerAction.Protect+":防御");
+        ShowAnnounce((int)E_PlayerAction.NormalAttack+":通常攻撃 "+(int)E_PlayerAction.InvokeSkill+":スキル "+(int)E_PlayerAction.UseItem+":アイテム "+(int)E_PlayerAction.Defend+":防御");
         this.currentSituation = E_BattleSituation.PlayerSelectAction;
         this.finishAction = false;
     }
@@ -329,7 +335,7 @@ public class DungeonBattleManager : MonoBehaviour
     }
     private void AdvanceTurn()
     {
-        //if (this.charaList[nextActionIndex].IsAlive) this.charaList[nextActionIndex].SetAfterActiton();
+        if (this.charaList[nextActionIndex].IsAlive) this.charaList[nextActionIndex].SetAfterActiton();
         this.finishAction = true;
         this.nextActionIndex++;
     }

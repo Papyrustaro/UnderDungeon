@@ -87,6 +87,7 @@ public class BattleCharacter : MonoBehaviour
     //public int NoGetDamagedTurn => ElementClass.GetDictionaryValue(this.noGetDamagedTurn;
     public double NormalAttackPower => Atk * ToNormalAttackRate * GetToDamageRate(Element);
     public bool IsAlive => Hp > 0;
+    public bool IsDefending { get; set; } = false;
 
     private void Awake()
     {
@@ -150,6 +151,7 @@ public class BattleCharacter : MonoBehaviour
         this.toNormalAttackRate = new List<BuffEffect>(); this.fromNormalAttackRate = new List<BuffEffect>();
         this.attractingEffectTurn = new Dictionary<E_Element, int>() { { E_Element.Fire, 0 }, { E_Element.Aqua, 0 }, { E_Element.Tree, 0 } };
         this.haveSkillPoint = 0; NormalAttackToAllTurn = 0; HaveDamageThisTurn = 0;
+        IsDefending = false;
     }
     
     public double GetRate(List<BuffEffect> bfList) //buffEffectのすべての倍率を計算して返す
@@ -252,6 +254,7 @@ public class BattleCharacter : MonoBehaviour
         }
         else
         {
+            if (IsDefending) power /= 2;
             DecreaseHp(power * GetFromDamageRate(atkElement) * ElementClass.GetElementCompatibilityRate(atkElement, this.Element)); // 威力*属性被ダメ減*属性相性
         }
     }
@@ -264,6 +267,7 @@ public class BattleCharacter : MonoBehaviour
         }
         else
         {
+            if (IsDefending) power /= 2;
             DecreaseHp(power * this.GetFromDamageRate(atkElement) * ElementClass.GetElementCompatibilityRate(atkElement, this.Element) * FromNormalAttackRate); // 威力*属性被ダメ減*属性相性*通常被ダメ
         }
     }
@@ -385,6 +389,7 @@ public class BattleCharacter : MonoBehaviour
     }
     public void ElapseTurn(BuffEffect buff)
     {
+        if (buff == null) return;
         buff.EffectTurn--;
         if (buff.EffectTurn < 1) buff = null;
     }
@@ -411,6 +416,7 @@ public class BattleCharacter : MonoBehaviour
         }
         ElapseTurn(this.hpRegeneration);
         ElapseTurn(this.spRegeneration);
+        IsDefending = false;
     }
     public void SetAfterActiton() //行動後に呼ぶ関数
     {

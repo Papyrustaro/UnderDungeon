@@ -19,5 +19,5 @@ public enum E_PlayerAction
     NormalAttack,
     InvokeSkill,
     UseItem,
-    Protect,
+    Defend,
 }

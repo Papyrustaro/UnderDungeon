@@ -2221,6 +2221,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 149719019}
     m_Modifications:
+    - target: {fileID: 4376891919933371840, guid: e066127918f14e946a2151f538f1c00e,
+        type: 3}
+      propertyPath: maxSpd
+      value: 999999
+      objectReference: {fileID: 0}
     - target: {fileID: 5061160232512452244, guid: e066127918f14e946a2151f538f1c00e,
         type: 3}
       propertyPath: haveExp
