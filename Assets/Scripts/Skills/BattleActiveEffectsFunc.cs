@@ -10,11 +10,11 @@ public class BattleActiveEffectsFunc : MonoBehaviour
     [SerializeField]
     private List<BattleActiveItem> itemList = new List<BattleActiveItem>();
 
-    public void SkillFunc(E_BattleActiveSkill skillID, BattleCharacter invoker, List<BattleCharacter> target)
+    public void SkillFunc(E_BattlePassiveSkill skillID, BattleCharacter invoker, List<BattleCharacter> target)
     {
         EffectFunc(skillList[(int)skillID], invoker, target);
     }
-    public void ItemFunc(E_BattleActiveItem itemID, BattleCharacter invoker, List<BattleCharacter> target)
+    public void ItemFunc(E_BattlePassiveItem itemID, BattleCharacter invoker, List<BattleCharacter> target)
     {
         EffectFunc(itemList[(int)itemID], invoker, target);
     }
@@ -25,73 +25,73 @@ public class BattleActiveEffectsFunc : MonoBehaviour
 
         switch (effect.EffectType)
         {
-            case E_ActiveEffectType.攻撃:
+            case E_BattleActiveEffectType.攻撃:
                 EffectToAllTarget(effect, invoker, target, Attack);
                 break;
-            case E_ActiveEffectType.固定ダメージ:
+            case E_BattleActiveEffectType.固定ダメージ:
                 EffectToAllTarget(effect, target, FixedDamageAttack);
                 break;
-            case E_ActiveEffectType.HP回復:
+            case E_BattleActiveEffectType.HP回復:
                 EffectToAllTarget(effect, target, RecoverHp);
                 break;
-            case E_ActiveEffectType.ATKバフ:
+            case E_BattleActiveEffectType.ATKバフ:
                 EffectToAllTarget(effect, target, BuffAtkStatus);
                 break;
-            case E_ActiveEffectType.SPDバフ:
+            case E_BattleActiveEffectType.SPDバフ:
                 EffectToAllTarget(effect, target, BuffSpdStatus);
                 break;
-            case E_ActiveEffectType.HPバフ:
+            case E_BattleActiveEffectType.HPバフ:
                 EffectToAllTarget(effect, target, BuffHpStatus);
                 break;
-            case E_ActiveEffectType.被ダメージ増減バフ:
+            case E_BattleActiveEffectType.被ダメージ増減バフ:
                 EffectToAllTarget(effect, target, BuffFromDamageRate);
                 break;
-            case E_ActiveEffectType.与ダメージ増減バフ:
+            case E_BattleActiveEffectType.与ダメージ増減バフ:
                 EffectToAllTarget(effect, target, BuffToDamageRate);
                 break;
-            case E_ActiveEffectType.スキルポイント増減:
+            case E_BattleActiveEffectType.スキルポイント増減:
                 EffectToAllTarget(effect, target, AddHaveSkillPoint);
                 break;
-            case E_ActiveEffectType.属性変化:
+            case E_BattleActiveEffectType.属性変化:
                 EffectToAllTarget(effect, target, SetElementChanged);
                 break;
-            case E_ActiveEffectType.復活付与:
+            case E_BattleActiveEffectType.復活付与:
                 EffectToAllTarget(effect, target, SetRebornEffect);
                 break;
-            case E_ActiveEffectType.無敵付与:
+            case E_BattleActiveEffectType.無敵付与:
                 EffectToAllTarget(effect, target, SetNoGetDamaged);
                 break;
-            case E_ActiveEffectType.攻撃集中:
+            case E_BattleActiveEffectType.攻撃集中:
                 EffectToAllTarget(effect, target, SetAttractingAffect);
                 break;
-            case E_ActiveEffectType.カウンター:
+            case E_BattleActiveEffectType.カウンター:
                 EffectToAllTarget(effect, invoker, target, CounterAttack);
                 break;
-            case E_ActiveEffectType.通常攻撃全体攻撃化:
+            case E_BattleActiveEffectType.通常攻撃全体攻撃化:
                 EffectToAllTarget(effect, target, AddNormalAttackToAllTurn);
                 break;
-            case E_ActiveEffectType.通常攻撃被ダメージ増減:
+            case E_BattleActiveEffectType.通常攻撃被ダメージ増減:
                 EffectToAllTarget(effect, target, AddFromNormalAttackRate);
                 break;
-            case E_ActiveEffectType.通常攻撃与ダメージ増減:
+            case E_BattleActiveEffectType.通常攻撃与ダメージ増減:
                 EffectToAllTarget(effect, target, AddToNormalAttackRate);
                 break;
-            case E_ActiveEffectType.通常攻撃回数追加:
+            case E_BattleActiveEffectType.通常攻撃回数追加:
                 EffectToAllTarget(effect, target, AddNormalAttackNum);
                 break;
-            case E_ActiveEffectType.攻撃集中被ダメ減:
+            case E_BattleActiveEffectType.攻撃集中被ダメ減:
                 EffectToAllTarget(effect, target, SetAttractingAffect);
                 EffectToAllTarget(effect, target, BuffFromDamageRate);
                 break;
-            case E_ActiveEffectType.HPリジェネ:
+            case E_BattleActiveEffectType.HPリジェネ:
                 EffectToAllTarget(effect, target, AddHpRegeneration);
                 break;
-            case E_ActiveEffectType.SPリジェネ:
+            case E_BattleActiveEffectType.SPリジェネ:
                 EffectToAllTarget(effect, target, AddSpRegeneration);
                 break;
 
 
-            case E_ActiveEffectType.その他:
+            case E_BattleActiveEffectType.その他:
                 effect.OtherFunc(invoker, target);
                 break;
         }
