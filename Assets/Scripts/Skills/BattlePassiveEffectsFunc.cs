@@ -62,31 +62,35 @@ public class BattlePassiveEffectsFunc : MonoBehaviour
 
     private void AddMaxHpRate(BattleCharacter target, BattlePassiveEffect effect)
     {
-
+        target.PassiveMaxHp = target.PassiveMaxHp * effect.RateOrValue;
     }
     private void AddMaxAtkRate(BattleCharacter target, BattlePassiveEffect effect)
     {
-
+        target.PassiveAtk = target.PassiveAtk * effect.RateOrValue;
     }
     private void AddMaxSpdRate(BattleCharacter target, BattlePassiveEffect effect)
     {
-
+        target.PassiveSpd = target.PassiveSpd * effect.RateOrValue;
     }
     private void AddToDamageRate(BattleCharacter target, BattlePassiveEffect effect)
     {
-
+        if (ElementClass.IsFire(effect.EffectElement)) target.PassiveToDamageRate[E_Element.Fire] = target.PassiveToDamageRate[E_Element.Fire] * effect.RateOrValue;
+        if (ElementClass.IsAqua(effect.EffectElement)) target.PassiveToDamageRate[E_Element.Aqua] = target.PassiveToDamageRate[E_Element.Aqua] * effect.RateOrValue;
+        if (ElementClass.IsTree(effect.EffectElement)) target.PassiveToDamageRate[E_Element.Tree] = target.PassiveToDamageRate[E_Element.Tree] * effect.RateOrValue;
     }
     private void AddFromDamageRate(BattleCharacter target, BattlePassiveEffect effect)
     {
-
+        if (ElementClass.IsFire(effect.EffectElement)) target.PassiveFromDamageRate[E_Element.Fire] = target.PassiveFromDamageRate[E_Element.Fire] * effect.RateOrValue;
+        if (ElementClass.IsAqua(effect.EffectElement)) target.PassiveFromDamageRate[E_Element.Aqua] = target.PassiveFromDamageRate[E_Element.Aqua] * effect.RateOrValue;
+        if (ElementClass.IsTree(effect.EffectElement)) target.PassiveFromDamageRate[E_Element.Tree] = target.PassiveFromDamageRate[E_Element.Tree] * effect.RateOrValue;
     }
     private void AddToNormalAttackRate(BattleCharacter target, BattlePassiveEffect effect)
     {
-
+        target.PassiveToNormalAttackRate *= effect.RateOrValue;
     }
     private void AddFromNormalAttackRate(BattleCharacter target, BattlePassiveEffect effect)
     {
-
+        target.PassiveFromNormalAttackRate *= effect.RateOrValue;
     }
     private void AddNormalAttackNum(BattleCharacter target, BattlePassiveEffect effect)
     {

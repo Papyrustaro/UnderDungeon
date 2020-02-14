@@ -114,6 +114,7 @@ public class BattleCharacter : MonoBehaviour
     }
     private void SetPassiveEffect()
     {
+
         //本当はここで、BattlePassiveSkillとItemによる能力上昇がある
     }
     private void SetCharacter()
