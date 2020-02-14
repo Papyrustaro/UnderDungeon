@@ -42,9 +42,9 @@ public class BattlePassiveEffectsFunc : MonoBehaviour
             case E_BattlePassiveEffectType.Sp回復量増加:
                 EffectToAllTarget(effect, target, AddHealSpPower);
                 break;
-            case E_BattlePassiveEffectType.開始時Sp増減:
+            /*case E_BattlePassiveEffectType.開始時Sp増減: //これを毎回呼ばれては困る
                 EffectToAllTarget(effect, target, AddSpBeforeBattle);
-                break;
+                break;*/
             case E_BattlePassiveEffectType.防御時攻撃集中:
                 EffectToAllTarget(effect, target, SetAttractInDefending);
                 break;
@@ -94,23 +94,26 @@ public class BattlePassiveEffectsFunc : MonoBehaviour
     }
     private void AddNormalAttackNum(BattleCharacter target, BattlePassiveEffect effect)
     {
-
+        target.PassiveNormalAttackNum += (int)effect.RateOrValue;
     }
     private void AddHealSpPower(BattleCharacter target, BattlePassiveEffect effect)
     {
-
+        target.PassiveHealSpInTurn += (int)effect.RateOrValue;
     }
     private void AddSpBeforeBattle(BattleCharacter target, BattlePassiveEffect effect)
     {
-
+        //ここをどの段階で呼ぶか(毎回呼ばれては困る)
+        target.AddHaveSkillPoint((int)effect.RateOrValue);
     }
     private void SetAttractInDefending(BattleCharacter target, BattlePassiveEffect effect)
     {
-
+        if (ElementClass.IsFire(effect.EffectElement)) target.PassiveAttractInDefending[E_Element.Fire] = true;
+        if (ElementClass.IsAqua(effect.EffectElement)) target.PassiveAttractInDefending[E_Element.Aqua] = true;
+        if (ElementClass.IsTree(effect.EffectElement)) target.PassiveAttractInDefending[E_Element.Tree] = true;
     }
     private void AddFromDamageRateInDefending(BattleCharacter target, BattlePassiveEffect effect)
     {
-
+        target.PassiveFromDamageRateInDefending *= effect.RateOrValue;
     }
 
     private void EffectToAllTarget(BattlePassiveEffect effect, BattleCharacter invoker, List<BattleCharacter> targetList, Action<BattleCharacter, BattleCharacter, BattlePassiveEffect> func)

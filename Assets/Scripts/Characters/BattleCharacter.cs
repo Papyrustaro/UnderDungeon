@@ -37,6 +37,10 @@ public class BattleCharacter : MonoBehaviour
     public Dictionary<E_Element, double> PassiveFromDamageRate { get; set; }
     public double PassiveToNormalAttackRate { get; set; } = 1;
     public double PassiveFromNormalAttackRate { get; set; } = 1;
+    public double PassiveFromDamageRateInDefending { get; set; } = 1; //属性関係なし
+    public Dictionary<E_Element, bool> PassiveAttractInDefending { get; set; }
+    public int PassiveHealSpInTurn { get; set; } = 1; //1ターンで自然回復するSp
+    public int PassiveNormalAttackNum { get; set; } = 1;
 
 
     /*  passiveとactiveを反映したプロパティ */
@@ -47,6 +51,7 @@ public class BattleCharacter : MonoBehaviour
     private Dictionary<E_Element, double> FromDamageRate => GetRate(PassiveFromDamageRate, fromDamageRate);
     public double ToNormalAttackRate => PassiveToNormalAttackRate * GetRate(this.toNormalAttackRate);
     public double FromNormalAttackRate => PassiveFromNormalAttackRate * GetRate(this.fromNormalAttackRate);
+
 
 
 

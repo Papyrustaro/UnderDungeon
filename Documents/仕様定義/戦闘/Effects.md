@@ -3,7 +3,10 @@
 ・ToDamageRate, FromDamageRate  
 ・ToNormalAttackRate, FromNormalAttackRate  
 
-・SPの回復量も入れたい  
+・FromDamageRateInDefending(属性関係なし)  
+・AttractInDefending  
+・HealSpInTurn(default == 1)  
+・NormalAttackNum  
 
 # ActiveEffects
 ・MaxHp, MaxAtk, MaxSpd  
