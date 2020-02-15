@@ -2,17 +2,16 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BattlePassiveItem : MonoBehaviour
+public class BattlePassiveItem : BattlePassiveEffect
 {
-    // Start is called before the first frame update
-    void Start()
+    [SerializeField]
+    private E_BattlePassiveItem id;
+
+    public E_BattlePassiveItem ID => id;
+    public override string EffectName => this.id.ToString();
+    public override void OtherFunc(BattleCharacter invoker, List<BattleCharacter> target)
     {
-        
+        //GetComponent<OtherBattleActiveSkillsFunc>().SkillFunc(invoker, target, this);
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }

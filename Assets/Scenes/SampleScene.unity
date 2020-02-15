@@ -1043,6 +1043,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5574414624290733910, guid: c3f5a59eff38e4d449ed9427b0f10858,
         type: 3}
+      propertyPath: haveBattlePassiveSkillID.Array.size
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5574414624290733910, guid: c3f5a59eff38e4d449ed9427b0f10858,
+        type: 3}
       propertyPath: haveExp
       value: 90
       objectReference: {fileID: 0}
@@ -2224,7 +2229,12 @@ PrefabInstance:
     - target: {fileID: 4376891919933371840, guid: e066127918f14e946a2151f538f1c00e,
         type: 3}
       propertyPath: maxSpd
-      value: 999999
+      value: 9999
+      objectReference: {fileID: 0}
+    - target: {fileID: 5061160232512452244, guid: e066127918f14e946a2151f538f1c00e,
+        type: 3}
+      propertyPath: haveBattlePassiveSkillID.Array.size
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5061160232512452244, guid: e066127918f14e946a2151f538f1c00e,
         type: 3}
@@ -3208,6 +3218,57 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1128073290}
   m_CullTransparentMesh: 1
+--- !u!1 &1158154543
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1158154545}
+  - component: {fileID: 1158154544}
+  m_Layer: 0
+  m_Name: BattlePassiveEffectsFunc
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1158154544
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1158154543}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4006cfe560e8b9c41a5083ea106cb8e8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  skillList:
+  - {fileID: 5693105244423394268, guid: 3338a3735f51ef24a8b36b0f23053a2f, type: 3}
+  - {fileID: 6554100692828766194, guid: f5e982d2ee1e34a44b60bd225c1688b4, type: 3}
+  - {fileID: 7023339214563890405, guid: 8bb322021527ddb499db879dda3efbda, type: 3}
+  itemList:
+  - {fileID: 4548651535157533383, guid: 7bdfae1db02072f42a1afb56d10736d1, type: 3}
+  - {fileID: 7801379745881534455, guid: 684797a9fdfd70c43b8859e45bdbb871, type: 3}
+  - {fileID: 4523069879996670023, guid: 23fca230e134bfa40a3ec04d6d4cdde9, type: 3}
+--- !u!4 &1158154545
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1158154543}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 8
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1178627333 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 8642841171715753288, guid: 91f2ed6384ce6a242b8da9ac0c9022f2,
@@ -3718,6 +3779,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 149719019}
     m_Modifications:
+    - target: {fileID: 1394796396292390195, guid: 6728aadce4b8b7644a69467e687f5d74,
+        type: 3}
+      propertyPath: haveBattlePassiveSkillID.Array.size
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1394796396292390195, guid: 6728aadce4b8b7644a69467e687f5d74,
         type: 3}
       propertyPath: haveExp
@@ -6084,9 +6150,11 @@ MonoBehaviour:
   - {fileID: 241843717}
   announceText: {fileID: 1486616416}
   activeEffectFuncs: {fileID: 1242917786}
+  passiveEffectFuncs: {fileID: 1158154544}
   uiManager: {fileID: 694735801}
-  haveItems:
+  haveActiveItems:
   - {fileID: 9151111040061661890, guid: b6cedaabb8e69804abe81954b8235854, type: 3}
+  havePassiveItems: []
 --- !u!4 &2045466973
 Transform:
   m_ObjectHideFlags: 0
@@ -6112,6 +6180,11 @@ PrefabInstance:
         type: 3}
       propertyPath: rarity
       value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 1522330860873923177, guid: 181192d4754373448bff3e620fe79796,
+        type: 3}
+      propertyPath: element
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1879176288748905539, guid: 181192d4754373448bff3e620fe79796,
         type: 3}
@@ -6166,6 +6239,11 @@ PrefabInstance:
     - target: {fileID: 1879176288748905539, guid: 181192d4754373448bff3e620fe79796,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4324497793931535174, guid: 181192d4754373448bff3e620fe79796,
+        type: 3}
+      propertyPath: haveBattlePassiveSkillID.Array.size
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4324497793931535174, guid: 181192d4754373448bff3e620fe79796,

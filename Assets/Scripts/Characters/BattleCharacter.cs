@@ -115,6 +115,7 @@ public class BattleCharacter : MonoBehaviour
         PassiveSpd = charaClass.MaxSpd;
         PassiveToDamageRate = new Dictionary<E_Element, double>() { { E_Element.Fire, 1.0 }, { E_Element.Aqua, 1.0 }, { E_Element.Tree, 1.0 } };
         PassiveFromDamageRate = new Dictionary<E_Element, double>() { { E_Element.Fire, 1.0 }, { E_Element.Aqua, 1.0 }, { E_Element.Tree, 1.0 } };
+        PassiveAttractInDefending = new Dictionary<E_Element, bool>() { { E_Element.Fire, false }, { E_Element.Aqua, false }, { E_Element.Tree, false } };
         Hp = MaxHp;
     }
     private void SetPassiveEffect()

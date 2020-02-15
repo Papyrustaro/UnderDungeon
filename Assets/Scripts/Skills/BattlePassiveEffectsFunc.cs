@@ -10,9 +10,13 @@ public class BattlePassiveEffectsFunc : MonoBehaviour
     [SerializeField]
     private List<BattlePassiveItem> itemList = new List<BattlePassiveItem>();
 
-    public void EffectFunc(BattlePassiveEffect effect, BattleCharacter invoker, List<BattleCharacter> target)
+    public void EffectFunc(E_BattlePassiveSkill skillID, List<BattleCharacter> target)
     {
-        Debug.Log(invoker.CharaClass.CharaName + "の" + effect.EffectName);
+        EffectFunc(GetBattlePassiveSkill(skillID), target);
+    }
+    public void EffectFunc(BattlePassiveEffect effect, List<BattleCharacter> target)
+    {
+        Debug.Log(effect.EffectName);
         switch (effect.EffectType)
         {
             case E_BattlePassiveEffectType.最大Hp増減:
@@ -60,6 +64,11 @@ public class BattlePassiveEffectsFunc : MonoBehaviour
         }
     }
 
+    public BattlePassiveSkill GetBattlePassiveSkill(E_BattlePassiveSkill id)
+    {
+        return this.skillList[(int)id];
+    }
+
     private void AddMaxHpRate(BattleCharacter target, BattlePassiveEffect effect)
     {
         target.PassiveMaxHp = target.PassiveMaxHp * effect.RateOrValue;
@@ -74,15 +83,15 @@ public class BattlePassiveEffectsFunc : MonoBehaviour
     }
     private void AddToDamageRate(BattleCharacter target, BattlePassiveEffect effect)
     {
-        if (ElementClass.IsFire(effect.EffectElement)) target.PassiveToDamageRate[E_Element.Fire] = target.PassiveToDamageRate[E_Element.Fire] * effect.RateOrValue;
-        if (ElementClass.IsAqua(effect.EffectElement)) target.PassiveToDamageRate[E_Element.Aqua] = target.PassiveToDamageRate[E_Element.Aqua] * effect.RateOrValue;
-        if (ElementClass.IsTree(effect.EffectElement)) target.PassiveToDamageRate[E_Element.Tree] = target.PassiveToDamageRate[E_Element.Tree] * effect.RateOrValue;
+        if (ElementClass.IsFire(effect.EffectElement)) target.PassiveToDamageRate[E_Element.Fire] *= effect.RateOrValue;
+        if (ElementClass.IsAqua(effect.EffectElement)) target.PassiveToDamageRate[E_Element.Aqua] *= effect.RateOrValue;
+        if (ElementClass.IsTree(effect.EffectElement)) target.PassiveToDamageRate[E_Element.Tree] *= effect.RateOrValue;
     }
     private void AddFromDamageRate(BattleCharacter target, BattlePassiveEffect effect)
     {
-        if (ElementClass.IsFire(effect.EffectElement)) target.PassiveFromDamageRate[E_Element.Fire] = target.PassiveFromDamageRate[E_Element.Fire] * effect.RateOrValue;
-        if (ElementClass.IsAqua(effect.EffectElement)) target.PassiveFromDamageRate[E_Element.Aqua] = target.PassiveFromDamageRate[E_Element.Aqua] * effect.RateOrValue;
-        if (ElementClass.IsTree(effect.EffectElement)) target.PassiveFromDamageRate[E_Element.Tree] = target.PassiveFromDamageRate[E_Element.Tree] * effect.RateOrValue;
+        if (ElementClass.IsFire(effect.EffectElement)) target.PassiveFromDamageRate[E_Element.Fire] *= effect.RateOrValue;
+        if (ElementClass.IsAqua(effect.EffectElement)) target.PassiveFromDamageRate[E_Element.Aqua] *= effect.RateOrValue;
+        if (ElementClass.IsTree(effect.EffectElement)) target.PassiveFromDamageRate[E_Element.Tree] *= effect.RateOrValue;
     }
     private void AddToNormalAttackRate(BattleCharacter target, BattlePassiveEffect effect)
     {
@@ -116,19 +125,32 @@ public class BattlePassiveEffectsFunc : MonoBehaviour
         target.PassiveFromDamageRateInDefending *= effect.RateOrValue;
     }
 
-    private void EffectToAllTarget(BattlePassiveEffect effect, BattleCharacter invoker, List<BattleCharacter> targetList, Action<BattleCharacter, BattleCharacter, BattlePassiveEffect> func)
-    {
-        foreach (BattleCharacter target in ElementClass.GetListInElement(targetList, effect.TargetElement))
-        {
-            if (!target.IsAlive) continue; //とりあえず倒れているキャラに効果は付与しないことにする
-            func(invoker, target, effect);
-        }
-    }
     private void EffectToAllTarget(BattlePassiveEffect effect, List<BattleCharacter> targetList, Action<BattleCharacter, BattlePassiveEffect> func)
     {
-        foreach (BattleCharacter target in ElementClass.GetListInElement(targetList, effect.TargetElement))
+        foreach (BattleCharacter target in ElementClass.GetListInElement(targetList, effect.TargetElement)) //属性の条件
         {
             if (!target.IsAlive) continue; //とりあえず倒れているキャラに効果は付与しないことにする
+
+            switch (effect.EffectCondition) //属性以外の条件
+            {
+                case E_BattlePassiveEffectCondition.AnyTime:
+                    break;
+                case E_BattlePassiveEffectCondition.HpHigher:
+                    if (target.Hp / target.MaxHp < effect.ConditionValue) continue;
+                    break;
+                case E_BattlePassiveEffectCondition.HpLower:
+                    if (target.Hp / target.MaxHp > effect.ConditionValue) continue;
+                    break;
+                case E_BattlePassiveEffectCondition.SpHigher:
+                    if (target.HaveSkillPoint < effect.ConditionValue) continue;
+                    break;
+                case E_BattlePassiveEffectCondition.SpLower:
+                    if (target.HaveSkillPoint > effect.ConditionValue) continue;
+                    break;
+                case E_BattlePassiveEffectCondition _:
+                    Debug.Log("error");
+                    continue;
+            }
             func(target, effect);
         }
     }

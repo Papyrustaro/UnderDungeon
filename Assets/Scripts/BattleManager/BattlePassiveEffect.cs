@@ -20,33 +20,32 @@ public enum E_BattlePassiveEffectType
     その他,
 }
 
-public enum E_BattlePassiveEffectCondition //PassiveEffect発動条件
+public enum E_BattlePassiveEffectCondition //PassiveEffect発動条件(ElementはTargetElementで管理)
 {
     AnyTime,
     HpHigher,
     HpLower,
     SpHigher,
     SpLower,
-    Element,
 }
 public class BattlePassiveEffect : MonoBehaviour
 {
     [SerializeField]
     private E_BattlePassiveEffectType effectType;
     [SerializeField]
-    private double rateOrValue = 0; 
-    [SerializeField]
-    private string description; //スキルの説明
-    [SerializeField]
-    private E_Element effectElement; //技の属性
+    private double rateOrValue = 0;
     [SerializeField]
     private E_Element targetElement = E_Element.FireAquaTree; //対象とする属性
     [SerializeField]
-    private E_TargetType targetType;
+    private E_TargetType targetType = E_TargetType.AllAlly;
     [SerializeField]
     private E_BattlePassiveEffectCondition effectCondition;
     [SerializeField]
+    private E_Element effectElement = E_Element.FireAquaTree; //技の属性
+    [SerializeField]
     private double conditionValue = 0; //条件の値(例: Hp50%以上→conditionValue=0.5)
+    [SerializeField]
+    private string description; //スキルの説明
 
     public E_Element EffectElement => this.effectElement;
     public E_Element TargetElement => this.targetElement;
@@ -67,9 +66,6 @@ public class BattlePassiveEffect : MonoBehaviour
             string targetText = "";
             switch (this.effectCondition)
             {
-                case E_BattlePassiveEffectCondition.Element:
-                    if (this.targetElement != E_Element.FireAquaTree) targetText = ElementClass.GetStringElement(this.targetElement) + "属性の";
-                    break;
                 case E_BattlePassiveEffectCondition.HpHigher:
                     targetText = "HP" + conditionValue * 100 + "%以上の";
                     break;
@@ -85,6 +81,8 @@ public class BattlePassiveEffect : MonoBehaviour
                 case E_BattlePassiveEffectCondition _:
                     break;
             }
+
+            if (this.targetElement != E_Element.FireAquaTree) targetText += ElementClass.GetStringElement(this.targetElement) + "属性の";
 
             switch (this.targetType)
             {

@@ -10,9 +10,11 @@ public class DungeonBattleManager : MonoBehaviour
     [SerializeField]private List<BattleCharacter> charaList = new List<BattleCharacter>();
     [SerializeField] private Text announceText;
     [SerializeField] private BattleActiveEffectsFunc activeEffectFuncs;
+    [SerializeField] private BattlePassiveEffectsFunc passiveEffectFuncs;
     [SerializeField] private BattleUIManager uiManager;
 
-    [SerializeField] private List<BattleActiveItem> haveItems;
+    [SerializeField] private List<BattleActiveItem> haveActiveItems;
+    [SerializeField] private List<BattlePassiveItem> havePassiveItems;
 
     private bool finishAction = true;
     private int charaNum; //戦闘に参加しているchara数
@@ -46,15 +48,18 @@ public class DungeonBattleManager : MonoBehaviour
         }
         //this.targetIndex = this.charaList.IndexOf(GetAliveList(this.enemyList)[0]);
         this.target = this.GetAliveList(this.enemyList)[0];
+
+        //SetPassiveEffect();
     }
 
     private void Update()
     {
-        /*if (debug)
+        if (debug)
         {
+            SetPassiveEffect();
             DebugFunc(); debug = false;
+            return;
         }
-        return;*/
         if (finishAction)
         {
             //DebugFunc(); finishAction = false;
@@ -105,9 +110,16 @@ public class DungeonBattleManager : MonoBehaviour
             AdvanceTurn();
         }
     }
-    private void DebugFunc(BattleCharacter target)
+    private void DebugFunc()
     {
-        Debug.Log(target.Hp + "/" + target.MaxHp);
+        foreach (BattleCharacter bc in this.allyList)
+        {
+            //Debug.Log(bc.CharaClass.CharaName + ":火" + bc.GetToDamageRate(E_Element.Fire) + " 水" + bc.GetToDamageRate(E_Element.Aqua) + " 木" + bc.GetToDamageRate(E_Element.Tree));
+            //Debug.Log(bc.HaveSkillPoint);
+            //Debug.Log(bc.PassiveNormalAttackNum);
+            //Debug.Log(bc.PassiveHealSpInTurn);
+            Debug.Log(bc.PassiveAttractInDefending[E_Element.Fire] + "/" + bc.PassiveAttractInDefending[E_Element.Aqua] + "/" + bc.PassiveAttractInDefending[E_Element.Tree]);
+        }
     }
     private void PlayerSelect()
     {
@@ -238,7 +250,7 @@ public class DungeonBattleManager : MonoBehaviour
     {
         string s = "";
         int i = 0; 
-        foreach(BattleActiveItem item in this.haveItems)
+        foreach(BattleActiveItem item in this.haveActiveItems)
         {
             s += " " + i.ToString() + ":" + item.EffectName;
             i++;
@@ -282,14 +294,14 @@ public class DungeonBattleManager : MonoBehaviour
             this.waitingEffect = null;
             return;
         }
-        for (int i = 0; i < this.haveItems.Count; i++) 
+        for (int i = 0; i < this.haveActiveItems.Count; i++) 
         {
             if (Input.GetKeyDown(i.ToString()))
             {
-                InvokeEffect(invoker, this.haveItems[i]);
+                InvokeEffect(invoker, this.haveActiveItems[i]);
                 if (this.currentSituation == E_BattleSituation.PlayerSelectItemTarget)
                 {
-                    this.waitingEffect = this.haveItems[i];
+                    this.waitingEffect = this.haveActiveItems[i];
                 }
             }
         }
@@ -443,6 +455,39 @@ public class DungeonBattleManager : MonoBehaviour
             //特殊な処理
             actionEnemy.EC.EnemyAI.EnemyActionFunc(this.enemyList, this.allyList, actionEnemy, this.activeEffectFuncs);
             AdvanceTurn();
+        }
+    }
+
+    /// <summary>
+    /// Set all passiveEffects by skills and items to all ally.
+    /// </summary>
+    public void SetPassiveEffect()
+    {
+        //itemのpassiveEffect反映
+        foreach(BattlePassiveEffect effect in this.havePassiveItems)
+        {
+            this.passiveEffectFuncs.EffectFunc(effect, this.allyList); //itemは見方全体にのみ対象...?
+        }
+
+        //skillのpassiveEffect反映
+        foreach(BattleCharacter bc in this.allyList)
+        {
+            for(int i = 0; i < bc.PC.HaveBattlePassiveSkillID.Length; i++)
+            {
+                if (bc.PC.UseAbleBattlePassiveSkillLV[i] > bc.PC.LV) break; //解放されていないスキルは飛ばす
+                switch (this.passiveEffectFuncs.GetBattlePassiveSkill(bc.PC.HaveBattlePassiveSkillID[i]).TargetType)
+                {
+                    case E_TargetType.AllAlly:
+                        this.passiveEffectFuncs.EffectFunc(bc.PC.HaveBattlePassiveSkillID[i], this.allyList);
+                        break;
+                    case E_TargetType.Self:
+                        this.passiveEffectFuncs.EffectFunc(bc.PC.HaveBattlePassiveSkillID[i], new List<BattleCharacter>() { bc });
+                        break;
+                    case E_TargetType _:
+                        Debug.Log("error");
+                        break;
+                }
+            }
         }
     }
 }
