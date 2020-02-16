@@ -7,4 +7,5 @@ public enum E_BattlePassiveSkill
     デバッグ0,
     デバッグ1,
     デバッグ2,
+    OtherSample,
 }

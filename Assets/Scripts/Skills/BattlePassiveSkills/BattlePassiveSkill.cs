@@ -9,9 +9,9 @@ public class BattlePassiveSkill : BattlePassiveEffect
 
     public E_BattlePassiveSkill ID => id;
     public override string EffectName => this.id.ToString();
-    public override void OtherFunc(BattleCharacter invoker, List<BattleCharacter> target)
+    public override void OtherFunc(BattleCharacter target)
     {
-        //GetComponent<OtherBattleActiveSkillsFunc>().SkillFunc(invoker, target, this);
+        GetComponent<OtherBattlePassiveSkillsFunc>().SkillFunc(target, this);
     }
 
 }

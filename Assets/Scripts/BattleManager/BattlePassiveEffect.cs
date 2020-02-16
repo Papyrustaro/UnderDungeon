@@ -55,7 +55,7 @@ public class BattlePassiveEffect : MonoBehaviour
     public E_BattlePassiveEffectCondition EffectCondition => this.effectCondition;
     public double ConditionValue => this.conditionValue;
     public virtual string EffectName { get { return "error"; } }
-    public virtual void OtherFunc(BattleCharacter invoker, List<BattleCharacter> target) { Debug.Log("error"); }
+    public virtual void OtherFunc(BattleCharacter target) { Debug.Log("error"); }
     public string Description
     {
         get

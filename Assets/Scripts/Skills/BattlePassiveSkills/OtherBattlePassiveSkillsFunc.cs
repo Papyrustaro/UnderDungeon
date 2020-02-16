@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class OtherBattlePassiveSkillsFunc : MonoBehaviour
+public abstract class OtherBattlePassiveSkillsFunc : MonoBehaviour
 {
-    
+    public virtual void SkillFunc(BattleCharacter target, BattlePassiveSkill skill)
+    {
+    }
 }

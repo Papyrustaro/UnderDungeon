@@ -59,7 +59,8 @@ public class BattlePassiveEffectsFunc : MonoBehaviour
                 //GetComposeでBattleActiveSkillを読み取って発動?
                 break;
 
-            case E_BattlePassiveEffectType.その他: //ActiveSkillのほうで全部やって、こちらはいらない?
+            case E_BattlePassiveEffectType.その他: 
+                EffectToAllTarget(effect, target, effect.OtherFunc);
                 break;
         }
     }
@@ -152,6 +153,35 @@ public class BattlePassiveEffectsFunc : MonoBehaviour
                     continue;
             }
             func(target, effect);
+        }
+    }
+    private void EffectToAllTarget(BattlePassiveEffect effect, List<BattleCharacter> targetList, Action<BattleCharacter> func)
+    {
+        foreach (BattleCharacter target in ElementClass.GetListInElement(targetList, effect.TargetElement)) //属性の条件
+        {
+            if (!target.IsAlive) continue; //とりあえず倒れているキャラに効果は付与しないことにする
+
+            switch (effect.EffectCondition) //属性以外の条件
+            {
+                case E_BattlePassiveEffectCondition.AnyTime:
+                    break;
+                case E_BattlePassiveEffectCondition.HpHigher:
+                    if (target.Hp / target.MaxHp < effect.ConditionValue) continue;
+                    break;
+                case E_BattlePassiveEffectCondition.HpLower:
+                    if (target.Hp / target.MaxHp > effect.ConditionValue) continue;
+                    break;
+                case E_BattlePassiveEffectCondition.SpHigher:
+                    if (target.HaveSkillPoint < effect.ConditionValue) continue;
+                    break;
+                case E_BattlePassiveEffectCondition.SpLower:
+                    if (target.HaveSkillPoint > effect.ConditionValue) continue;
+                    break;
+                case E_BattlePassiveEffectCondition _:
+                    Debug.Log("error");
+                    continue;
+            }
+            func(target);
         }
     }
 }

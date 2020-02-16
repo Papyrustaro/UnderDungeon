@@ -4,7 +4,8 @@ using UnityEngine;
 
 public abstract class OtherBattlePassiveItemsFunc : MonoBehaviour
 {
-    public virtual void ItemFunc(BattleCharacter invoker, List<BattleCharacter> target, BattleActiveItem item)
+    public virtual void ItemFunc(BattleCharacter target, BattlePassiveItem item)
     {
+
     }
 }
