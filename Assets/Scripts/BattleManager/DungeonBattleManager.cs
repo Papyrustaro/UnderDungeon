@@ -56,6 +56,7 @@ public class DungeonBattleManager : MonoBehaviour
     {
         if (debug)
         {
+            this.allyList[0].DecreaseHpByRate(0.1);
             SetPassiveEffect();
             DebugFunc(); debug = false;
             return;
@@ -118,7 +119,8 @@ public class DungeonBattleManager : MonoBehaviour
             //Debug.Log(bc.HaveSkillPoint);
             //Debug.Log(bc.PassiveNormalAttackNum);
             //Debug.Log(bc.PassiveHealSpInTurn);
-            Debug.Log(bc.PassiveAttractInDefending[E_Element.Fire] + "/" + bc.PassiveAttractInDefending[E_Element.Aqua] + "/" + bc.PassiveAttractInDefending[E_Element.Tree]);
+            //Debug.Log(bc.PassiveAttractInDefending[E_Element.Fire] + "/" + bc.PassiveAttractInDefending[E_Element.Aqua] + "/" + bc.PassiveAttractInDefending[E_Element.Tree]);
+            Debug.Log(bc.MaxHp + " " + bc.Atk + " " + bc.Spd);
         }
     }
     private void PlayerSelect()

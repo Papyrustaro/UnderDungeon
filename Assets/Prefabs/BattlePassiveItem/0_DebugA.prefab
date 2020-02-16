@@ -44,11 +44,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   effectType: 1
-  rateOrValue: 1.1
+  rateOrValue: 100
   targetElement: 6
   targetType: 3
-  effectCondition: 0
+  effectCondition: 1
   effectElement: 6
-  conditionValue: 0
+  conditionValue: 0.9
   description: 
   id: 0

@@ -44,8 +44,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   effectType: 2
-  rateOrValue: 1.1
-  targetElement: 6
+  rateOrValue: 10
+  targetElement: 2
   targetType: 3
   effectCondition: 0
   effectElement: 0
