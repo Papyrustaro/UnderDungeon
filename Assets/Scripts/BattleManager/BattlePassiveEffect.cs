@@ -16,8 +16,8 @@ public enum E_BattlePassiveEffectType
     Sp回復量増加, //強すぎる気もする。バランス崩れそう→厳しい条件ならアリ？
     防御時被ダメージ軽減,
     防御時攻撃集中,
-    開始時ActiveSkill発動,
-    その他,
+    その他常時,
+    その他開始時,
 }
 
 public enum E_BattlePassiveEffectCondition //PassiveEffect発動条件(ElementはTargetElementで管理)
@@ -60,7 +60,7 @@ public class BattlePassiveEffect : MonoBehaviour
     {
         get
         {
-            if (this.description != "" || this.effectType == E_BattlePassiveEffectType.その他) return this.description;
+            if (this.description != "" || this.effectType == E_BattlePassiveEffectType.その他常時 || this.effectType == E_BattlePassiveEffectType.その他開始時) return this.description;
 
 
             string targetText = "";
@@ -127,12 +127,19 @@ public class BattlePassiveEffect : MonoBehaviour
                     else return targetText + "防御時" +  ElementClass.GetStringElement(this.effectElement) + "属性の攻撃集中";
                 case E_BattlePassiveEffectType.防御時被ダメージ軽減:
                     return targetText + "の防御時被ダメージ" + this.rateOrValue + "倍";
-                case E_BattlePassiveEffectType.開始時ActiveSkill発動:
-                    return targetText + "(開始時AS発動)";
                 case E_BattlePassiveEffectType _:
                     return "エラー";
 
             }
         }
+    }
+
+    /// <summary>
+    /// passiveEffectの効果適用が戦闘開始時のみか
+    /// </summary>
+    /// <returns></returns>
+    public bool EffectIsOnlyFirst()
+    {
+        return this.effectType == E_BattlePassiveEffectType.開始時Sp増加 || this.effectType == E_BattlePassiveEffectType.その他開始時; //「その他」の判断はどうする？
     }
 }

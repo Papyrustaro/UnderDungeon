@@ -44,7 +44,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9d82715d428b15f47a664bf033028fdd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  effectType: 13
+  effectType: 12
   rateOrValue: 2
   targetElement: 2
   targetType: 3

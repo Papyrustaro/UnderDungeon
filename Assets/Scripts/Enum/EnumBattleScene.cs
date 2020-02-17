@@ -5,6 +5,7 @@ using UnityEngine;
 /* 戦闘において、現在どの状態にあるか */
 public enum E_BattleSituation
 {
+    SetParameterBeforeStartBattle, //戦闘開始前のパラメータ反映(passiveEffectなど)
     PlayerSelectAction, //どの行動をとるかプレイヤーの入力待ち
     PlayerSelectActiveSkill, //どのスキルを発動するかプレイヤーの入力待ち
     PlayerSelectActiveItem, //どのアイテムを使うかプレイヤーの入力待ち

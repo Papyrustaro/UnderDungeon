@@ -27,7 +27,7 @@ public class DungeonBattleManager : MonoBehaviour
     public List<BattleCharacter> AliveCharaList => GetAliveList(this.charaList);
     private int targetIndex;
     private BattleCharacter target;
-    private E_BattleSituation currentSituation = E_BattleSituation.WaitFinishAction;
+    private E_BattleSituation currentSituation = E_BattleSituation.SetParameterBeforeStartBattle;
 
     private List<BattleCharacter> allyList = new List<BattleCharacter>();
     private List<BattleCharacter> enemyList = new List<BattleCharacter>();
@@ -57,7 +57,9 @@ public class DungeonBattleManager : MonoBehaviour
         if (debug)
         {
             this.allyList[0].DecreaseHpByRate(0.1);
+            this.currentSituation = E_BattleSituation.SetParameterBeforeStartBattle;
             SetPassiveEffect();
+            this.currentSituation = E_BattleSituation.WaitFinishAction;
             DebugFunc(); debug = false;
             return;
         }
@@ -69,6 +71,7 @@ public class DungeonBattleManager : MonoBehaviour
                 nextActionIndex = 0;
                 SortCharacterBySpd();
             }
+            SetPassiveEffect(); //行動前に毎回passiveEffectを呼ぶ(HP,SP,属性条件が変わるため)
             this.charaList[nextActionIndex].SetBeforeAction();
             CharacterAction();
         }else
@@ -461,7 +464,7 @@ public class DungeonBattleManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Set all passiveEffects by skills and items to all ally.
+    /// Set all passiveEffects by skills and items.
     /// </summary>
     public void SetPassiveEffect()
     {
@@ -477,13 +480,15 @@ public class DungeonBattleManager : MonoBehaviour
             for(int i = 0; i < bc.PC.HaveBattlePassiveSkillID.Length; i++)
             {
                 if (bc.PC.UseAbleBattlePassiveSkillLV[i] > bc.PC.LV) break; //解放されていないスキルは飛ばす
-                switch (this.passiveEffectFuncs.GetBattlePassiveSkill(bc.PC.HaveBattlePassiveSkillID[i]).TargetType)
+                BattlePassiveSkill passiveSkill = this.passiveEffectFuncs.GetBattlePassiveSkill(bc.PC.HaveBattlePassiveSkillID[i]);
+                if (passiveSkill.EffectIsOnlyFirst() && this.currentSituation != E_BattleSituation.SetParameterBeforeStartBattle) break; //戦闘開始時のみ適用スキル
+                switch (passiveSkill.TargetType)
                 {
                     case E_TargetType.AllAlly:
-                        this.passiveEffectFuncs.EffectFunc(bc.PC.HaveBattlePassiveSkillID[i], this.allyList);
+                        this.passiveEffectFuncs.EffectFunc(passiveSkill, this.allyList);
                         break;
                     case E_TargetType.Self:
-                        this.passiveEffectFuncs.EffectFunc(bc.PC.HaveBattlePassiveSkillID[i], new List<BattleCharacter>() { bc });
+                        this.passiveEffectFuncs.EffectFunc(passiveSkill, new List<BattleCharacter>() { bc });
                         break;
                     case E_TargetType _:
                         Debug.Log("error");

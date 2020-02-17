@@ -55,11 +55,9 @@ public class BattlePassiveEffectsFunc : MonoBehaviour
             case E_BattlePassiveEffectType.防御時被ダメージ軽減:
                 EffectToAllTarget(effect, target, AddFromDamageRateInDefending);
                 break;
-            case E_BattlePassiveEffectType.開始時ActiveSkill発動:
-                //GetComposeでBattleActiveSkillを読み取って発動?
-                break;
 
-            case E_BattlePassiveEffectType.その他: 
+            case E_BattlePassiveEffectType.その他常時:
+            case E_BattlePassiveEffectType.その他開始時:
                 EffectToAllTarget(effect, target, effect.OtherFunc);
                 break;
         }
