@@ -16,14 +16,9 @@ public class DungeonBattleManager : MonoBehaviour
 
     private bool finishAction = true;
     private int charaNum; //戦闘に参加しているchara数
-    private List<int> playerIndex, playerAliveIndex;
-    private List<int> enemyIndex, enemyAliveIndex;
     private int nextActionIndex = 99;
-    private bool inputWaiting = false; //プレイヤーの入力まち
     private bool inputTargetWaiting = false;
     private BattleActiveEffect waitingEffect = null;
-    public List<BattleCharacter> AliveCharaList => GetAliveList(this.charaList);
-    private int targetIndex;
     private BattleCharacter target;
     private E_BattleSituation currentSituation = E_BattleSituation.SetParameterBeforeStartBattle;
 
@@ -34,7 +29,7 @@ public class DungeonBattleManager : MonoBehaviour
 
     private void Awake()
     {
-        //SetCharacter();
+        
     }
     private void Start()
     {
@@ -44,10 +39,8 @@ public class DungeonBattleManager : MonoBehaviour
             if (bc.IsEnemy) this.enemyList.Add(bc);
             else this.allyList.Add(bc);
         }
-        //this.targetIndex = this.charaList.IndexOf(GetAliveList(this.enemyList)[0]);
+        
         this.target = this.GetAliveList(this.enemyList)[0];
-
-        //SetPassiveEffect();
     }
 
     private void Update()
@@ -67,35 +60,40 @@ public class DungeonBattleManager : MonoBehaviour
         }
         if (finishAction)
         {
-            //DebugFunc(); finishAction = false;
+            ReSetPassiveEffect(); //行動前に毎回passiveEffectを呼ぶ(HP,SP,属性条件が変わるため)
+            this.charaList[nextActionIndex].SetBeforeAction();
             if (charaNum <= nextActionIndex) //1週したら
             {
                 nextActionIndex = 0;
                 SortCharacterBySpd();
             }
-            Debug.Log(allyList[0].Atk + ":" + allyList[0].Hp + "/" + allyList[0].MaxHp);
-            ReSetPassiveEffect(); //行動前に毎回passiveEffectを呼ぶ(HP,SP,属性条件が変わるため)
-            this.charaList[nextActionIndex].SetBeforeAction();
-            Debug.Log(allyList[0].Atk + ":" + allyList[0].Hp + "/" + allyList[0].MaxHp);
             CharacterAction();
         }else
         {
             PlayerSelect();
         }
     }
+
+    /// <summary>
+    /// ボタンで取得したtarget情報をセット
+    /// </summary>
+    /// <param name="target">ターゲット</param>
     public void SetInputTarget(BattleCharacter target)
     {
-        if (!target.IsAlive) { Debug.Log("もう死んでいます"); return; } //とりあえず
-        //this.targetIndex = charaList.IndexOf(target);
+        if (!target.IsAlive) { Debug.Log("もう死んでいます"); return; } 
         this.target = target;
-        BattleUIManager.ShowAnnounce("target: " + target.CharaClass.CharaName);
+        Debug.Log("target: " + target.CharaClass.CharaName);
         this.inputTargetWaiting = false;
 
-        if (!target.IsEnemy)
+        if (!target.IsEnemy) //ボタンの有効を敵に戻す
         {
             uiManager.SetActiveAllyTargetButtons(false);
         }
     }
+
+    /// <summary>
+    /// 倒れていれば次のキャラへ、敵ならAI行動、プレイヤーなら入力待機に移行する
+    /// </summary>
     private void CharacterAction()
     {
         if (charaList[nextActionIndex].IsAlive)
@@ -108,8 +106,6 @@ public class DungeonBattleManager : MonoBehaviour
             {
                 if (!this.target.IsEnemy || !this.target.IsAlive) this.target = GetAliveList(this.enemyList)[0];
                 ShowPlayerActionSelect();
-                //ShowAnnounce(charaList[nextActionIndex].CharaClass.CharaName + "のばん");
-                //ShowActiveSkillSelect(charaList[nextActionIndex]);
                 this.finishAction = false;
             }
         }
@@ -118,9 +114,14 @@ public class DungeonBattleManager : MonoBehaviour
             AdvanceTurn();
         }
     }
+
     private void DebugFunc()
     {
     }
+
+    /// <summary>
+    /// currentSituationによって、プレイヤーの入力遷移を分岐する
+    /// </summary>
     private void PlayerSelect()
     {
         switch (this.currentSituation)
@@ -145,6 +146,10 @@ public class DungeonBattleManager : MonoBehaviour
                 break;
         }
     }
+
+    /// <summary>
+    /// 4つの行動(通常攻撃、スキル、アイテム、防御)からプレイヤーの入力で分岐する
+    /// </summary>
     private void InputPlayerAction()
     {
         if (Input.GetKeyDown(((int)E_PlayerAction.NormalAttack).ToString()))
@@ -168,7 +173,13 @@ public class DungeonBattleManager : MonoBehaviour
             Defend(charaList[nextActionIndex]);
         }
     }
-    //なぜこの処理をこちら側でするか→oneAllyのときターゲット入力が必要だから→それが解決できたらFuncクラスでの実装でもいいか?
+
+
+    /// <summary>
+    /// ActiveEffect(skill or item)の発動、ターン経過
+    /// </summary>
+    /// <param name="invoker">Effect発動者</param>
+    /// <param name="effect">発動するActiveEffect</param>
     private void InvokeEffect(BattleCharacter invoker, BattleActiveEffect effect)
     {
         switch (effect.TargetType)
@@ -222,12 +233,21 @@ public class DungeonBattleManager : MonoBehaviour
         AdvanceTurn();
 
     }
+
+    /// <summary>
+    /// 防御処理、ターン経過
+    /// </summary>
+    /// <param name="defendChara">行動キャラ</param>
     private void Defend(BattleCharacter defendChara)
     {
         defendChara.IsDefending = true;
         ShowAnnounce(defendChara.CharaClass.CharaName + "は防御している");
         AdvanceTurn();
     }
+
+    /// <summary>
+    /// プレイヤーの行動選択のテキスト出力
+    /// </summary>
     private void ShowPlayerActionSelect()
     {
         ShowAnnounce(charaList[nextActionIndex].CharaClass.CharaName + "のばん");
@@ -235,6 +255,11 @@ public class DungeonBattleManager : MonoBehaviour
         this.currentSituation = E_BattleSituation.PlayerSelectAction;
         this.finishAction = false;
     }
+
+    /// <summary>
+    /// 保持ActiveSkillをテキストに表示
+    /// </summary>
+    /// <param name="bc">スキルを表示するキャラ</param>
     private void ShowActiveSkillSelect(BattleCharacter bc)
     {
         string s = "";
@@ -246,6 +271,10 @@ public class DungeonBattleManager : MonoBehaviour
         }
         ShowAnnounce(s);
     }
+
+    /// <summary>
+    /// 所持しているActiveItemsをテキストに表示する
+    /// </summary>
     private void ShowActiveItemSelect()
     {
         string s = "";
@@ -257,6 +286,10 @@ public class DungeonBattleManager : MonoBehaviour
         }
         ShowAnnounce(s);
     }
+
+    /// <summary>
+    /// ActiveSkillの選択画面で、番号入力で対応スキルを発動
+    /// </summary>
     private void InputActuateSkill()
     {
         BattleCharacter invoker = charaList[nextActionIndex];
@@ -285,6 +318,10 @@ public class DungeonBattleManager : MonoBehaviour
             }
         }
     }
+
+    /// <summary>
+    /// ActiveItemの選択画面で、番号入力で対応アイテムを発動
+    /// </summary>
     private void InputActuateItem()
     {
         BattleCharacter invoker = charaList[nextActionIndex];
@@ -306,6 +343,12 @@ public class DungeonBattleManager : MonoBehaviour
             }
         }
     }
+
+    /// <summary>
+    /// 生存しているキャラをリストで返す
+    /// </summary>
+    /// <param name="bcList">探索するキャラリスト</param>
+    /// <returns>生存リスト</returns>
     private List<BattleCharacter> GetAliveList(List<BattleCharacter> bcList)
     {
         List<BattleCharacter> list = new List<BattleCharacter>();
@@ -315,15 +358,12 @@ public class DungeonBattleManager : MonoBehaviour
         }
         return list;
     }
-    private List<int> GetAliveIndexListOfCharaList(List<BattleCharacter> bcList)
-    {
-        List<int> list = new List<int>();
-        foreach(BattleCharacter bc in bcList)
-        {
-            if (bc.Hp > 0) list.Add(charaList.IndexOf(bc));
-        }
-        return list;
-    }
+ 
+    /// <summary>
+    /// 通常攻撃、ターン経過処理
+    /// </summary>
+    /// <param name="attacker">攻撃者</param>
+    /// <param name="target">攻撃対象</param>
     private void NormalAttack(BattleCharacter attacker, BattleCharacter target)
     {
         ShowAnnounce(attacker.CharaClass.CharaName + "の通常攻撃");
@@ -333,6 +373,12 @@ public class DungeonBattleManager : MonoBehaviour
         }
         AdvanceTurn();
     }
+
+    /// <summary>
+    /// 通常攻撃、ターン経過処理
+    /// </summary>
+    /// <param name="attacker">攻撃者</param>
+    /// <param name="targetList">攻撃対象リスト</param>
     private void NormalAttack(BattleCharacter attacker, List<BattleCharacter> targetList)
     {
         ShowAnnounce(attacker.CharaClass.CharaName + "の通常攻撃");
@@ -345,44 +391,38 @@ public class DungeonBattleManager : MonoBehaviour
         }
         AdvanceTurn();
     }
+
+    /// <summary>
+    /// ターン経過処理
+    /// </summary>
     private void AdvanceTurn()
     {
-        if (this.charaList[nextActionIndex].IsAlive) this.charaList[nextActionIndex].SetAfterActiton();
+        if (this.charaList[nextActionIndex].IsAlive) this.charaList[nextActionIndex].SetAfterAction();
         this.finishAction = true;
         this.nextActionIndex++;
     }
+
+    /// <summary>
+    /// AnnounceText.textを変える
+    /// </summary>
+    /// <param name="s">代入するtext</param>
     private void ShowAnnounce(string s)
     {
         Debug.Log(s);
         this.announceText.text = s;
     }
-    private void SetCharaIndex()
-    {
-        this.playerIndex = new List<int>();
-        this.enemyIndex = new List<int>();
-        this.playerAliveIndex = new List<int>();
-        this.enemyAliveIndex = new List<int>();
-        int index = 0;
-        foreach(BattleCharacter bc in charaList)
-        {
-            if (bc.IsEnemy)
-            {
-                enemyIndex.Add(index);
-                if (bc.Hp > 0) enemyAliveIndex.Add(index);
-            }
-            else
-            {
-                playerIndex.Add(index);
-                if (bc.Hp > 0) playerAliveIndex.Add(index);
-            }
-            index++;
-        }
-    }
+
+    /// <summary>
+    /// charaListをSpd順にソート
+    /// </summary>
     private void SortCharacterBySpd()
     {
         charaList.Sort((a, b) => (int)(b.Spd - a.Spd));
-        //SetCharaIndex();
     }
+
+    /// <summary>
+    /// BattleManagerからBattleCharacterをセット
+    /// </summary>
     public void SetCharacter()
     {
         DungeonManager dm = GetComponent<DungeonManager>();
@@ -390,34 +430,22 @@ public class DungeonBattleManager : MonoBehaviour
         List<EnemyCharacter> enemyList = dm.EnemyList;
         foreach(PlayerCharacter player in playerList)
         {
-            //this.playerList.Add(player.GetComponent<BattlePlayerCharacter>());
+            this.allyList.Add(player.GetComponent<BattleCharacter>());
             this.charaList.Add(player.GetComponent<BattleCharacter>());
         }
         foreach(EnemyCharacter enemy in enemyList)
         {
-            //this.enemyList.Add(enemy.GetComponent<BattleEnemyCharacter>());
+            this.enemyList.Add(enemy.GetComponent<BattleCharacter>());
             this.charaList.Add(enemy.GetComponent<BattleCharacter>());
         }
     }
-    private void ShowAnnounce(E_BattleSituation scene)
-    {
-        switch (scene)
-        {
-            case E_BattleSituation.PlayerSelectAction:
-                ShowAnnounce(charaList[nextActionIndex].CharaClass.CharaName + "はどうする");
-                ShowAnnounce("0:通常攻撃 1:防御 2:スキル 3:アイテム");
-                break;
-            case E_BattleSituation.PlayerSelectActiveSkill:
-                ShowActiveSkillSelect(charaList[nextActionIndex]);
-                break;
-            case E_BattleSituation.PlayerSelectActiveItem:
-                ShowAnnounce("アイテムを選択してください(未実装)");
-                break;
-            case E_BattleSituation.PlayerSelectSkillTarget:
-                ShowAnnounce("スキルの対象を選択してください");
-                break;
-        }
-    }
+
+    /// <summary>
+    /// 攻撃を集中しているキャラクターをリストの先頭から探索
+    /// </summary>
+    /// <param name="attractElement">集中している属性</param>
+    /// <param name="charaList">探索するキャラリスト</param>
+    /// <returns>最初に見つかった集中させているキャラ(いなければnull)</returns>
     public BattleCharacter GetAttractingCharacter(E_Element attractElement, List<BattleCharacter> charaList) //charaListの先頭から検索していくため、sortされないlistを渡す必要がある
     {
         foreach(BattleCharacter bc in charaList)
@@ -426,6 +454,11 @@ public class DungeonBattleManager : MonoBehaviour
         }
         return null;
     }
+
+    /// <summary>
+    /// 敵のAIにそって自動で行動する
+    /// </summary>
+    /// <param name="actionEnemy">行動する敵キャラ</param>
     private void EnemyAction(BattleCharacter actionEnemy)
     {
         if (!actionEnemy.EC.HaveSpecialAI)
@@ -501,9 +534,10 @@ public class DungeonBattleManager : MonoBehaviour
             bc.InitCondition(); //一応条件保持パラメータを初期化
         }
     }
-
     
-
+    /// <summary>
+    /// HPなどの条件変化に対応するための、PassiveEffectの初期化と再代入
+    /// </summary>
     public void ReSetPassiveEffect()
     {
         foreach(BattleCharacter bc in this.allyList)

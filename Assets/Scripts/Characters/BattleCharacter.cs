@@ -433,7 +433,7 @@ public class BattleCharacter : MonoBehaviour
         ElapseTurn(this.spRegeneration);
         IsDefending = false;
     }
-    public void SetAfterActiton() //行動後に呼ぶ関数
+    public void SetAfterAction() //行動後に呼ぶ関数
     {
         ElapseAllTurn();
         AddHaveSkillPoint(PassiveHealSpInTurn);
