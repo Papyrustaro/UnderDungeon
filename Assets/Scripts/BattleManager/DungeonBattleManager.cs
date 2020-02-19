@@ -120,15 +120,6 @@ public class DungeonBattleManager : MonoBehaviour
     }
     private void DebugFunc()
     {
-        foreach (BattleCharacter bc in this.allyList)
-        {
-            //Debug.Log(bc.CharaClass.CharaName + ":火" + bc.GetToDamageRate(E_Element.Fire) + " 水" + bc.GetToDamageRate(E_Element.Aqua) + " 木" + bc.GetToDamageRate(E_Element.Tree));
-            //Debug.Log(bc.HaveSkillPoint);
-            //Debug.Log(bc.PassiveNormalAttackNum);
-            //Debug.Log(bc.PassiveHealSpInTurn);
-            //Debug.Log(bc.PassiveAttractInDefending[E_Element.Fire] + "/" + bc.PassiveAttractInDefending[E_Element.Aqua] + "/" + bc.PassiveAttractInDefending[E_Element.Tree]);
-            //Debug.Log(bc.MaxHp + " " + bc.Atk + " " + bc.Spd);
-        }
     }
     private void PlayerSelect()
     {
@@ -442,9 +433,10 @@ public class DungeonBattleManager : MonoBehaviour
             List<BattleActiveSkill> useableSkill = new List<BattleActiveSkill>();
             foreach(E_BattleActiveSkill skillID in actionEnemy.EC.HaveBattleActtiveSkillID)
             {
-                if(actionEnemy.HaveSkillPoint >= this.activeEffectFuncs.GetBattleActiveSkill(skillID).NeedSkillPoint)
+                BattleActiveSkill skill = this.activeEffectFuncs.GetBattleActiveSkill(skillID);
+                if(actionEnemy.HaveSkillPoint >= skill.NeedSkillPoint)
                 {
-                    useableSkill.Add(this.activeEffectFuncs.GetBattleActiveSkill(skillID));
+                    if(skill.EffectType != E_BattleActiveEffectType.HP回復 || BattleMethod.GetLowerHpChara(this.enemyList, 0.5) != null) useableSkill.Add(this.activeEffectFuncs.GetBattleActiveSkill(skillID));
                 }
             }
             int action = UnityEngine.Random.Range(0, useableSkill.Count + 1);
