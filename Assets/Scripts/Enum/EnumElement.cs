@@ -52,7 +52,23 @@ public class ElementClass
         }
         return list;
     }
-
+    /// <summary>
+    /// PassiveEffect用の条件用保持パラメータ(Conditon)を利用した属性サーチ
+    /// </summary>
+    /// <param name="baseList"></param>
+    /// <param name="searchElement"></param>
+    /// <returns>検索属性をもつキャラのリスト</returns>
+    public static List<BattleCharacter> GetListInElementByCondition(List<BattleCharacter> baseList, E_Element searchElement)
+    {
+        List<BattleCharacter> list = new List<BattleCharacter>();
+        foreach (BattleCharacter bc in baseList)
+        {
+            if (ElementClass.IsFire(searchElement) && ElementClass.IsFire(bc.Condition.Element)) list.Add(bc);
+            else if (ElementClass.IsAqua(searchElement) && ElementClass.IsAqua(bc.Condition.Element)) list.Add(bc);
+            else if (ElementClass.IsTree(searchElement) && ElementClass.IsTree(bc.Condition.Element)) list.Add(bc);
+        }
+        return list;
+    }
     /* 属性倍率を返す */
     public static double GetElementCompatibilityRate(E_Element attackElement, E_Element targetElement)
     {

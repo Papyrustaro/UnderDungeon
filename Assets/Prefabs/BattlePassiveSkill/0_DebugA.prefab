@@ -43,12 +43,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9d82715d428b15f47a664bf033028fdd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  effectType: 1
-  rateOrValue: 3
+  effectType: 0
+  rateOrValue: 10
   targetElement: 6
   targetType: 4
-  effectCondition: 0
+  effectCondition: 2
   effectElement: 0
-  conditionValue: 0
-  description: 
+  conditionValue: 0.9999
+  description: "\u4F53\u529B\u3075\u3048\u308B\u3084\u3064"
   id: 0

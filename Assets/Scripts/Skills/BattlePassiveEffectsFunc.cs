@@ -46,9 +46,9 @@ public class BattlePassiveEffectsFunc : MonoBehaviour
             case E_BattlePassiveEffectType.Sp回復量増加:
                 EffectToAllTarget(effect, target, AddHealSpPower);
                 break;
-            /*case E_BattlePassiveEffectType.開始時Sp増減: //これを毎回呼ばれては困る
+            case E_BattlePassiveEffectType.開始時Sp増加:
                 EffectToAllTarget(effect, target, AddSpBeforeBattle);
-                break;*/
+                break;
             case E_BattlePassiveEffectType.防御時攻撃集中:
                 EffectToAllTarget(effect, target, SetAttractInDefending);
                 break;
@@ -70,15 +70,15 @@ public class BattlePassiveEffectsFunc : MonoBehaviour
 
     private void AddMaxHpRate(BattleCharacter target, BattlePassiveEffect effect)
     {
-        target.PassiveMaxHp = target.PassiveMaxHp * effect.RateOrValue;
+        target.PassiveMaxHpRate *= effect.RateOrValue;
     }
     private void AddMaxAtkRate(BattleCharacter target, BattlePassiveEffect effect)
     {
-        target.PassiveAtk = target.PassiveAtk * effect.RateOrValue;
+        target.PassiveAtkRate *= effect.RateOrValue;
     }
     private void AddMaxSpdRate(BattleCharacter target, BattlePassiveEffect effect)
     {
-        target.PassiveSpd = target.PassiveSpd * effect.RateOrValue;
+        target.PassiveSpdRate *= effect.RateOrValue;
     }
     private void AddToDamageRate(BattleCharacter target, BattlePassiveEffect effect)
     {
@@ -110,7 +110,6 @@ public class BattlePassiveEffectsFunc : MonoBehaviour
     }
     private void AddSpBeforeBattle(BattleCharacter target, BattlePassiveEffect effect)
     {
-        //ここをどの段階で呼ぶか(毎回呼ばれては困る)
         target.AddHaveSkillPoint((int)effect.RateOrValue);
     }
     private void SetAttractInDefending(BattleCharacter target, BattlePassiveEffect effect)
@@ -126,7 +125,7 @@ public class BattlePassiveEffectsFunc : MonoBehaviour
 
     private void EffectToAllTarget(BattlePassiveEffect effect, List<BattleCharacter> targetList, Action<BattleCharacter, BattlePassiveEffect> func)
     {
-        foreach (BattleCharacter target in ElementClass.GetListInElement(targetList, effect.TargetElement)) //属性の条件
+        foreach (BattleCharacter target in ElementClass.GetListInElementByCondition(targetList, effect.TargetElement)) //属性の条件
         {
             if (!target.IsAlive) continue; //とりあえず倒れているキャラに効果は付与しないことにする
 
@@ -135,16 +134,16 @@ public class BattlePassiveEffectsFunc : MonoBehaviour
                 case E_BattlePassiveEffectCondition.AnyTime:
                     break;
                 case E_BattlePassiveEffectCondition.HpHigher:
-                    if (target.Hp / target.MaxHp < effect.ConditionValue) continue;
+                    if (target.Condition.Hp / target.Condition.MaxHp < effect.ConditionValue) continue;
                     break;
                 case E_BattlePassiveEffectCondition.HpLower:
-                    if (target.Hp / target.MaxHp > effect.ConditionValue) continue;
+                    if (target.Condition.Hp / target.Condition.MaxHp > effect.ConditionValue) continue;
                     break;
                 case E_BattlePassiveEffectCondition.SpHigher:
-                    if (target.HaveSkillPoint < effect.ConditionValue) continue;
+                    if (target.Condition.Sp < effect.ConditionValue) continue;
                     break;
                 case E_BattlePassiveEffectCondition.SpLower:
-                    if (target.HaveSkillPoint > effect.ConditionValue) continue;
+                    if (target.Condition.Sp > effect.ConditionValue) continue;
                     break;
                 case E_BattlePassiveEffectCondition _:
                     Debug.Log("error");
@@ -155,7 +154,7 @@ public class BattlePassiveEffectsFunc : MonoBehaviour
     }
     private void EffectToAllTarget(BattlePassiveEffect effect, List<BattleCharacter> targetList, Action<BattleCharacter> func)
     {
-        foreach (BattleCharacter target in ElementClass.GetListInElement(targetList, effect.TargetElement)) //属性の条件
+        foreach (BattleCharacter target in ElementClass.GetListInElementByCondition(targetList, effect.TargetElement)) //属性の条件
         {
             if (!target.IsAlive) continue; //とりあえず倒れているキャラに効果は付与しないことにする
 
@@ -164,16 +163,16 @@ public class BattlePassiveEffectsFunc : MonoBehaviour
                 case E_BattlePassiveEffectCondition.AnyTime:
                     break;
                 case E_BattlePassiveEffectCondition.HpHigher:
-                    if (target.Hp / target.MaxHp < effect.ConditionValue) continue;
+                    if (target.Condition.Hp / target.Condition.MaxHp < effect.ConditionValue) continue;
                     break;
                 case E_BattlePassiveEffectCondition.HpLower:
-                    if (target.Hp / target.MaxHp > effect.ConditionValue) continue;
+                    if (target.Condition.Hp / target.Condition.MaxHp > effect.ConditionValue) continue;
                     break;
                 case E_BattlePassiveEffectCondition.SpHigher:
-                    if (target.HaveSkillPoint < effect.ConditionValue) continue;
+                    if (target.Condition.Sp < effect.ConditionValue) continue;
                     break;
                 case E_BattlePassiveEffectCondition.SpLower:
-                    if (target.HaveSkillPoint > effect.ConditionValue) continue;
+                    if (target.Condition.Sp > effect.ConditionValue) continue;
                     break;
                 case E_BattlePassiveEffectCondition _:
                     Debug.Log("error");

@@ -27,12 +27,12 @@ public class BattleCharacter : MonoBehaviour
     //private double hp;
     private PlayerCharacter pc;
     private EnemyCharacter ec;
-    
+
 
     /* passiveのみ考慮したプロパティ */
-    public double PassiveMaxHp { get; set; } //passive考慮したステータス charaClass.maxHP * battlePassiveSkill * itemPassiveSkill
-    public double PassiveAtk { get; set; }
-    public double PassiveSpd { get; set; }
+    public double PassiveMaxHpRate { get; set; } = 1; //passive考慮したステータス charaClass.maxHP * battlePassiveSkill * itemPassiveSkill
+    public double PassiveAtkRate { get; set; } = 1;
+    public double PassiveSpdRate { get; set; } = 1;
     public Dictionary<E_Element, double> PassiveToDamageRate { get; set; }
     public Dictionary<E_Element, double> PassiveFromDamageRate { get; set; }
     public double PassiveToNormalAttackRate { get; set; } = 1;
@@ -44,9 +44,9 @@ public class BattleCharacter : MonoBehaviour
 
 
     /*  passiveとactiveを反映したプロパティ */
-    public double MaxHp => PassiveMaxHp * GetRate(hpRate); //現在の(全て考慮した最終的な)最大HP
-    public double Atk => PassiveAtk * GetRate(atkRate);
-    public double Spd => PassiveSpd * GetRate(spdRate);
+    public double MaxHp => CharaClass.MaxHp * PassiveMaxHpRate * GetRate(hpRate); //現在の(全て考慮した最終的な)最大HP
+    public double Atk => CharaClass.MaxAtk * PassiveAtkRate * GetRate(atkRate);
+    public double Spd => CharaClass.MaxSpd * PassiveSpdRate * GetRate(spdRate);
     private Dictionary<E_Element, double> ToDamageRate => GetRate(PassiveToDamageRate, toDamageRate);
     private Dictionary<E_Element, double> FromDamageRate => GetRate(PassiveFromDamageRate, fromDamageRate);
     public double ToNormalAttackRate => PassiveToNormalAttackRate * GetRate(this.toNormalAttackRate);
@@ -56,6 +56,7 @@ public class BattleCharacter : MonoBehaviour
 
 
     /* その他プロパティ */
+    public BattleCharacterCondition Condition { get; set; } = new BattleCharacterCondition();
     public List<E_BattleActiveSkill> BattleActiveSkillID => this.battleActiveSkillID;
     public bool StatusChange { get; set; } = false;
     public double Hp { get; set; } //現在のHP
@@ -78,7 +79,7 @@ public class BattleCharacter : MonoBehaviour
     {
         get
         {
-            int num = 1;
+            int num = PassiveNormalAttackNum;
             foreach(BuffEffect bf in this.normalAttackNum)
             {
                 num += (int)bf.Rate;
@@ -101,27 +102,34 @@ public class BattleCharacter : MonoBehaviour
     {
         SetCharacter();
         SetBaseStatus();
-        if (!IsEnemy)
-        {
-            SetPassiveEffect(); //Passiveスキルの効果を反映
-        }
         SetActiveSkill();
         StatusChange = true;
     }
     private void SetBaseStatus()
     {
-        PassiveMaxHp = charaClass.MaxHp;
-        PassiveAtk = charaClass.MaxAtk;
-        PassiveSpd = charaClass.MaxSpd;
-        PassiveToDamageRate = new Dictionary<E_Element, double>() { { E_Element.Fire, 1.0 }, { E_Element.Aqua, 1.0 }, { E_Element.Tree, 1.0 } };
-        PassiveFromDamageRate = new Dictionary<E_Element, double>() { { E_Element.Fire, 1.0 }, { E_Element.Aqua, 1.0 }, { E_Element.Tree, 1.0 } };
-        PassiveAttractInDefending = new Dictionary<E_Element, bool>() { { E_Element.Fire, false }, { E_Element.Aqua, false }, { E_Element.Tree, false } };
+        InitPassiveParameter();
         Hp = MaxHp;
     }
-    private void SetPassiveEffect()
+    public void RememberCondition()
     {
-
-        //本当はここで、BattlePassiveSkillとItemによる能力上昇がある
+        Condition.SetParameter(this.MaxHp, this.Hp, this.Spd, this.Atk, this.Element, this.HaveSkillPoint);
+    }
+    public void InitCondition()
+    {
+        Condition.InitParameter();
+    }
+    public void InitPassiveParameter()
+    {
+        PassiveMaxHpRate = 1;
+        PassiveAtkRate = 1;
+        PassiveSpdRate = 1;
+        PassiveToDamageRate = new Dictionary<E_Element, double>() { { E_Element.Fire, 1.0 }, { E_Element.Aqua, 1.0 }, { E_Element.Tree, 1.0 } };
+        PassiveFromDamageRate = new Dictionary<E_Element, double>() { { E_Element.Fire, 1.0 }, { E_Element.Aqua, 1.0 }, { E_Element.Tree, 1.0 } };
+        PassiveToNormalAttackRate = 1; PassiveFromNormalAttackRate = 1;
+        PassiveFromDamageRateInDefending = 1;
+        PassiveAttractInDefending = new Dictionary<E_Element, bool>() { { E_Element.Fire, false }, { E_Element.Aqua, false }, { E_Element.Tree, false } };
+        PassiveHealSpInTurn = 1;
+        PassiveNormalAttackNum = 1;
     }
     private void SetCharacter()
     {
@@ -261,7 +269,7 @@ public class BattleCharacter : MonoBehaviour
         }
         else
         {
-            if (IsDefending) power /= 2;
+            if (IsDefending) power *= 0.5 * PassiveFromDamageRateInDefending;
             DecreaseHp(power * GetFromDamageRate(atkElement) * ElementClass.GetElementCompatibilityRate(atkElement, this.Element)); // 威力*属性被ダメ減*属性相性
         }
     }
@@ -274,7 +282,7 @@ public class BattleCharacter : MonoBehaviour
         }
         else
         {
-            if (IsDefending) power /= 2;
+            if (IsDefending) power *= 0.5 * PassiveFromDamageRateInDefending;
             DecreaseHp(power * this.GetFromDamageRate(atkElement) * ElementClass.GetElementCompatibilityRate(atkElement, this.Element) * FromNormalAttackRate); // 威力*属性被ダメ減*属性相性*通常被ダメ
         }
     }
@@ -366,7 +374,7 @@ public class BattleCharacter : MonoBehaviour
     }
     public bool IsAttracting(E_Element attackElement)
     {
-        return ElementClass.GetTurn(this.attractingEffectTurn, attackElement) > 0;
+        return (IsDefending && PassiveAttractInDefending[attackElement]) || (ElementClass.GetTurn(this.attractingEffectTurn, attackElement) > 0);
     }
     public double GetToDamageRate(E_Element attackElement)
     {
@@ -428,6 +436,6 @@ public class BattleCharacter : MonoBehaviour
     public void SetAfterActiton() //行動後に呼ぶ関数
     {
         ElapseAllTurn();
-        AddHaveSkillPoint(1);
+        AddHaveSkillPoint(PassiveHealSpInTurn);
     }
 }

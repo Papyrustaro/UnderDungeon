@@ -5,9 +5,7 @@ using UnityEngine.UI;
 
 public class DungeonBattleManager : MonoBehaviour
 {
-    private double hpPassiveRate = 2, atkPassiveRate = 1, spdPassiveRate = 2; 
-    private double toDamageFirePassiveRate = 1, toDamageAquaPassiveRate = 1, toDamageTreePassiveRate = 1;
-    [SerializeField]private List<BattleCharacter> charaList = new List<BattleCharacter>();
+    [SerializeField] private List<BattleCharacter> charaList = new List<BattleCharacter>();
     [SerializeField] private Text announceText;
     [SerializeField] private BattleActiveEffectsFunc activeEffectFuncs;
     [SerializeField] private BattlePassiveEffectsFunc passiveEffectFuncs;
@@ -56,9 +54,13 @@ public class DungeonBattleManager : MonoBehaviour
     {
         if (debug)
         {
-            this.allyList[0].DecreaseHpByRate(0.1);
             this.currentSituation = E_BattleSituation.SetParameterBeforeStartBattle;
             SetPassiveEffect();
+            foreach(BattleCharacter bc in this.allyList)
+            {
+                bc.Hp = bc.MaxHp;
+            }
+            //this.allyList[0].DecreaseHpByRate(0.09);
             this.currentSituation = E_BattleSituation.WaitFinishAction;
             DebugFunc(); debug = false;
             return;
@@ -71,8 +73,10 @@ public class DungeonBattleManager : MonoBehaviour
                 nextActionIndex = 0;
                 SortCharacterBySpd();
             }
-            SetPassiveEffect(); //行動前に毎回passiveEffectを呼ぶ(HP,SP,属性条件が変わるため)
+            Debug.Log(allyList[0].Atk + ":" + allyList[0].Hp + "/" + allyList[0].MaxHp);
+            ReSetPassiveEffect(); //行動前に毎回passiveEffectを呼ぶ(HP,SP,属性条件が変わるため)
             this.charaList[nextActionIndex].SetBeforeAction();
+            Debug.Log(allyList[0].Atk + ":" + allyList[0].Hp + "/" + allyList[0].MaxHp);
             CharacterAction();
         }else
         {
@@ -123,7 +127,7 @@ public class DungeonBattleManager : MonoBehaviour
             //Debug.Log(bc.PassiveNormalAttackNum);
             //Debug.Log(bc.PassiveHealSpInTurn);
             //Debug.Log(bc.PassiveAttractInDefending[E_Element.Fire] + "/" + bc.PassiveAttractInDefending[E_Element.Aqua] + "/" + bc.PassiveAttractInDefending[E_Element.Tree]);
-            Debug.Log(bc.MaxHp + " " + bc.Atk + " " + bc.Spd);
+            //Debug.Log(bc.MaxHp + " " + bc.Atk + " " + bc.Spd);
         }
     }
     private void PlayerSelect()
@@ -468,6 +472,10 @@ public class DungeonBattleManager : MonoBehaviour
     /// </summary>
     public void SetPassiveEffect()
     {
+        foreach(BattleCharacter bc in this.allyList)
+        {
+            bc.RememberCondition(); //PassiveEffect反映の条件保持
+        }
         //itemのpassiveEffect反映
         foreach(BattlePassiveEffect effect in this.havePassiveItems)
         {
@@ -495,6 +503,25 @@ public class DungeonBattleManager : MonoBehaviour
                         break;
                 }
             }
+        }
+        foreach(BattleCharacter bc in this.allyList)
+        {
+            bc.InitCondition(); //一応条件保持パラメータを初期化
+        }
+    }
+
+    
+
+    public void ReSetPassiveEffect()
+    {
+        foreach(BattleCharacter bc in this.allyList)
+        {
+            bc.InitPassiveParameter();
+        }
+        SetPassiveEffect();
+        foreach(BattleCharacter bc in this.allyList)
+        {
+            if (bc.Hp > bc.MaxHp) bc.Hp = bc.MaxHp;
         }
     }
 }
