@@ -60,13 +60,17 @@ public class DungeonBattleManager : MonoBehaviour
         }
         if (finishAction)
         {
-            ReSetPassiveEffect(); //行動前に毎回passiveEffectを呼ぶ(HP,SP,属性条件が変わるため)
-            this.charaList[nextActionIndex].SetBeforeAction();
-            if (charaNum <= nextActionIndex) //1週したら
+            if(charaNum <= nextActionIndex) //1周したら
             {
                 nextActionIndex = 0;
+                ReSetPassiveEffect();
                 SortCharacterBySpd();
             }
+            else
+            {
+                ReSetPassiveEffect();
+            }
+            this.charaList[nextActionIndex].SetBeforeAction();
             CharacterAction();
         }else
         {
