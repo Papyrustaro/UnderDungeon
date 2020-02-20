@@ -14,6 +14,12 @@ public class BattlePassiveEffectsFunc : MonoBehaviour
     {
         EffectFunc(GetBattlePassiveSkill(skillID), target);
     }
+
+    /// <summary>
+    /// PassiveEffectの効果適用
+    /// </summary>
+    /// <param name="effect">適用するBattlePassiveEffect</param>
+    /// <param name="target">効果対象</param>
     public void EffectFunc(BattlePassiveEffect effect, List<BattleCharacter> target)
     {
         Debug.Log(effect.EffectName);
@@ -123,11 +129,17 @@ public class BattlePassiveEffectsFunc : MonoBehaviour
         target.PassiveFromDamageRateInDefending *= effect.RateOrValue;
     }
 
+    /// <summary>
+    /// passiveEffectをtargetListの中から条件を満たすtargetだけに反映させる
+    /// </summary>
+    /// <param name="effect">反映させるBattlePassiveEffect</param>
+    /// <param name="targetList">効果対象</param>
+    /// <param name="func">呼ぶ関数</param>
     private void EffectToAllTarget(BattlePassiveEffect effect, List<BattleCharacter> targetList, Action<BattleCharacter, BattlePassiveEffect> func)
     {
         foreach (BattleCharacter target in ElementClass.GetListInElementByCondition(targetList, effect.TargetElement)) //属性の条件
         {
-            if (!target.IsAlive) continue; //とりあえず倒れているキャラに効果は付与しないことにする
+            if (!target.IsAlive) continue; //倒れているキャラに効果は反映しない
 
             switch (effect.EffectCondition) //属性以外の条件
             {
@@ -152,11 +164,19 @@ public class BattlePassiveEffectsFunc : MonoBehaviour
             func(target, effect);
         }
     }
+
+    /// <summary>
+    /// passiveEffectをtargetListの中から条件を満たすtargetだけに反映させる
+    /// </summary>
+    /// <param name="effect">反映させるBattlePassiveEffect</param>
+    /// <param name="targetList">効果対象</param>
+    /// <param name="func">呼ぶ関数</param>
+
     private void EffectToAllTarget(BattlePassiveEffect effect, List<BattleCharacter> targetList, Action<BattleCharacter> func)
     {
         foreach (BattleCharacter target in ElementClass.GetListInElementByCondition(targetList, effect.TargetElement)) //属性の条件
         {
-            if (!target.IsAlive) continue; //とりあえず倒れているキャラに効果は付与しないことにする
+            if (!target.IsAlive) continue; //倒れているキャラに効果は反映しない
 
             switch (effect.EffectCondition) //属性以外の条件
             {

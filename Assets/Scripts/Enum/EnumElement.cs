@@ -27,6 +27,12 @@ public class ElementClass
     {
         return (element == E_Element.Tree || element == E_Element.AquaTree || element == E_Element.TreeFire || element == E_Element.FireAquaTree);
     }
+
+    /// <summary>
+    /// 列挙型に対する各属性の文字列を返す
+    /// </summary>
+    /// <param name="element">検索する属性</param>
+    /// <returns>属性の文字列</returns>
     public static string GetStringElement(E_Element element)
     {
         switch (element)
@@ -41,6 +47,13 @@ public class ElementClass
             case E_Element _: return "エラー";
         }
     }
+
+    /// <summary>
+    /// bc.Elementを利用した属性検索
+    /// </summary>
+    /// <param name="baseList">検索するキャラリスト</param>
+    /// <param name="searchElement">検索する属性</param>
+    /// <returns>属性にマッチしたキャラのリスト</returns>
     public static List<BattleCharacter> GetListInElement(List<BattleCharacter> baseList, E_Element searchElement)
     {
         List<BattleCharacter> list = new List<BattleCharacter>();
@@ -52,11 +65,12 @@ public class ElementClass
         }
         return list;
     }
+
     /// <summary>
     /// PassiveEffect用の条件用保持パラメータ(Conditon)を利用した属性サーチ
     /// </summary>
-    /// <param name="baseList"></param>
-    /// <param name="searchElement"></param>
+    /// <param name="baseList">検索するキャラのリスト</param>
+    /// <param name="searchElement">検索する属性</param>
     /// <returns>検索属性をもつキャラのリスト</returns>
     public static List<BattleCharacter> GetListInElementByCondition(List<BattleCharacter> baseList, E_Element searchElement)
     {
@@ -69,7 +83,14 @@ public class ElementClass
         }
         return list;
     }
-    /* 属性倍率を返す */
+
+
+    /// <summary>
+    /// 属性相性の倍率を返す(攻撃火、防御火・木ならば、倍率1.5倍)
+    /// </summary>
+    /// <param name="attackElement">攻撃属性</param>
+    /// <param name="targetElement">防御属性</param>
+    /// <returns>属性相性の倍率</returns>
     public static double GetElementCompatibilityRate(E_Element attackElement, E_Element targetElement)
     {
         double rate = 1.0;
@@ -90,6 +111,13 @@ public class ElementClass
         }
         return rate;
     }
+
+    /// <summary>
+    /// 辞書型(属性ごとターン管理)の検索属性のターン数を返す
+    /// </summary>
+    /// <param name="dic">検索する辞書型パラメータ</param>
+    /// <param name="searchElement">検索属性</param>
+    /// <returns>その属性のターン数</returns>
     public static int GetTurn(Dictionary<E_Element, int> dic, E_Element searchElement)
     {
         int turn = 0;
@@ -98,6 +126,13 @@ public class ElementClass
         if (IsTree(searchElement)) turn += dic[E_Element.Tree];
         return turn;
     }
+
+    /// <summary>
+    /// 辞書型(属性ごとの倍率管理)の検索属性の倍率を返す
+    /// </summary>
+    /// <param name="dic">検索する辞書型パラメータ</param>
+    /// <param name="searchElement">検索属性</param>
+    /// <returns>その属性の倍率</returns>
     public static double GetRate(Dictionary<E_Element, double> dic, E_Element searchElement)
     {
         double rate = 1;

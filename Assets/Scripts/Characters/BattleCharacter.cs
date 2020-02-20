@@ -19,14 +19,8 @@ public class BattleCharacter : MonoBehaviour
     private List<BuffEffect> hpRegeneration = new List<BuffEffect>();
     private List<BuffEffect> spRegeneration = new List<BuffEffect>();
 
-    private int haveSkillPoint = 0;
-    //private bool isEnemy = false;
-
     private List<E_BattleActiveSkill> battleActiveSkillID = new List<E_BattleActiveSkill>();
     private Character charaClass;
-    //private double hp;
-    private PlayerCharacter pc;
-    private EnemyCharacter ec;
 
 
     /* passiveのみ考慮したプロパティ */
@@ -37,24 +31,46 @@ public class BattleCharacter : MonoBehaviour
     public Dictionary<E_Element, double> PassiveFromDamageRate { get; set; }
     public double PassiveToNormalAttackRate { get; set; } = 1;
     public double PassiveFromNormalAttackRate { get; set; } = 1;
-    public double PassiveFromDamageRateInDefending { get; set; } = 1; //属性関係なし
+
+    /// <summary>
+    /// 防御状態での被ダメージ倍率(属性関係なし)
+    /// </summary>
+    public double PassiveFromDamageRateInDefending { get; set; } = 1; 
     public Dictionary<E_Element, bool> PassiveAttractInDefending { get; set; }
-    public int PassiveHealSpInTurn { get; set; } = 1; //1ターンで自然回復するSp
+
+    /// <summary>
+    /// 1ターンでの自然Sp回復量
+    /// </summary>
+    public int PassiveHealSpInTurn { get; set; } = 1;
     public int PassiveNormalAttackNum { get; set; } = 1;
 
 
     /*  passiveとactiveを反映したプロパティ */
-    public double MaxHp => CharaClass.MaxHp * PassiveMaxHpRate * GetRate(hpRate); //現在の(全て考慮した最終的な)最大HP
+    /// <summary>
+    /// 全ての効果を考慮した最大Hp
+    /// </summary>
+    public double MaxHp => CharaClass.MaxHp * PassiveMaxHpRate * GetRate(hpRate); 
+
+    /// <summary>
+    /// 全ての効果を考慮した最大Atk
+    /// </summary>
     public double Atk => CharaClass.MaxAtk * PassiveAtkRate * GetRate(atkRate);
+
+    /// <summary>
+    /// 全ての効果を考慮した最大Spd
+    /// </summary>
     public double Spd => CharaClass.MaxSpd * PassiveSpdRate * GetRate(spdRate);
+
     /// <summary>
     /// 与ダメージ倍率(Fire,Aqua,Treeのみkeyに持つため、基本はGetToDamageRate(element)を利用
     /// </summary>
     private Dictionary<E_Element, double> ToDamageRate => GetRate(PassiveToDamageRate, toDamageRate);
+
     /// <summary>
     /// 被ダメージ倍率(Fire,Aqua,Treeのみkeyに持つため、基本はGetToDamageRate(element)を利用
     /// </summary>
     private Dictionary<E_Element, double> FromDamageRate => GetRate(PassiveFromDamageRate, fromDamageRate);
+
     public double ToNormalAttackRate => PassiveToNormalAttackRate * GetRate(this.toNormalAttackRate);
     public double FromNormalAttackRate => PassiveFromNormalAttackRate * GetRate(this.fromNormalAttackRate);
 
@@ -62,10 +78,22 @@ public class BattleCharacter : MonoBehaviour
 
 
     /* その他プロパティ */
+    /// <summary>
+    /// PassiveEffectなどの条件判定用の一時状態保存クラス
+    /// </summary>
     public BattleCharacterCondition Condition { get; set; } = new BattleCharacterCondition();
+
     public List<E_BattleActiveSkill> BattleActiveSkillID => this.battleActiveSkillID;
     public bool StatusChange { get; set; } = false;
-    public double Hp { get; set; } //現在のHP
+
+    /// <summary>
+    /// 現在のHp
+    /// </summary>
+    public double Hp { get; set; }
+
+    /// <summary>
+    /// ベースとなるCharacterクラス
+    /// </summary>
     public Character CharaClass
     {
         get
@@ -74,12 +102,16 @@ public class BattleCharacter : MonoBehaviour
             return charaClass;
         }
     }
-    public PlayerCharacter PC => this.pc;
-    public EnemyCharacter EC => this.ec;
-    public double RebornHpRate { get; set; } = 0; //復活できる状態か(0で復活しない。0.1など復活したときのHP割合を保持)
-    public bool Reborned { get; set; } //復活効果を使ったか
-    public int NormalAttackToAllTurn { get; set; } = 0; //通常攻撃が全体攻撃になるターン
-    public double HaveDamageThisTurn { get; set; } = 100; //1ターンで喰らったダメージ量
+    public PlayerCharacter PC { get; set; }
+    public EnemyCharacter EC { get; set; }
+
+    /// <summary>
+    /// 復活する際のHp回復割合(Max1, 0で復活しない)
+    /// </summary>
+    public double RebornHpRate { get; set; } = 0; 
+    public bool Reborned { get; set; } 
+    public int NormalAttackToAllTurn { get; set; } = 0; 
+    public double HaveDamageThisTurn { get; set; } = 0; 
     public int NormalAttackNum
     {
         get
@@ -93,7 +125,7 @@ public class BattleCharacter : MonoBehaviour
         }
     }
     public bool IsEnemy { get; set; } = false;
-    public int HaveSkillPoint => this.haveSkillPoint;
+    public int HaveSkillPoint { get; set; } = 0;
     public E_Element Element { get { if (this.elementChange == null) return CharaClass.Element; else return this.elementChange.Element; } }
     public double NormalAttackPower => Atk * ToNormalAttackRate * GetToDamageRate(Element);
     public bool IsAlive => Hp > 0;
@@ -159,13 +191,13 @@ public class BattleCharacter : MonoBehaviour
     {
         if (this.gameObject.CompareTag("Player"))
         {
-            this.pc = GetComponent<PlayerCharacter>();
-            this.charaClass = pc.CharaClass;
+            this.PC = GetComponent<PlayerCharacter>();
+            this.charaClass = PC.CharaClass;
         }
         else
         {
-            this.ec = GetComponent<EnemyCharacter>();
-            this.charaClass = ec.CharaClass;
+            this.EC = GetComponent<EnemyCharacter>();
+            this.charaClass = EC.CharaClass;
             this.IsEnemy = true;
         }
     }
@@ -179,7 +211,7 @@ public class BattleCharacter : MonoBehaviour
         {
             for(int i = 0; i < CharacterConstValue.MAX_HAVE_ACTIVE_SKILL; i++)
             {
-                if (pc.LV >= pc.UseAbleBattleActiveSkillLV[i]) this.battleActiveSkillID.Add(pc.HaveBattleActiveSkillID[i]);
+                if (PC.LV >= PC.UseAbleBattleActiveSkillLV[i]) this.battleActiveSkillID.Add(PC.HaveBattleActiveSkillID[i]);
                 else break;
             }
         }
@@ -196,7 +228,7 @@ public class BattleCharacter : MonoBehaviour
         this.elementChange = null; this.normalAttackNum = new List<BuffEffect>();
         this.toNormalAttackRate = new List<BuffEffect>(); this.fromNormalAttackRate = new List<BuffEffect>();
         this.attractingEffectTurn = new Dictionary<E_Element, int>() { { E_Element.Fire, 0 }, { E_Element.Aqua, 0 }, { E_Element.Tree, 0 } };
-        this.haveSkillPoint = 0; NormalAttackToAllTurn = 0; HaveDamageThisTurn = 0;
+        this.HaveSkillPoint = 0; NormalAttackToAllTurn = 0; HaveDamageThisTurn = 0;
         IsDefending = false;
     }
     
@@ -244,7 +276,6 @@ public class BattleCharacter : MonoBehaviour
     {
         Debug.Log("効果前のMaxHP:" + MaxHp);
         this.hpRate.Add(new BuffEffect(rate, effectTurn));
-        Debug.Log(CharaClass.CharaName + "の体力" + rate + "倍");
         Debug.Log("効果後のMaxHP:" + MaxHp);
         StatusChange = true;
     }
@@ -256,9 +287,9 @@ public class BattleCharacter : MonoBehaviour
     /// <param name="effectTurn">効果ターン</param>
     public void AddAtkRate(double rate, int effectTurn)
     {
-        Debug.Log("効果前のAtkRate:" + GetRate(this.atkRate));
+        Debug.Log("効果前のAtk:" + Atk);
         this.atkRate.Add(new BuffEffect(rate, effectTurn));
-        Debug.Log(CharaClass.CharaName + "の攻撃" + rate + "倍");
+        Debug.Log("効果後のAtk:" + Atk);
         StatusChange = true;
     }
 
@@ -269,8 +300,9 @@ public class BattleCharacter : MonoBehaviour
     /// <param name="effectTurn">効果ターン</param>
     public void AddSpdRate(double rate, int effectTurn)
     {
+        Debug.Log("効果前のSpd:" + Spd);
         this.spdRate.Add(new BuffEffect(rate, effectTurn));
-        Debug.Log(CharaClass.CharaName + "の素早さ" + rate + "倍");
+        Debug.Log("効果後のSpd:" + Spd);
         StatusChange = true;
     }
 
@@ -281,8 +313,9 @@ public class BattleCharacter : MonoBehaviour
     /// <param name="effectTurn">効果ターン</param>
     public void AddToNormalAttackRate(double rate, int effectTurn)
     {
+        Debug.Log("効果前のToNormalAttackRate" + ToNormalAttackRate);
         this.toNormalAttackRate.Add(new BuffEffect(rate, effectTurn));
-        Debug.Log(CharaClass.CharaName + "の通常攻撃の与ダメージ" + rate + "倍");
+        Debug.Log("効果後のToNormalAttackRate" + ToNormalAttackRate);
     }
 
     /// <summary>
@@ -292,8 +325,9 @@ public class BattleCharacter : MonoBehaviour
     /// <param name="effectTurn">効果ターン</param>
     public void AddFromNormalAttackRate(double rate, int effectTurn)
     {
+        Debug.Log("効果前のFromNormalAttackRate:" + FromNormalAttackRate);
         this.fromNormalAttackRate.Add(new BuffEffect(rate, effectTurn));
-        Debug.Log(CharaClass.CharaName + "の通常攻撃被ダメージ" + rate + "倍");
+        Debug.Log("効果後のFromNormalAttackRate:" + FromNormalAttackRate);
     }
 
     /// <summary>
@@ -303,8 +337,9 @@ public class BattleCharacter : MonoBehaviour
     /// <param name="effectTurn">効果ターン</param>
     public void AddNormalAttackNum(int addNum, int effectTurn)
     {
+        Debug.Log("効果前の通常攻撃回数:" + NormalAttackNum);
         this.normalAttackNum.Add(new BuffEffect((double)addNum, effectTurn));
-        Debug.Log(CharaClass.CharaName + "の通常攻撃回数+" + addNum);
+        Debug.Log("効果後の通常攻撃回数:" + NormalAttackNum);
     }
 
     /// <summary>
@@ -315,10 +350,9 @@ public class BattleCharacter : MonoBehaviour
     /// <param name="effectTurn">効果ターン</param>
     public void AddToDamageRate(E_Element element, double rate, int effectTurn)
     {
-        Debug.Log("Rate:" + GetToDamageRate(element));
+        Debug.Log("効果前のToDamageRate:" + GetToDamageRate(element));
         this.toDamageRate.Add(new BuffEffect(element, rate, effectTurn));
-        Debug.Log(CharaClass.CharaName + "の" + element.ToString() + "に与ダメージ" + rate + "倍");
-        Debug.Log("Rate:" + GetToDamageRate(E_Element.Fire));
+        Debug.Log("効果後のToDamageRate:" + GetToDamageRate(E_Element.Fire));
     }
 
     /// <summary>
@@ -329,8 +363,9 @@ public class BattleCharacter : MonoBehaviour
     /// <param name="effectTurn">効果ターン</param>
     public void AddFromDamageRate(E_Element element, double rate, int effectTurn)
     {
+        Debug.Log("効果前のFromDamageRate:" + GetFromDamageRate(element));
         this.fromDamageRate.Add(new BuffEffect(element, rate, effectTurn));
-        Debug.Log(CharaClass.CharaName + "の" + element.ToString() + "からの被ダメージ" + rate + "倍");
+        Debug.Log("効果後のFromDamageRate:" + GetFromDamageRate(element));
     }
 
     /// <summary>
@@ -368,8 +403,9 @@ public class BattleCharacter : MonoBehaviour
     /// <param name="effectTurn">効果ターン</param>
     public void SetElementChanged(E_Element element, int effectTurn)
     {
+        Debug.Log("効果前の属性:" + ElementClass.GetStringElement(this.Element));
         this.elementChange = new BuffEffect(element, 0, effectTurn);
-        Debug.Log(CharaClass.CharaName + "の属性が" + effectTurn + "ターン" + ElementClass.GetStringElement(element) + "属性になる");
+        Debug.Log("効果後の属性:" + ElementClass.GetStringElement(this.Element));
     }
 
     /// <summary>
@@ -416,19 +452,19 @@ public class BattleCharacter : MonoBehaviour
     /// <param name="addValue">Sp増加量</param>
     public void AddHaveSkillPoint(int addValue)
     {
-        if(this.haveSkillPoint + addValue < 0)
+        if(this.HaveSkillPoint + addValue < 0)
         {
-            Debug.Log(CharaClass.CharaName + "のスキルポイントが" + this.haveSkillPoint + "減少した");
-            this.haveSkillPoint = 0;
+            Debug.Log(CharaClass.CharaName + "のスキルポイントが" + this.HaveSkillPoint + "減少した");
+            this.HaveSkillPoint = 0;
         }else if(addValue < 0)
         {
             Debug.Log(CharaClass.CharaName + "のスキルポイントが" + addValue + "減少した");
-            this.haveSkillPoint += addValue;
+            this.HaveSkillPoint += addValue;
         }
         else
         {
             Debug.Log(CharaClass.CharaName + "のスキルポイントが" + addValue + "増加した");
-            this.haveSkillPoint += addValue;
+            this.HaveSkillPoint += addValue;
         }
     }
 
@@ -507,6 +543,7 @@ public class BattleCharacter : MonoBehaviour
         {
             Debug.Log(charaClass.CharaName + "は" + (int)damage_value + "のダメージを受けた");
             Hp -= damage_value;
+            HaveDamageThisTurn += damage_value;
             return damage_value;
         }
     }

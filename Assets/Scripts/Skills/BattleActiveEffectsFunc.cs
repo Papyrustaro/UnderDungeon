@@ -19,6 +19,12 @@ public class BattleActiveEffectsFunc : MonoBehaviour
         EffectFunc(itemList[(int)itemID], invoker, target);
     }
 
+    /// <summary>
+    /// ActiveEffectの効果適用
+    /// </summary>
+    /// <param name="effect">適用するActiveEffect</param>
+    /// <param name="invoker">(skill,item)発動者</param>
+    /// <param name="target">効果対象</param>
     public void EffectFunc(BattleActiveEffect effect, BattleCharacter invoker, List<BattleCharacter> target)
     {
         Debug.Log(invoker.CharaClass.CharaName + "の" + effect.EffectName);
@@ -96,6 +102,12 @@ public class BattleActiveEffectsFunc : MonoBehaviour
                 break;
         }
     }
+
+    /// <summary>
+    /// idからBattleActiveSkillを取得
+    /// </summary>
+    /// <param name="id">取得するBattleActiveSkillのId</param>
+    /// <returns>取得したBattleActiveSkill</returns>
     public BattleActiveSkill GetBattleActiveSkill(E_BattleActiveSkill id)
     {
         return this.skillList[(int)id];
@@ -104,15 +116,34 @@ public class BattleActiveEffectsFunc : MonoBehaviour
     {
         target.DamagedByElementAttack(attacker.Atk * attacker.GetToDamageRate(effect.EffectElement) * effect.RateOrValue, effect.EffectElement);
     }
+
+    /// <summary>
+    /// 自身のこのターン受けた総ダメージ量*power(atk * toDamageRate * effectRate)のダメージ
+    /// </summary>
+    /// <param name="attacker">攻撃者</param>
+    /// <param name="target">攻撃対象</param>
+    /// <param name="effect">BattleActiveEffect</param>
     private void CounterAttack(BattleCharacter attacker, BattleCharacter target, BattleActiveEffect effect) 
     {
         target.DamagedByElementAttack(attacker.HaveDamageThisTurn * attacker.GetToDamageRate(effect.EffectElement) * effect.RateOrValue, effect.EffectElement);
     }
+
+    /// <summary>
+    /// 固定値or割合Hp回復(effect.RateOrValueが1未満で最大Hpの割合回復、1以上で固定値回復)
+    /// </summary>
+    /// <param name="target"></param>
+    /// <param name="effect"></param>
     private void RecoverHp(BattleCharacter target, BattleActiveEffect effect)
     {
         if (effect.RateOrValue > 1) target.RecoverHp(effect.RateOrValue);
         else target.RecoverHpByRate(effect.RateOrValue);
     }
+
+    /// <summary>
+    /// 固定or割合ダメージ(effect.RateOrValueが1未満でtargetの最大Hpに対する割合ダメージ、1以上で固定ダメージ)
+    /// </summary>
+    /// <param name="target">攻撃対象</param>
+    /// <param name="effect">BattleActiveEffect</param>
     private void FixedDamageAttack(BattleCharacter target, BattleActiveEffect effect) //固定ダメージ(RateOrValueが1以下で最大HPの割合ダメージ)
     {
         if (effect.RateOrValue > 1) target.DecreaseHp(effect.RateOrValue);
@@ -182,6 +213,14 @@ public class BattleActiveEffectsFunc : MonoBehaviour
     {
         target.AddSpRegeneration((int)effect.RateOrValue, effect.EffectTurn);
     }
+
+    /// <summary>
+    /// targetList全てに対しactiveEffectを発動する(倒れているtargetは除く)
+    /// </summary>
+    /// <param name="effect">発動するBattleActiveEffect</param>
+    /// <param name="invoker">発動者</param>
+    /// <param name="targetList">効果対象</param>
+    /// <param name="func">呼ぶ関数</param>
     private void EffectToAllTarget(BattleActiveEffect effect, BattleCharacter invoker, List<BattleCharacter> targetList, Action<BattleCharacter, BattleCharacter, BattleActiveEffect> func)
     {
         foreach (BattleCharacter target in ElementClass.GetListInElement(targetList, effect.TargetElement))
@@ -190,6 +229,13 @@ public class BattleActiveEffectsFunc : MonoBehaviour
             func(invoker, target, effect);
         }
     }
+
+    /// <summary>
+    /// targetList全てに対しactiveEffectを発動する(倒れているtargetは除く)
+    /// </summary>
+    /// <param name="effect">発動するBattleActiveEffect</param>
+    /// <param name="targetList">効果対象</param>
+    /// <param name="func">呼ぶ関数</param>
     private void EffectToAllTarget(BattleActiveEffect effect, List<BattleCharacter> targetList, Action<BattleCharacter, BattleActiveEffect> func)
     {
         foreach(BattleCharacter target in ElementClass.GetListInElement(targetList, effect.TargetElement))

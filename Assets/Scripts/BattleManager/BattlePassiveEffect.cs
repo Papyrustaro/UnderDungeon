@@ -47,11 +47,23 @@ public class BattlePassiveEffect : MonoBehaviour
     [SerializeField]
     private string description; //スキルの説明
 
+    /// <summary>
+    /// 技の属性(バフ効果の属性などに対応)
+    /// </summary>
     public E_Element EffectElement => this.effectElement;
+
+    /// <summary>
+    /// 技の対象属性(火属性の味方全体へ、など)
+    /// </summary>
     public E_Element TargetElement => this.targetElement;
+
     public E_TargetType TargetType => this.targetType;
     public double RateOrValue => this.rateOrValue;
     public E_BattlePassiveEffectType EffectType => this.effectType;
+
+    /// <summary>
+    /// 効果の発動条件
+    /// </summary>
     public E_BattlePassiveEffectCondition EffectCondition => this.effectCondition;
     public double ConditionValue => this.conditionValue;
     public virtual string EffectName { get { return "error"; } }

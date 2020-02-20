@@ -44,10 +44,16 @@ public class BattleActiveEffect : MonoBehaviour
     [SerializeField]
     private E_TargetType targetType;
 
+    /// <summary>
+    /// 技の属性
+    /// </summary>
     public E_Element EffectElement => this.effectElement;
+
+    /// <summary>
+    /// 対象とする属性条件
+    /// </summary>
     public E_Element TargetElement => this.targetElement;
     public E_TargetType TargetType => this.targetType;
-    //public bool NeedTarget => this.targetType == E_TargetType.OneAlly; //プレイヤーにターゲットをきくかどうか
     public double RateOrValue => this.rateOrValue;
     public E_BattleActiveEffectType EffectType => this.effectType;
     public int EffectTurn => this.effectTurn;
