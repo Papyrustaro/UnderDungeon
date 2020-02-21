@@ -141,4 +141,42 @@ public class ElementClass
         if (IsTree(searchElement)) rate *= dic[E_Element.Tree];
         return rate;
     }
+
+    /// <summary>
+    /// 属性ごとにターンを保持している辞書型変数へ、ターン増加(ActiveEffect)
+    /// </summary>
+    /// <param name="dic">属性ごとにターン保持している辞書型変数</param>
+    /// <param name="effectElement">効果対象属性</param>
+    /// <param name="addTurnValue">増加ターン数</param>
+    public static void AddTurn(Dictionary<E_Element, int>dic, E_Element effectElement, int addTurnValue)
+    {
+        if (ElementClass.IsFire(effectElement)) dic[E_Element.Fire] += addTurnValue;
+        if (ElementClass.IsAqua(effectElement)) dic[E_Element.Aqua] += addTurnValue;
+        if (ElementClass.IsTree(effectElement)) dic[E_Element.Tree] += addTurnValue;
+    }
+
+    /// <summary>
+    /// 属性ごとに倍率を保持している辞書型変数へ、倍率追加
+    /// </summary>
+    /// <param name="dic">属性ごとに倍率保持している辞書型変数</param>
+    /// <param name="effectElement">効果対象属性</param>
+    /// <param name="addRateValue">追加倍率</param>
+    public static void AddRate(Dictionary<E_Element, double> dic, E_Element effectElement, double addRateValue)
+    {
+        if (ElementClass.IsFire(effectElement)) dic[E_Element.Fire] *= addRateValue;
+        if (ElementClass.IsAqua(effectElement)) dic[E_Element.Aqua] *= addRateValue;
+        if (ElementClass.IsTree(effectElement)) dic[E_Element.Tree] *= addRateValue;
+    }
+
+    /// <summary>
+    /// 属性ごとにフラグを保持している辞書型変数へ、フラグ(true)追加
+    /// </summary>
+    /// <param name="dic">属性ごとにフラグ保持している辞書型変数</param>
+    /// <param name="effectElement">効果対象属性</param>
+    public static void SetTrueFlag(Dictionary<E_Element, bool> dic, E_Element effectElement)
+    {
+        if (ElementClass.IsFire(effectElement)) dic[E_Element.Fire] = true;
+        if (ElementClass.IsAqua(effectElement)) dic[E_Element.Aqua] = true;
+        if (ElementClass.IsTree(effectElement)) dic[E_Element.Tree] = true;
+    }
 }

@@ -88,15 +88,11 @@ public class BattlePassiveEffectsFunc : MonoBehaviour
     }
     private void AddToDamageRate(BattleCharacter target, BattlePassiveEffect effect)
     {
-        if (ElementClass.IsFire(effect.EffectElement)) target.PassiveToDamageRate[E_Element.Fire] *= effect.RateOrValue;
-        if (ElementClass.IsAqua(effect.EffectElement)) target.PassiveToDamageRate[E_Element.Aqua] *= effect.RateOrValue;
-        if (ElementClass.IsTree(effect.EffectElement)) target.PassiveToDamageRate[E_Element.Tree] *= effect.RateOrValue;
+        ElementClass.AddRate(target.PassiveToDamageRate, effect.EffectElement, effect.RateOrValue);
     }
     private void AddFromDamageRate(BattleCharacter target, BattlePassiveEffect effect)
     {
-        if (ElementClass.IsFire(effect.EffectElement)) target.PassiveFromDamageRate[E_Element.Fire] *= effect.RateOrValue;
-        if (ElementClass.IsAqua(effect.EffectElement)) target.PassiveFromDamageRate[E_Element.Aqua] *= effect.RateOrValue;
-        if (ElementClass.IsTree(effect.EffectElement)) target.PassiveFromDamageRate[E_Element.Tree] *= effect.RateOrValue;
+        ElementClass.AddRate(target.PassiveFromDamageRate, effect.EffectElement, effect.RateOrValue);
     }
     private void AddToNormalAttackRate(BattleCharacter target, BattlePassiveEffect effect)
     {
@@ -120,9 +116,7 @@ public class BattlePassiveEffectsFunc : MonoBehaviour
     }
     private void SetAttractInDefending(BattleCharacter target, BattlePassiveEffect effect)
     {
-        if (ElementClass.IsFire(effect.EffectElement)) target.PassiveAttractInDefending[E_Element.Fire] = true;
-        if (ElementClass.IsAqua(effect.EffectElement)) target.PassiveAttractInDefending[E_Element.Aqua] = true;
-        if (ElementClass.IsTree(effect.EffectElement)) target.PassiveAttractInDefending[E_Element.Tree] = true;
+        ElementClass.SetTrueFlag(target.PassiveAttractInDefending, effect.EffectElement);
     }
     private void AddFromDamageRateInDefending(BattleCharacter target, BattlePassiveEffect effect)
     {

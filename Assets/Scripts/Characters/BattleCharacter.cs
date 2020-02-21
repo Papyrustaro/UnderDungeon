@@ -130,7 +130,7 @@ public class BattleCharacter : MonoBehaviour
     public double NormalAttackPower => Atk * ToNormalAttackRate * GetToDamageRate(Element);
     public bool IsAlive => Hp > 0;
     public bool IsDefending { get; set; } = false;
-    private void Start()
+    public void Start()
     {
         SetCharacter();
         SetBaseStatus();
@@ -144,7 +144,7 @@ public class BattleCharacter : MonoBehaviour
     private void SetBaseStatus()
     {
         InitPassiveParameter();
-        Hp = MaxHp;
+        Hp = MaxHp; //この行いらないかもしれん(素のMaxHp)
     }
 
     /// <summary>
@@ -371,9 +371,7 @@ public class BattleCharacter : MonoBehaviour
     /// <param name="effectTurn">効果ターン</param>
     public void AddNoGetDamaged(E_Element element, int effectTurn)
     {
-        if (ElementClass.IsFire(element)) this.noGetDamagedTurn[E_Element.Fire] += effectTurn;
-        if (ElementClass.IsAqua(element)) this.noGetDamagedTurn[E_Element.Aqua] += effectTurn;
-        if (ElementClass.IsTree(element)) this.noGetDamagedTurn[E_Element.Tree] += effectTurn;
+        ElementClass.AddTurn(this.noGetDamagedTurn, element, effectTurn);
         Debug.Log(CharaClass.CharaName + "が" + effectTurn + "ターン"+ ElementClass.GetStringElement(element) + "属性の攻撃無敵");
         Debug.Log("noGetDamagedTurn 火:" + this.noGetDamagedTurn[E_Element.Fire] + " 水:" + this.noGetDamagedTurn[E_Element.Aqua] + " 木:" + this.noGetDamagedTurn[E_Element.Tree]);
     }
@@ -385,9 +383,7 @@ public class BattleCharacter : MonoBehaviour
     /// <param name="effectTurn">効果ターン</param>
     public void AddAttractEffectTurn(E_Element element, int effectTurn)
     {
-        if (ElementClass.IsFire(element)) this.attractingEffectTurn[E_Element.Fire] += effectTurn;
-        if (ElementClass.IsAqua(element)) this.attractingEffectTurn[E_Element.Aqua] += effectTurn;
-        if (ElementClass.IsTree(element)) this.attractingEffectTurn[E_Element.Tree] += effectTurn;
+        ElementClass.AddTurn(this.attractingEffectTurn, element, effectTurn);
         Debug.Log(CharaClass.CharaName + "が" + effectTurn + "ターン" + ElementClass.GetStringElement(element) + "属性の攻撃集中");
         Debug.Log("attractingEffectTurn 火:" + this.attractingEffectTurn[E_Element.Fire] + " 水:" + this.attractingEffectTurn[E_Element.Aqua] + " 木:" + this.attractingEffectTurn[E_Element.Tree]);
     }
@@ -658,13 +654,11 @@ public class BattleCharacter : MonoBehaviour
     /// </summary>
     public void ElapseAllTurn()
     {
-        Debug.Log("Atk:" + Atk);
         ElapseTurn(this.hpRate); ElapseTurn(this.atkRate); ElapseTurn(this.spdRate);
         ElapseTurn(this.toDamageRate); ElapseTurn(this.fromDamageRate); ElapseTurn(this.noGetDamagedTurn);
         ElapseTurn(this.elementChange); ElapseTurn(this.normalAttackNum); ElapseTurn(this.toNormalAttackRate);
         ElapseTurn(this.fromNormalAttackRate); ElapseTurn(this.attractingEffectTurn);
         NormalAttackToAllTurn = ElapseTurn(this.NormalAttackToAllTurn);
-        Debug.Log("Atk:" + Atk);
     }
 
     /// <summary>

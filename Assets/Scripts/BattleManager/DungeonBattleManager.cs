@@ -25,34 +25,28 @@ public class DungeonBattleManager : MonoBehaviour
     private List<BattleCharacter> allyList = new List<BattleCharacter>();
     private List<BattleCharacter> enemyList = new List<BattleCharacter>();
 
-    private bool debug = true;
     private void Start()
     {
         charaNum = charaList.Count;
         foreach(BattleCharacter bc in charaList)
         {
+            if(!bc.StatusChange) bc.Start(); //BattleCharacterのStartが終了していないとき、呼ぶ
             if (bc.IsEnemy) this.enemyList.Add(bc);
             else this.allyList.Add(bc);
         }
         
         this.target = this.GetAliveList(this.enemyList)[0];
+        this.currentSituation = E_BattleSituation.SetParameterBeforeStartBattle;
+        SetPassiveEffect();
+        foreach (BattleCharacter bc in this.allyList)
+        {
+            bc.Hp = bc.MaxHp;
+        }
+        this.currentSituation = E_BattleSituation.WaitFinishAction;
     }
 
     private void Update()
     {
-        if (debug)
-        {
-            this.currentSituation = E_BattleSituation.SetParameterBeforeStartBattle;
-            SetPassiveEffect();
-            foreach(BattleCharacter bc in this.allyList)
-            {
-                bc.Hp = bc.MaxHp;
-            }
-            //this.allyList[0].DecreaseHpByRate(0.09);
-            this.currentSituation = E_BattleSituation.WaitFinishAction;
-            DebugFunc(); debug = false;
-            return;
-        }
         if (finishAction)
         {
             if(charaNum <= nextActionIndex) //1周したら
@@ -79,7 +73,7 @@ public class DungeonBattleManager : MonoBehaviour
     /// <param name="target">ターゲット</param>
     public void SetInputTarget(BattleCharacter target)
     {
-        if (!target.IsAlive) { Debug.Log("もう死んでいます"); return; } 
+        if (!target.IsAlive) { Debug.Log(target.CharaClass.CharaName + "は、倒れています"); return; } 
         this.target = target;
         Debug.Log("target: " + target.CharaClass.CharaName);
         this.inputTargetWaiting = false;
@@ -502,7 +496,7 @@ public class DungeonBattleManager : MonoBehaviour
         //itemのpassiveEffect反映
         foreach(BattlePassiveEffect effect in this.havePassiveItems)
         {
-            this.passiveEffectFuncs.EffectFunc(effect, this.allyList); //itemは見方全体にのみ対象...?
+            this.passiveEffectFuncs.EffectFunc(effect, this.allyList); //itemは見方全体にのみ対象
         }
 
         //skillのpassiveEffect反映
