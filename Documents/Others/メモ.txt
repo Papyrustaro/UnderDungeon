@@ -8,3 +8,12 @@ passiveEffectの保存パラメータ
 ・試合開始前に所持しているSP(デフォルトは0)
 ・防御時攻撃を集中させるか
 ・防御時被ダメ軽減率(デフォルトは50%)
+
+currentSituation
+SetParameterBeforeStartBattle, //戦闘開始前のパラメータ反映(passiveEffectなど)
+PlayerSelectAction, //どの行動をとるかプレイヤーの入力待ち
+PlayerSelectActiveSkill, //どのスキルを発動するかプレイヤーの入力待ち
+PlayerSelectActiveItem, //どのアイテムを使うかプレイヤーの入力待ち
+WaitFinishAction, //発動開始後、発動のアニメーションなどが終わるの待ち
+PlayerSelectSkillTarget, //スキルの効果対象の入力待ち
+PlayerSelectItemTarget, //itemの効果対象の入力待ち

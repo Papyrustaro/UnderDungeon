@@ -35,65 +35,65 @@ public class BattleActiveEffectsFunc : MonoBehaviour
                 EffectToAllTarget(effect, invoker, target, Attack);
                 break;
             case E_BattleActiveEffectType.固定ダメージ:
-                EffectToAllTarget(effect, target, FixedDamageAttack);
+                EffectToAllTarget(effect, invoker, target, FixedDamageAttack);
                 break;
             case E_BattleActiveEffectType.HP回復:
-                EffectToAllTarget(effect, target, RecoverHp);
+                EffectToAllTarget(effect, invoker, target, RecoverHp);
                 break;
             case E_BattleActiveEffectType.ATKバフ:
-                EffectToAllTarget(effect, target, BuffAtkStatus);
+                EffectToAllTarget(effect, invoker, target, BuffAtkStatus);
                 break;
             case E_BattleActiveEffectType.SPDバフ:
-                EffectToAllTarget(effect, target, BuffSpdStatus);
+                EffectToAllTarget(effect, invoker, target, BuffSpdStatus);
                 break;
             case E_BattleActiveEffectType.HPバフ:
-                EffectToAllTarget(effect, target, BuffHpStatus);
+                EffectToAllTarget(effect, invoker, target, BuffHpStatus);
                 break;
             case E_BattleActiveEffectType.被ダメージ増減バフ:
-                EffectToAllTarget(effect, target, BuffFromDamageRate);
+                EffectToAllTarget(effect, invoker, target, BuffFromDamageRate);
                 break;
             case E_BattleActiveEffectType.与ダメージ増減バフ:
-                EffectToAllTarget(effect, target, BuffToDamageRate);
+                EffectToAllTarget(effect, invoker, target, BuffToDamageRate);
                 break;
             case E_BattleActiveEffectType.スキルポイント増減:
-                EffectToAllTarget(effect, target, AddHaveSkillPoint);
+                EffectToAllTarget(effect, invoker, target, AddHaveSkillPoint);
                 break;
             case E_BattleActiveEffectType.属性変化:
-                EffectToAllTarget(effect, target, SetElementChanged);
+                EffectToAllTarget(effect, invoker, target, SetElementChanged);
                 break;
             case E_BattleActiveEffectType.復活付与:
-                EffectToAllTarget(effect, target, SetRebornEffect);
+                EffectToAllTarget(effect, invoker, target, SetRebornEffect);
                 break;
             case E_BattleActiveEffectType.無敵付与:
-                EffectToAllTarget(effect, target, SetNoGetDamaged);
+                EffectToAllTarget(effect, invoker, target, SetNoGetDamaged);
                 break;
             case E_BattleActiveEffectType.攻撃集中:
-                EffectToAllTarget(effect, target, SetAttractingAffect);
+                EffectToAllTarget(effect, invoker, target, SetAttractingAffect);
                 break;
             case E_BattleActiveEffectType.カウンター:
                 EffectToAllTarget(effect, invoker, target, CounterAttack);
                 break;
             case E_BattleActiveEffectType.通常攻撃全体攻撃化:
-                EffectToAllTarget(effect, target, AddNormalAttackToAllTurn);
+                EffectToAllTarget(effect, invoker, target, AddNormalAttackToAllTurn);
                 break;
             case E_BattleActiveEffectType.通常攻撃被ダメージ増減:
-                EffectToAllTarget(effect, target, AddFromNormalAttackRate);
+                EffectToAllTarget(effect, invoker, target, AddFromNormalAttackRate);
                 break;
             case E_BattleActiveEffectType.通常攻撃与ダメージ増減:
-                EffectToAllTarget(effect, target, AddToNormalAttackRate);
+                EffectToAllTarget(effect, invoker, target, AddToNormalAttackRate);
                 break;
             case E_BattleActiveEffectType.通常攻撃回数追加:
-                EffectToAllTarget(effect, target, AddNormalAttackNum);
+                EffectToAllTarget(effect, invoker, target, AddNormalAttackNum);
                 break;
             case E_BattleActiveEffectType.攻撃集中被ダメ減:
-                EffectToAllTarget(effect, target, SetAttractingAffect);
-                EffectToAllTarget(effect, target, BuffFromDamageRate);
+                EffectToAllTarget(effect, invoker, target, SetAttractingAffect);
+                EffectToAllTarget(effect, invoker, target, BuffFromDamageRate);
                 break;
             case E_BattleActiveEffectType.HPリジェネ:
-                EffectToAllTarget(effect, target, AddHpRegeneration);
+                EffectToAllTarget(effect, invoker, target, AddHpRegeneration);
                 break;
             case E_BattleActiveEffectType.SPリジェネ:
-                EffectToAllTarget(effect, target, AddSpRegeneration);
+                EffectToAllTarget(effect, invoker, target, AddSpRegeneration);
                 break;
 
 
@@ -226,7 +226,17 @@ public class BattleActiveEffectsFunc : MonoBehaviour
         foreach (BattleCharacter target in ElementClass.GetListInElement(targetList, effect.TargetElement))
         {
             if (!target.IsAlive) continue; //とりあえず倒れているキャラに効果は付与しないことにする
-            func(invoker, target, effect);
+            if(invoker == target) //発動者へのバフは+1ターンする(行動終了後に全effectTurnを経過させるため)
+            {
+                effect.ChangeEffectTurn(1);
+                Debug.Log("効果対象が発動者と同じです");
+                func(invoker, target, effect);
+                effect.ChangeEffectTurn(-1);
+            }
+            else
+            {
+                func(invoker, target, effect);
+            }
         }
     }
 
@@ -234,14 +244,26 @@ public class BattleActiveEffectsFunc : MonoBehaviour
     /// targetList全てに対しactiveEffectを発動する(倒れているtargetは除く)
     /// </summary>
     /// <param name="effect">発動するBattleActiveEffect</param>
+    /// <param name="invoker">発動者</param>
     /// <param name="targetList">効果対象</param>
     /// <param name="func">呼ぶ関数</param>
-    private void EffectToAllTarget(BattleActiveEffect effect, List<BattleCharacter> targetList, Action<BattleCharacter, BattleActiveEffect> func)
+    private void EffectToAllTarget(BattleActiveEffect effect, BattleCharacter invoker, List<BattleCharacter> targetList, Action<BattleCharacter, BattleActiveEffect> func)
     {
         foreach(BattleCharacter target in ElementClass.GetListInElement(targetList, effect.TargetElement))
         {
             if (!target.IsAlive) continue; //とりあえず倒れているキャラに効果は付与しないことにする
-            func(target, effect);
+
+            if (invoker == target) //発動者へのバフは+1ターンする(行動終了後に全effectTurnを経過させるため)
+            {
+                effect.ChangeEffectTurn(1);
+                Debug.Log("効果対象が発動者と同じです");
+                func(target, effect);
+                effect.ChangeEffectTurn(-1);
+            }
+            else
+            {
+                func(target, effect);
+            }
         }
     }
 }

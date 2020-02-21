@@ -8,13 +8,9 @@ public class BattleUIManager : MonoBehaviour
     private static Text announceText;
     [SerializeField] private Text announceTextObject;
 
-    //[SerializeField] private GameObject enemyTargetButtonsObject;
-    //[SerializeField] private GameObject allyTargetButtonsObject;
     [SerializeField] private Button[] enemyTargetButton = new Button[4];
     [SerializeField] private Button[] allyTargetButton = new Button[4];
 
-    //public GameObject EnemyTargetButtons => this.enemyTargetButtonsObject;
-    //public GameObject AllyTargetButtons => this.allyTargetButtonsObject;
     public Button[] EnemyTargetButton => this.enemyTargetButton;
     public Button[] AllyTargetButton => this.allyTargetButton;
 
@@ -33,17 +29,21 @@ public class BattleUIManager : MonoBehaviour
         Debug.Log(text);
     }
 
-    public void SetActiveAllyTargetButtons(bool flag)
+    /// <summary>
+    /// ターゲット選択ボタンの表示を切り替える
+    /// </summary>
+    /// <param name="targetIsAlly">ターゲットが味方かどうか</param>
+    public void SetActiveAllyTargetButtons(bool targetIsAlly)
     {
         foreach(Button button in this.allyTargetButton)
         {
-            button.gameObject.SetActive(flag);
+            button.gameObject.SetActive(targetIsAlly);
         }
         foreach(Button button in this.enemyTargetButton)
         {
-            button.gameObject.SetActive(!flag);
+            button.gameObject.SetActive(!targetIsAlly);
         }
-        if (flag) this.allyTargetButton[0].Select();
+        if (targetIsAlly) this.allyTargetButton[0].Select();
         else this.enemyTargetButton[0].Select();
     }
 }

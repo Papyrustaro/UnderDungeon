@@ -26,11 +26,6 @@ public class DungeonBattleManager : MonoBehaviour
     private List<BattleCharacter> enemyList = new List<BattleCharacter>();
 
     private bool debug = true;
-
-    private void Awake()
-    {
-        
-    }
     private void Start()
     {
         charaNum = charaList.Count;
@@ -134,7 +129,6 @@ public class DungeonBattleManager : MonoBehaviour
                 InputPlayerAction();
                 break;
             case E_BattleSituation.PlayerSelectActiveSkill:
-                //ShowActiveSkillSelect(charaList[nextActionIndex]);
                 InputActuateSkill();
                 break;
             case E_BattleSituation.PlayerSelectActiveItem:
@@ -305,7 +299,7 @@ public class DungeonBattleManager : MonoBehaviour
         }
 
 
-        for(int i = 0; i < invoker.BattleActiveSkillID.Count; i++) //4で固定されちゃうかも
+        for(int i = 0; i < invoker.BattleActiveSkillID.Count; i++) 
         {
             if (Input.GetKeyDown(i.ToString()))
             {
@@ -552,6 +546,42 @@ public class DungeonBattleManager : MonoBehaviour
         foreach(BattleCharacter bc in this.allyList)
         {
             if (bc.Hp > bc.MaxHp) bc.Hp = bc.MaxHp;
+        }
+    }
+
+    /// <summary>
+    /// 「もどる」ボタン押されたときの処理
+    /// </summary>
+    public void PressedBackButton()
+    {
+        switch (this.currentSituation)
+        {
+            case E_BattleSituation.PlayerSelectActiveSkill:
+            case E_BattleSituation.PlayerSelectActiveItem:
+                this.currentSituation = E_BattleSituation.PlayerSelectAction;
+                ShowPlayerActionSelect();
+                break;
+            case E_BattleSituation.PlayerSelectSkillTarget:
+                this.waitingEffect = null;
+                if (inputTargetWaiting) //味方1人対象選択中
+                {
+                    this.uiManager.SetActiveAllyTargetButtons(false);
+                    this.inputTargetWaiting = false;
+                }
+                this.currentSituation = E_BattleSituation.PlayerSelectActiveSkill;
+                ShowActiveSkillSelect(charaList[nextActionIndex]);
+                break;
+            case E_BattleSituation.PlayerSelectItemTarget:
+                this.waitingEffect = null;
+                if (inputTargetWaiting) //味方1人対象選択中
+                {
+                    this.uiManager.SetActiveAllyTargetButtons(false);
+                    this.inputTargetWaiting = false;
+                }
+                this.currentSituation = E_BattleSituation.PlayerSelectActiveItem;
+                ShowActiveItemSelect();
+                break;
+            
         }
     }
 }

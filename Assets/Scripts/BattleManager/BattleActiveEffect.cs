@@ -133,4 +133,13 @@ public class BattleActiveEffect : MonoBehaviour
             }
         }
     }
+
+    /// <summary>
+    /// (発動者への効果ターンを1増やすため)EffectTurnの値を変化させる
+    /// </summary>
+    /// <param name="addTurnValue"></param>
+    public void ChangeEffectTurn(int addTurnValue)
+    {
+        this.effectTurn += addTurnValue;
+    }
 }

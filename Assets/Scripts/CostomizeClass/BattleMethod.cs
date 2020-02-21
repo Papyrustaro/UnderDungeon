@@ -34,4 +34,6 @@ public class BattleMethod : MonoBehaviour
         }
         return list;
     }
+
+    
 }

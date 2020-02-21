@@ -130,10 +130,6 @@ public class BattleCharacter : MonoBehaviour
     public double NormalAttackPower => Atk * ToNormalAttackRate * GetToDamageRate(Element);
     public bool IsAlive => Hp > 0;
     public bool IsDefending { get; set; } = false;
-
-    private void Awake()
-    {
-    }
     private void Start()
     {
         SetCharacter();
@@ -350,9 +346,9 @@ public class BattleCharacter : MonoBehaviour
     /// <param name="effectTurn">効果ターン</param>
     public void AddToDamageRate(E_Element element, double rate, int effectTurn)
     {
-        Debug.Log("効果前のToDamageRate:" + GetToDamageRate(element));
+        Debug.Log("効果前のToDamageRate" + ElementClass.GetStringElement(element) + ":" + GetToDamageRate(element));
         this.toDamageRate.Add(new BuffEffect(element, rate, effectTurn));
-        Debug.Log("効果後のToDamageRate:" + GetToDamageRate(E_Element.Fire));
+        Debug.Log("効果後のToDamageRate" + ElementClass.GetStringElement(element) + ":" + GetToDamageRate(element));
     }
 
     /// <summary>
@@ -636,12 +632,14 @@ public class BattleCharacter : MonoBehaviour
     }
 
     /// <summary>
-    /// turnValueで保持している効果ターンを1ターン経過(デクリメント)
+    /// 経過後のターン値を返す(値渡しであるので注意)
     /// </summary>
     /// <param name="turnValue">経過させるパラメータ</param>
-    public void ElapseTurn(int turnValue)
+    /// <returns>経過後のターン</returns>
+    public int ElapseTurn(int turnValue)
     {
         if (turnValue > 0) turnValue--;
+        return turnValue;
     }
 
     /// <summary>
@@ -660,15 +658,17 @@ public class BattleCharacter : MonoBehaviour
     /// </summary>
     public void ElapseAllTurn()
     {
+        Debug.Log("Atk:" + Atk);
         ElapseTurn(this.hpRate); ElapseTurn(this.atkRate); ElapseTurn(this.spdRate);
         ElapseTurn(this.toDamageRate); ElapseTurn(this.fromDamageRate); ElapseTurn(this.noGetDamagedTurn);
         ElapseTurn(this.elementChange); ElapseTurn(this.normalAttackNum); ElapseTurn(this.toNormalAttackRate);
         ElapseTurn(this.fromNormalAttackRate); ElapseTurn(this.attractingEffectTurn);
-        ElapseTurn(NormalAttackToAllTurn);
+        NormalAttackToAllTurn = ElapseTurn(this.NormalAttackToAllTurn);
+        Debug.Log("Atk:" + Atk);
     }
 
     /// <summary>
-    /// キャラ行動開始前に呼ぶ関数。リジェネ、防御状態解除
+    /// キャラ行動開始前に呼ぶ関数。リジェネ適用、防御状態解除
     /// </summary>
     public void SetBeforeAction()
     {
