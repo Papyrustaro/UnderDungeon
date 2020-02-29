@@ -4,24 +4,34 @@ using UnityEngine;
 
 public class BuffEffect
 {
-    private readonly E_Element element;
-    private readonly double rate; //効果倍率
-    private int effectTurn; //効果持続ターン
-
+    public E_Element Element { get; }
+    public double Rate { get; }
+    public int EffectTurn { get; set; }
     public BuffEffect(E_Element element, double rate, int effectTurn)
     {
-        this.element = element; this.rate = rate; this.effectTurn = effectTurn;
+        this.Element = element; this.Rate = rate; this.EffectTurn = effectTurn;
     }
     public BuffEffect(double rate, int effectTurn)
     {
-        this.element = E_Element.FireAquaTree; this.rate = rate; this.effectTurn = effectTurn;
+        this.Element = E_Element.FireAquaTree; this.Rate = rate; this.EffectTurn = effectTurn;
     }
     public BuffEffect(E_Element element, int effectTurn)
     {
-        this.element = element; this.rate = 0; this.effectTurn = effectTurn;
+        this.Element = element; this.Rate = 0; this.EffectTurn = effectTurn;
     }
+    public BuffEffect(int effectTurn)
+    {
+        this.Element = E_Element.FireAquaTree; this.Rate = 0; this.EffectTurn = effectTurn;
+    }
+}
 
-    public E_Element Element => this.element;
-    public double Rate => this.rate;
-    public int EffectTurn { get { return this.effectTurn; } set { this.effectTurn = value; } }
+public class BuffEffectWithType
+{
+    public E_BattleActiveEffectType EffectType { get; }
+    public BuffEffect Buff { get; }
+
+    public BuffEffectWithType(E_BattleActiveEffectType effectType, BuffEffect buffEffect)
+    {
+        this.EffectType = effectType; this.Buff = buffEffect;
+    }
 }

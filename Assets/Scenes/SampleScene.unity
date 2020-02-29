@@ -6281,7 +6281,7 @@ PrefabInstance:
     - target: {fileID: 4324497793931535174, guid: 181192d4754373448bff3e620fe79796,
         type: 3}
       propertyPath: haveBattleActiveSkillID.Array.data[3]
-      value: 12
+      value: 13
       objectReference: {fileID: 0}
     - target: {fileID: 4324497793931535174, guid: 181192d4754373448bff3e620fe79796,
         type: 3}
@@ -6297,6 +6297,16 @@ PrefabInstance:
         type: 3}
       propertyPath: haveBattlePassiveSkillID.Array.data[0]
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4324497793931535174, guid: 181192d4754373448bff3e620fe79796,
+        type: 3}
+      propertyPath: compositeExp
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 4324497793931535174, guid: 181192d4754373448bff3e620fe79796,
+        type: 3}
+      propertyPath: sellPrice
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 6832071821252253256, guid: 181192d4754373448bff3e620fe79796,
         type: 3}

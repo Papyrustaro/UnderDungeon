@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// 戦闘中のアクティブなスキルorアイテムの効果
+/// </summary>
 public enum E_BattleActiveEffectType
 {
     攻撃, //RateOrValueが1以下でHP割合ダメージ

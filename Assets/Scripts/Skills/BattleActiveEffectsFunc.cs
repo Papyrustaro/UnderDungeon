@@ -226,17 +226,7 @@ public class BattleActiveEffectsFunc : MonoBehaviour
         foreach (BattleCharacter target in ElementClass.GetListInElement(targetList, effect.TargetElement))
         {
             if (!target.IsAlive) continue; //とりあえず倒れているキャラに効果は付与しないことにする
-            if(invoker == target) //発動者へのバフは+1ターンする(行動終了後に全effectTurnを経過させるため)
-            {
-                effect.ChangeEffectTurn(1);
-                Debug.Log("効果対象が発動者と同じです");
-                func(invoker, target, effect);
-                effect.ChangeEffectTurn(-1);
-            }
-            else
-            {
-                func(invoker, target, effect);
-            }
+            func(invoker, target, effect);
         }
     }
 
@@ -252,17 +242,7 @@ public class BattleActiveEffectsFunc : MonoBehaviour
         foreach(BattleCharacter target in ElementClass.GetListInElement(targetList, effect.TargetElement))
         {
             if (!target.IsAlive) continue; //とりあえず倒れているキャラに効果は付与しないことにする
-
-            if (invoker == target) //発動者へのバフは+1ターンする(行動終了後に全effectTurnを経過させるため)
-            {
-                effect.ChangeEffectTurn(1);
-                func(target, effect);
-                effect.ChangeEffectTurn(-1);
-            }
-            else
-            {
-                func(target, effect);
-            }
+            func(target, effect);
         }
     }
 }

@@ -1,0 +1,46 @@
+# ターン経過で消えるバフ効果
+
+## 自身のターン経過処理が終わってから反映
+・HPバフ  
+・Atkバフ  
+・Spdバフ  
+・与ダメージバフ  
+・被ダメージバフ  
+・属性変化  
+・無敵付与  
+・攻撃集中  
+・通常攻撃全体化  
+・通常攻撃被ダメ増減  
+・通常攻撃与ダメ増減  
+・HPリジェネ  
+・SPリジェネ  
+
+# 格納している型の種類
+・List<BuffEffect>  
+・Dictionary<E_Element, int>  
+・int  
+・BuffEffect  
+
+# BattleCharacter内バフ適用関数の引数
+・effect.RateOrValue, effect.EffectTurn
+・Element, RateOrValue, EffectTurn
+・RateOrValue
+・element, EffectTurn
+・effectTurn
+・
+
+# 処理の流れ
+## バフ効果の記憶
+(0.BattleActiveEffectsFuncからBattleCharacter内関数を呼ぶ)
+1.BattleCharacter内関数で、どのバフか&バフパラメータ記憶
+
+## バフ効果の反映
+1.BattleCharacter内関数で、記憶したバフの効果反映
+
+# 実装
+## EffectsFuncからBattleCharacter関数の呼び出し
+
+## BattleCharacter内関数で、どのバフか&バフパラメータ記憶
+
+
+## 記憶したバフ効果の反映

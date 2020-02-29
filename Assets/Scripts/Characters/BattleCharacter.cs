@@ -22,6 +22,11 @@ public class BattleCharacter : MonoBehaviour
     private List<E_BattleActiveSkill> battleActiveSkillID = new List<E_BattleActiveSkill>();
     private Character charaClass;
 
+    /// <summary>
+    /// 経過ターン処理後に適用するActiveEffectの保存用リスト
+    /// </summary>
+    private List<BuffEffectWithType> beforeSetBuffEffect = new List<BuffEffectWithType>();
+
 
     /* passiveのみ考慮したプロパティ */
     public double PassiveMaxHpRate { get; set; } = 1; //passive考慮したステータス charaClass.maxHP * battlePassiveSkill * itemPassiveSkill
@@ -130,6 +135,10 @@ public class BattleCharacter : MonoBehaviour
     public double NormalAttackPower => Atk * ToNormalAttackRate * GetToDamageRate(Element);
     public bool IsAlive => Hp > 0;
     public bool IsDefending { get; set; } = false;
+
+    /// <summary>
+    /// 複数回呼ばれる可能性あり
+    /// </summary>
     public void Start()
     {
         SetCharacter();
@@ -203,6 +212,7 @@ public class BattleCharacter : MonoBehaviour
     /// </summary>
     private void SetActiveSkill()
     {
+        this.battleActiveSkillID = new List<E_BattleActiveSkill>();
         if (!this.IsEnemy)
         {
             for(int i = 0; i < CharacterConstValue.MAX_HAVE_ACTIVE_SKILL; i++)
@@ -226,6 +236,7 @@ public class BattleCharacter : MonoBehaviour
         this.attractingEffectTurn = new Dictionary<E_Element, int>() { { E_Element.Fire, 0 }, { E_Element.Aqua, 0 }, { E_Element.Tree, 0 } };
         this.HaveSkillPoint = 0; NormalAttackToAllTurn = 0; HaveDamageThisTurn = 0;
         IsDefending = false;
+        this.beforeSetBuffEffect = new List<BuffEffectWithType>();
     }
     
     /// <summary>
@@ -270,9 +281,7 @@ public class BattleCharacter : MonoBehaviour
     /// <param name="effectTurn">効果ターン</param>
     public void AddHpRate(double rate, int effectTurn)
     {
-        Debug.Log("効果前のMaxHP:" + MaxHp);
-        this.hpRate.Add(new BuffEffect(rate, effectTurn));
-        Debug.Log("効果後のMaxHP:" + MaxHp);
+        this.beforeSetBuffEffect.Add(new BuffEffectWithType(E_BattleActiveEffectType.HPバフ, new BuffEffect(rate, effectTurn)));
         StatusChange = true;
     }
 
@@ -283,9 +292,7 @@ public class BattleCharacter : MonoBehaviour
     /// <param name="effectTurn">効果ターン</param>
     public void AddAtkRate(double rate, int effectTurn)
     {
-        Debug.Log("効果前のAtk:" + Atk);
-        this.atkRate.Add(new BuffEffect(rate, effectTurn));
-        Debug.Log("効果後のAtk:" + Atk);
+        this.beforeSetBuffEffect.Add(new BuffEffectWithType(E_BattleActiveEffectType.ATKバフ, new BuffEffect(rate, effectTurn)));
         StatusChange = true;
     }
 
@@ -296,9 +303,7 @@ public class BattleCharacter : MonoBehaviour
     /// <param name="effectTurn">効果ターン</param>
     public void AddSpdRate(double rate, int effectTurn)
     {
-        Debug.Log("効果前のSpd:" + Spd);
-        this.spdRate.Add(new BuffEffect(rate, effectTurn));
-        Debug.Log("効果後のSpd:" + Spd);
+        this.beforeSetBuffEffect.Add(new BuffEffectWithType(E_BattleActiveEffectType.SPDバフ, new BuffEffect(rate, effectTurn)));
         StatusChange = true;
     }
 
@@ -309,9 +314,7 @@ public class BattleCharacter : MonoBehaviour
     /// <param name="effectTurn">効果ターン</param>
     public void AddToNormalAttackRate(double rate, int effectTurn)
     {
-        Debug.Log("効果前のToNormalAttackRate" + ToNormalAttackRate);
-        this.toNormalAttackRate.Add(new BuffEffect(rate, effectTurn));
-        Debug.Log("効果後のToNormalAttackRate" + ToNormalAttackRate);
+        this.beforeSetBuffEffect.Add(new BuffEffectWithType(E_BattleActiveEffectType.通常攻撃与ダメージ増減, new BuffEffect(rate, effectTurn)));
     }
 
     /// <summary>
@@ -321,9 +324,7 @@ public class BattleCharacter : MonoBehaviour
     /// <param name="effectTurn">効果ターン</param>
     public void AddFromNormalAttackRate(double rate, int effectTurn)
     {
-        Debug.Log("効果前のFromNormalAttackRate:" + FromNormalAttackRate);
-        this.fromNormalAttackRate.Add(new BuffEffect(rate, effectTurn));
-        Debug.Log("効果後のFromNormalAttackRate:" + FromNormalAttackRate);
+        this.beforeSetBuffEffect.Add(new BuffEffectWithType(E_BattleActiveEffectType.通常攻撃被ダメージ増減, new BuffEffect(rate, effectTurn)));
     }
 
     /// <summary>
@@ -333,9 +334,7 @@ public class BattleCharacter : MonoBehaviour
     /// <param name="effectTurn">効果ターン</param>
     public void AddNormalAttackNum(int addNum, int effectTurn)
     {
-        Debug.Log("効果前の通常攻撃回数:" + NormalAttackNum);
-        this.normalAttackNum.Add(new BuffEffect((double)addNum, effectTurn));
-        Debug.Log("効果後の通常攻撃回数:" + NormalAttackNum);
+        this.beforeSetBuffEffect.Add(new BuffEffectWithType(E_BattleActiveEffectType.通常攻撃回数追加, new BuffEffect((double)addNum, effectTurn)));
     }
 
     /// <summary>
@@ -346,9 +345,7 @@ public class BattleCharacter : MonoBehaviour
     /// <param name="effectTurn">効果ターン</param>
     public void AddToDamageRate(E_Element element, double rate, int effectTurn)
     {
-        Debug.Log("効果前のToDamageRate" + ElementClass.GetStringElement(element) + ":" + GetToDamageRate(element));
-        this.toDamageRate.Add(new BuffEffect(element, rate, effectTurn));
-        Debug.Log("効果後のToDamageRate" + ElementClass.GetStringElement(element) + ":" + GetToDamageRate(element));
+        this.beforeSetBuffEffect.Add(new BuffEffectWithType(E_BattleActiveEffectType.与ダメージ増減バフ, new BuffEffect(element, rate, effectTurn)));
     }
 
     /// <summary>
@@ -359,9 +356,7 @@ public class BattleCharacter : MonoBehaviour
     /// <param name="effectTurn">効果ターン</param>
     public void AddFromDamageRate(E_Element element, double rate, int effectTurn)
     {
-        Debug.Log("効果前のFromDamageRate:" + GetFromDamageRate(element));
-        this.fromDamageRate.Add(new BuffEffect(element, rate, effectTurn));
-        Debug.Log("効果後のFromDamageRate:" + GetFromDamageRate(element));
+        this.beforeSetBuffEffect.Add(new BuffEffectWithType(E_BattleActiveEffectType.被ダメージ増減バフ, new BuffEffect(element, rate, effectTurn)));
     }
 
     /// <summary>
@@ -371,9 +366,7 @@ public class BattleCharacter : MonoBehaviour
     /// <param name="effectTurn">効果ターン</param>
     public void AddNoGetDamaged(E_Element element, int effectTurn)
     {
-        ElementClass.AddTurn(this.noGetDamagedTurn, element, effectTurn);
-        Debug.Log(CharaClass.CharaName + "が" + effectTurn + "ターン"+ ElementClass.GetStringElement(element) + "属性の攻撃無敵");
-        Debug.Log("noGetDamagedTurn 火:" + this.noGetDamagedTurn[E_Element.Fire] + " 水:" + this.noGetDamagedTurn[E_Element.Aqua] + " 木:" + this.noGetDamagedTurn[E_Element.Tree]);
+        this.beforeSetBuffEffect.Add(new BuffEffectWithType(E_BattleActiveEffectType.無敵付与, new BuffEffect(element, effectTurn)));
     }
 
     /// <summary>
@@ -383,9 +376,7 @@ public class BattleCharacter : MonoBehaviour
     /// <param name="effectTurn">効果ターン</param>
     public void AddAttractEffectTurn(E_Element element, int effectTurn)
     {
-        ElementClass.AddTurn(this.attractingEffectTurn, element, effectTurn);
-        Debug.Log(CharaClass.CharaName + "が" + effectTurn + "ターン" + ElementClass.GetStringElement(element) + "属性の攻撃集中");
-        Debug.Log("attractingEffectTurn 火:" + this.attractingEffectTurn[E_Element.Fire] + " 水:" + this.attractingEffectTurn[E_Element.Aqua] + " 木:" + this.attractingEffectTurn[E_Element.Tree]);
+        this.beforeSetBuffEffect.Add(new BuffEffectWithType(E_BattleActiveEffectType.攻撃集中, new BuffEffect(element, effectTurn)));
     }
 
     /// <summary>
@@ -395,9 +386,7 @@ public class BattleCharacter : MonoBehaviour
     /// <param name="effectTurn">効果ターン</param>
     public void SetElementChanged(E_Element element, int effectTurn)
     {
-        Debug.Log("効果前の属性:" + ElementClass.GetStringElement(this.Element));
-        this.elementChange = new BuffEffect(element, 0, effectTurn);
-        Debug.Log("効果後の属性:" + ElementClass.GetStringElement(this.Element));
+        this.beforeSetBuffEffect.Add(new BuffEffectWithType(E_BattleActiveEffectType.属性変化, new BuffEffect(element, effectTurn)));
     }
 
     /// <summary>
@@ -467,7 +456,7 @@ public class BattleCharacter : MonoBehaviour
     /// <param name="effectTurn">効果ターン</param>
     public void AddHpRegeneration(double rateOrValue, int effectTurn)
     {
-        this.hpRegeneration.Add(new BuffEffect(rateOrValue, effectTurn));
+        this.beforeSetBuffEffect.Add(new BuffEffectWithType(E_BattleActiveEffectType.HPリジェネ, new BuffEffect(rateOrValue, effectTurn)));
     }
 
     /// <summary>
@@ -477,7 +466,15 @@ public class BattleCharacter : MonoBehaviour
     /// <param name="effectTurn">効果ターン</param>
     public void AddSpRegeneration(int value, int effectTurn)
     {
-        this.spRegeneration.Add(new BuffEffect((double)value, effectTurn));
+        this.beforeSetBuffEffect.Add(new BuffEffectWithType(E_BattleActiveEffectType.SPリジェネ, new BuffEffect((double)value, effectTurn)));
+    }
+
+    /// <summary>
+    /// 通常攻撃全体化のターン数を増加させる(初期値0)
+    /// </summary>
+    /// <param name="addTurn">増加ターン数</param>
+    public void AddNormalAttackToAllTurn(int addTurn) {
+        this.beforeSetBuffEffect.Add(new BuffEffectWithType(E_BattleActiveEffectType.通常攻撃全体攻撃化, new BuffEffect(addTurn)));
     }
 
     /// <summary>
@@ -662,9 +659,9 @@ public class BattleCharacter : MonoBehaviour
     }
 
     /// <summary>
-    /// キャラ行動開始前に呼ぶ関数。リジェネ適用、防御状態解除
+    /// キャラ行動開始前に呼ぶ関数。呼ばれるのは行動前のキャラのみ。リジェネ適用、防御状態解除
     /// </summary>
-    public void SetBeforeAction()
+    public void SetBeforeSelfAction()
     {
         foreach(BuffEffect bf in this.hpRegeneration)
         {
@@ -681,11 +678,102 @@ public class BattleCharacter : MonoBehaviour
     }
 
     /// <summary>
-    /// 行動後に呼ぶ関数。AcitveEffectの効果を全て1ターン経過、Sp自然回復
+    /// 行動後に呼ぶ関数。呼ばれるのは行動したキャラのみ。AcitveEffectの効果を全て1ターン経過、Sp自然回復
     /// </summary>
-    public void SetAfterAction() //行動後に呼ぶ関数
+    public void SetAfterSelfAction()
     {
         ElapseAllTurn();
         AddHaveSkillPoint(PassiveHealSpInTurn);
+    }
+
+    /// <summary>
+    /// キャラ行動前に呼ぶ関数。全キャラ呼ばれる。呼ばれるのは行動者処理の後(?)
+    /// </summary>
+    public void SetBeforeAction()
+    {
+
+    }
+
+    /// <summary>
+    /// キャラ行動後に呼ぶ関数。全キャラ呼ばれる。呼ばれるのは行動者処理の後
+    /// </summary>
+    public void SetAfterAction()
+    {
+        SetBuffEffectAfterElapseTurn();
+    }
+    
+
+    /// <summary>
+    /// ターン経過処理後に呼ぶ、ActiveEffect適用関数
+    /// </summary>
+    private void SetBuffEffectAfterElapseTurn()
+    {
+        foreach(BuffEffectWithType buff in this.beforeSetBuffEffect)
+        {
+            switch (buff.EffectType)
+            {
+                case E_BattleActiveEffectType.ATKバフ:
+                    this.atkRate.Add(buff.Buff);
+                    Debug.Log(CharaClass.CharaName + "のAtkが" + buff.Buff.EffectTurn + "ターン" + buff.Buff.Rate + "倍");
+                    break;
+                case E_BattleActiveEffectType.HPバフ:
+                    this.hpRate.Add(buff.Buff);
+                    Debug.Log(CharaClass.CharaName + "のHpが" + buff.Buff.EffectTurn + "ターン" + buff.Buff.Rate + "倍");
+                    break;
+                case E_BattleActiveEffectType.HPリジェネ:
+                    this.hpRegeneration.Add(buff.Buff);
+                    Debug.Log(CharaClass.CharaName + "が" + buff.Buff.EffectTurn + "ターンHpを" + buff.Buff.Rate + "回復");
+                    break;
+                case E_BattleActiveEffectType.SPDバフ:
+                    this.spdRate.Add(buff.Buff);
+                    Debug.Log(CharaClass.CharaName + "のSpdが" + buff.Buff.EffectTurn + "ターン" + buff.Buff.Rate + "倍");
+                    break;
+                case E_BattleActiveEffectType.SPリジェネ:
+                    this.spRegeneration.Add(buff.Buff);
+                    Debug.Log(CharaClass.CharaName + "が" + buff.Buff.EffectTurn + "ターンSpを" + buff.Buff.Rate + "回復");
+                    break;
+                case E_BattleActiveEffectType.与ダメージ増減バフ:
+                    this.toDamageRate.Add(buff.Buff);
+                    Debug.Log(CharaClass.CharaName + "の" + ElementClass.GetStringElement(buff.Buff.Element) + "への与ダメージが" + buff.Buff.EffectTurn + "ターン" + buff.Buff.Rate + "倍");
+                    break;
+                case E_BattleActiveEffectType.属性変化:
+                    this.elementChange = buff.Buff;
+                    Debug.Log(CharaClass.CharaName + "の属性が" + buff.Buff.EffectTurn + "ターン" + ElementClass.GetStringElement(buff.Buff.Element) + "属性に変化");
+                    break;
+                case E_BattleActiveEffectType.攻撃集中:
+                    ElementClass.AddTurn(this.attractingEffectTurn, buff.Buff.Element, buff.Buff.EffectTurn);
+                    Debug.Log(CharaClass.CharaName + "が" + buff.Buff.EffectTurn + "ターン" + ElementClass.GetStringElement(buff.Buff.Element) + "属性の攻撃集中");
+                    break;
+                case E_BattleActiveEffectType.無敵付与:
+                    ElementClass.AddTurn(this.noGetDamagedTurn, buff.Buff.Element, buff.Buff.EffectTurn);
+                    Debug.Log(CharaClass.CharaName + "が" + buff.Buff.EffectTurn + "ターン" + ElementClass.GetStringElement(buff.Buff.Element) + "属性の攻撃無敵");
+                    break;
+                case E_BattleActiveEffectType.被ダメージ増減バフ:
+                    this.fromDamageRate.Add(buff.Buff);
+                    Debug.Log(CharaClass.CharaName + "の" + ElementClass.GetStringElement(buff.Buff.Element) + "からの被ダメージが" + buff.Buff.EffectTurn + "ターン" + buff.Buff.Rate + "倍");
+                    break;
+                case E_BattleActiveEffectType.通常攻撃与ダメージ増減:
+                    this.toNormalAttackRate.Add(buff.Buff);
+                    Debug.Log(CharaClass.CharaName + "通常攻撃の与ダメージが" + buff.Buff.EffectTurn + "ターン" + buff.Buff.Rate + "倍");
+                    break;
+                case E_BattleActiveEffectType.通常攻撃全体攻撃化:
+                    this.NormalAttackToAllTurn += buff.Buff.EffectTurn;
+                    Debug.Log(CharaClass.CharaName + "の通常攻撃が" + buff.Buff.EffectTurn + "ターン全体化");
+                    break;
+                case E_BattleActiveEffectType.通常攻撃回数追加:
+                    this.normalAttackNum.Add(buff.Buff);
+                    Debug.Log(CharaClass.CharaName + "通常攻撃回数が" + buff.Buff.EffectTurn + "ターン" + buff.Buff.Rate + "回増加");
+                    break;
+                case E_BattleActiveEffectType.通常攻撃被ダメージ増減:
+                    this.fromNormalAttackRate.Add(buff.Buff);
+                    Debug.Log(CharaClass.CharaName + "の通常攻撃の被ダメージが" + buff.Buff.EffectTurn + "ターン" + buff.Buff.Rate + "倍");
+                    break;
+                case E_BattleActiveEffectType _:
+                    Debug.Log("error");
+                    break;
+            }
+        }
+
+        this.beforeSetBuffEffect = new List<BuffEffectWithType>(); //効果適用後、記憶用変数の初期化
     }
 }

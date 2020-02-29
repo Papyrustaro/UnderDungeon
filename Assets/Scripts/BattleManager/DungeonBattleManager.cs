@@ -59,7 +59,7 @@ public class DungeonBattleManager : MonoBehaviour
             {
                 ReSetPassiveEffect();
             }
-            this.charaList[nextActionIndex].SetBeforeAction();
+            this.charaList[nextActionIndex].SetBeforeSelfAction();
             CharacterAction();
         }else
         {
@@ -254,6 +254,7 @@ public class DungeonBattleManager : MonoBehaviour
     /// <param name="bc">スキルを表示するキャラ</param>
     private void ShowActiveSkillSelect(BattleCharacter bc)
     {
+        Debug.Log(bc.BattleActiveSkillID.Count);
         string s = "";
         int i = 0;
         foreach(E_BattleActiveSkill id in bc.BattleActiveSkillID)
@@ -389,7 +390,11 @@ public class DungeonBattleManager : MonoBehaviour
     /// </summary>
     private void AdvanceTurn()
     {
-        if (this.charaList[nextActionIndex].IsAlive) this.charaList[nextActionIndex].SetAfterAction();
+        if (this.charaList[nextActionIndex].IsAlive) this.charaList[nextActionIndex].SetAfterSelfAction();
+        foreach(BattleCharacter bc in this.charaList)
+        {
+            bc.SetAfterAction();
+        }
         this.finishAction = true;
         this.nextActionIndex++;
     }

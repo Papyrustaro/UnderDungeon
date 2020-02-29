@@ -46,9 +46,9 @@ MonoBehaviour:
   effectType: 4
   rateOrValue: 1.5
   effectTurn: 2
-  description: "\u81EA\u8EAB\u306E\u4F53\u529B\u30922\u30BF\u30FC\u30F3\u306E\u95931.5\u500D\u306B\u3059\u308B"
+  description: 
   effectElement: 2
   targetElement: 6
-  targetType: 4
+  targetType: 3
   id: 13
   needSkillPoint: 0
