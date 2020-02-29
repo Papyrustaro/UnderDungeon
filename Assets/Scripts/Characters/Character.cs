@@ -12,7 +12,7 @@ public class Character : MonoBehaviour
     [SerializeField]
     private E_Element element;
     [SerializeField]
-    private int rarity;
+    private E_CharaRarity rarity;
     [SerializeField]
     private string description;
     //private Image image;
@@ -24,6 +24,15 @@ public class Character : MonoBehaviour
     public int MaxAtk { get { return this.maxAtk; } set { this.maxAtk = value; } }
     public int MaxSpd { get { return this.maxSpd; } set { this.maxSpd = value; } }
     public E_Element Element => element;
-    public int Rarity => rarity;
+    public E_CharaRarity Rarity => rarity;
     public string Description => description;
+}
+
+public enum E_CharaRarity
+{
+    星1 = 0,
+    星2,
+    星3,
+    星4,
+    星5,
 }

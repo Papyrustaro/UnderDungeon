@@ -51,7 +51,7 @@ MonoBehaviour:
   maxSpd: 100
   element: 0
   rarity: 2
-  description: "\u52C7\u8005\uFF5E\uFF5E(\u3048\u3048\u58F0)"
+  description: "\u4F1D\u8AAC\u306E\u52C7\u8005"
 --- !u!114 &671494677203043193
 MonoBehaviour:
   m_ObjectHideFlags: 0

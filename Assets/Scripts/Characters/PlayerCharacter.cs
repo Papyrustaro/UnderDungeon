@@ -42,7 +42,7 @@ public class PlayerCharacter : MonoBehaviour
     public int MaxAtk => charaClass.MaxAtk;
     public int MaxSpd => charaClass.MaxSpd;
     public E_Element Element => charaClass.Element;
-    public int Rarity => charaClass.Rarity;
+    public E_CharaRarity Rarity => charaClass.Rarity;
     public string Description => charaClass.Description;
     public int HaveExp => this.haveExp;
     public int ExceedLimitNum => this.exceedLimitNum;
@@ -57,7 +57,7 @@ public class PlayerCharacter : MonoBehaviour
     public E_CompositeExp CompositeExp => this.compositeExp;
     public E_SellPrice SellPrice => this.sellPrice;
     public int Cost => this.cost;
-    public int MaxLV => LVTable.GetMaxLV(this.Rarity, this.exceedLimitNum);
+    public int MaxLV => LVTable.GetMaxLV((int)this.Rarity, this.exceedLimitNum);
     public int LV => LVTable.GetLV(this.haveExp, this.MaxLV);
     public int MaxExp => LVTable.GetMaxExp(this.MaxLV);
     public Character CharaClass

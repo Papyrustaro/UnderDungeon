@@ -49,7 +49,7 @@ MonoBehaviour:
   maxAtk: 10
   maxSpd: 10
   element: 1
-  rarity: 1
+  rarity: 0
   description: "\u3088\u304F\u3044\u308B\u3084\u3064"
 --- !u!114 &759348412468617237
 MonoBehaviour:
@@ -69,8 +69,8 @@ MonoBehaviour:
   useAbleBattleActiveSkillLV: 050000000a0000000f00000014000000
   haveBattlePassiveSkillID: 0000000001000000
   useAbleBattlePassiveSkillLV: 070000000e000000
-  haveDungeonActiveSkillID: 1000000
-  useAbleDungeonActiveSkillLV: -2073389440
+  haveDungeonActiveSkillID: 2
+  useAbleDungeonActiveSkillLV: 12
   haveDungeonPassiveSkillID: 0000000001000000
   useAbleDungeonPassiveSkillLV: 160000002c000000
   compositeExp: 10

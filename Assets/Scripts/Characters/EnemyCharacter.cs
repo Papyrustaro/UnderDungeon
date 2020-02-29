@@ -40,7 +40,7 @@ public class EnemyCharacter : MonoBehaviour
     public int MaxAtk => charaClass.MaxAtk;
     public int MaxSpd => charaClass.MaxSpd;
     public E_Element Element => charaClass.Element;
-    public int Rarity => charaClass.Rarity;
+    public E_CharaRarity Rarity => charaClass.Rarity;
     public string Description => charaClass.Description;
     public double HpRate => this.hpRate;
     public double AtkRate => this.atkRate;

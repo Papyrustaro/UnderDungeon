@@ -659,7 +659,7 @@ public class BattleCharacter : MonoBehaviour
     }
 
     /// <summary>
-    /// キャラ行動開始前に呼ぶ関数。呼ばれるのは行動前のキャラのみ。リジェネ適用、防御状態解除
+    /// キャラ行動開始前に呼ぶ関数。呼ばれるのは行動前の生存キャラのみ。リジェネ適用、防御状態解除
     /// </summary>
     public void SetBeforeSelfAction()
     {

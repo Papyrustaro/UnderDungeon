@@ -48,5 +48,5 @@ MonoBehaviour:
   maxAtk: 10
   maxSpd: 10
   element: 1
-  rarity: 1
+  rarity: 0
   description: "\u3088\u304F\u3044\u308B\u3084\u3064"
