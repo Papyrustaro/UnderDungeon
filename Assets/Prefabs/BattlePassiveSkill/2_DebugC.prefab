@@ -46,7 +46,7 @@ MonoBehaviour:
   effectType: 3
   rateOrValue: 2
   targetElement: 0
-  targetType: 3
+  targetType: 4
   effectCondition: 0
   effectElement: 6
   conditionValue: 0

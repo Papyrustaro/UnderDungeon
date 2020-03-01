@@ -43,7 +43,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2f0540b6e129afe4ca1c3c9d611e87ab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  effectType: 1
+  effectType: 0
   rateOrValue: 100
   targetElement: 6
   targetType: 3

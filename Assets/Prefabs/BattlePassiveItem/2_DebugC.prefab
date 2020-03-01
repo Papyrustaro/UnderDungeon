@@ -43,12 +43,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2f0540b6e129afe4ca1c3c9d611e87ab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  effectType: 4
+  effectType: 2
   rateOrValue: 0.1
   targetElement: 6
   targetType: 3
-  effectCondition: 0
+  effectCondition: 1
   effectElement: 6
-  conditionValue: 0
+  conditionValue: 0.9
   description: 
   id: 1

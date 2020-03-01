@@ -535,6 +535,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d59831af2fbee794f9b86e1985b47357, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &277495584 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 747896214091052387, guid: f742b5ca6598aac48b1d0d53292133ec,
+    type: 3}
+  m_PrefabInstance: {fileID: 1624895821}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &277495585
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 277495584}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d59831af2fbee794f9b86e1985b47357, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &302963278
 GameObject:
   m_ObjectHideFlags: 0
@@ -1039,7 +1057,7 @@ PrefabInstance:
     - target: {fileID: 5434958491773487578, guid: c3f5a59eff38e4d449ed9427b0f10858,
         type: 3}
       propertyPath: rarity
-      value: 0
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 5574414624290733910, guid: c3f5a59eff38e4d449ed9427b0f10858,
         type: 3}
@@ -2239,7 +2257,7 @@ PrefabInstance:
     - target: {fileID: 4376891919933371840, guid: e066127918f14e946a2151f538f1c00e,
         type: 3}
       propertyPath: rarity
-      value: 0
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 5061160232512452244, guid: e066127918f14e946a2151f538f1c00e,
         type: 3}
@@ -5159,18 +5177,6 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1624895821}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1624895823 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 3095886165874284127, guid: f742b5ca6598aac48b1d0d53292133ec,
-    type: 3}
-  m_PrefabInstance: {fileID: 1624895821}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d59831af2fbee794f9b86e1985b47357, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1628708034
 GameObject:
   m_ObjectHideFlags: 0
@@ -5301,7 +5307,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 49b971e812f3e9743be3da99cec6df44, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bc: {fileID: 1624895823}
+  bc: {fileID: 277495585}
 --- !u!1 &1643515056
 GameObject:
   m_ObjectHideFlags: 0
@@ -6172,7 +6178,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   charaList:
-  - {fileID: 1624895823}
+  - {fileID: 277495585}
   - {fileID: 196988965}
   - {fileID: 1178627333}
   - {fileID: 546123968}
@@ -6211,7 +6217,7 @@ PrefabInstance:
     - target: {fileID: 1522330860873923177, guid: 181192d4754373448bff3e620fe79796,
         type: 3}
       propertyPath: rarity
-      value: 0
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 1522330860873923177, guid: 181192d4754373448bff3e620fe79796,
         type: 3}

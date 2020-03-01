@@ -43,7 +43,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c81c7e50da784394cb571316354deb9d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  effectType: 21
+  effectType: 1
   rateOrValue: 100
   effectTurn: 3
   description: 
