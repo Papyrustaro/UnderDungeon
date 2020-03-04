@@ -13,16 +13,22 @@ public class MapManager : MonoBehaviour
 
     [SerializeField] private GameObject cameraObject;
 
+    [SerializeField] private DungeonSquare dungeonSquare;
+
     private List<GameObject> mapData = new List<GameObject>();
+
+
 
     private void Start()
     {
-        GenerateMap();
+        //GenerateMap();
+        this.dungeonSquare.SquareEvent();
+        Debug.Log(this.dungeonSquare.ColumnPosition);
     }
 
     private void Update()
     {
-        MoveCamara();
+        //MoveCamara();
     }
 
     private void MoveCamara()
