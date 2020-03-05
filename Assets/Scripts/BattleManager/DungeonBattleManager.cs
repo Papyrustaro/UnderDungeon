@@ -419,6 +419,7 @@ public class DungeonBattleManager : MonoBehaviour
     /// <summary>
     /// BattleManagerからBattleCharacterをセット
     /// </summary>
+    /*
     public void SetCharacter()
     {
         DungeonManager dm = GetComponent<DungeonManager>();
@@ -434,7 +435,7 @@ public class DungeonBattleManager : MonoBehaviour
             this.enemyList.Add(enemy.GetComponent<BattleCharacter>());
             this.charaList.Add(enemy.GetComponent<BattleCharacter>());
         }
-    }
+    }*/
 
     /// <summary>
     /// 攻撃を集中しているキャラクターをリストの先頭から探索
