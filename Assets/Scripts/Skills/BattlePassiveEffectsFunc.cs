@@ -112,7 +112,7 @@ public class BattlePassiveEffectsFunc : MonoBehaviour
     }
     private void AddSpBeforeBattle(BattleCharacter target, BattlePassiveEffect effect)
     {
-        target.AddHaveSkillPoint((int)effect.RateOrValue);
+        target.AddBsp((int)effect.RateOrValue);
     }
     private void SetAttractInDefending(BattleCharacter target, BattlePassiveEffect effect)
     {

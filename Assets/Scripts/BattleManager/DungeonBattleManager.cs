@@ -297,7 +297,7 @@ public class DungeonBattleManager : MonoBehaviour
         {
             if (Input.GetKeyDown(i.ToString()))
             {
-                if(this.activeEffectFuncs.GetBattleActiveSkill(invoker.BattleActiveSkillID[i]).NeedSkillPoint > invoker.HaveSkillPoint)
+                if(this.activeEffectFuncs.GetBattleActiveSkill(invoker.BattleActiveSkillID[i]).NeedBattleSkillPoint > invoker.Bsp)
                 {
                     ShowAnnounce("スキルポイントが足りません");
                     this.finishAction = true; return;
@@ -464,7 +464,7 @@ public class DungeonBattleManager : MonoBehaviour
             foreach(E_BattleActiveSkill skillID in actionEnemy.EC.HaveBattleActtiveSkillID)
             {
                 BattleActiveSkill skill = this.activeEffectFuncs.GetBattleActiveSkill(skillID);
-                if(actionEnemy.HaveSkillPoint >= skill.NeedSkillPoint)
+                if(actionEnemy.Bsp >= skill.NeedBattleSkillPoint)
                 {
                     if(skill.EffectType != E_BattleActiveEffectType.HP回復 || BattleMethod.GetLowerHpChara(this.enemyList, 0.5) != null) useableSkill.Add(this.activeEffectFuncs.GetBattleActiveSkill(skillID));
                 }

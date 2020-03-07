@@ -4,15 +4,15 @@ using UnityEngine;
 
 public class DungeonPassiveItem : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    [SerializeField] private int sellPrice;
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    /// <summary>
+    /// 売却額
+    /// </summary>
+    public int SellPrice => this.sellPrice;
+
+    /// <summary>
+    /// 購入額(とりあえず、売却額の10倍で)
+    /// </summary>
+    public int BuyPrice => this.sellPrice * 10;
 }

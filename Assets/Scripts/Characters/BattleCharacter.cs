@@ -130,7 +130,7 @@ public class BattleCharacter : MonoBehaviour
         }
     }
     public bool IsEnemy { get; set; } = false;
-    public int HaveSkillPoint { get; set; } = 0;
+    public int Bsp { get; set; } = 0;
     public E_Element Element { get { if (this.elementChange == null) return CharaClass.Element; else return this.elementChange.Element; } }
     public double NormalAttackPower => Atk * ToNormalAttackRate * GetToDamageRate(Element);
     public bool IsAlive => Hp > 0;
@@ -161,7 +161,7 @@ public class BattleCharacter : MonoBehaviour
     /// </summary>
     public void RememberCondition()
     {
-        Condition.SetParameter(this.MaxHp, this.Hp, this.Spd, this.Atk, this.Element, this.HaveSkillPoint);
+        Condition.SetParameter(this.MaxHp, this.Hp, this.Spd, this.Atk, this.Element, this.Bsp);
     }
 
     /// <summary>
@@ -234,7 +234,7 @@ public class BattleCharacter : MonoBehaviour
         this.elementChange = null; this.normalAttackNum = new List<BuffEffect>();
         this.toNormalAttackRate = new List<BuffEffect>(); this.fromNormalAttackRate = new List<BuffEffect>();
         this.attractingEffectTurn = new Dictionary<E_Element, int>() { { E_Element.Fire, 0 }, { E_Element.Aqua, 0 }, { E_Element.Tree, 0 } };
-        this.HaveSkillPoint = 0; NormalAttackToAllTurn = 0; HaveDamageThisTurn = 0;
+        this.Bsp = 0; NormalAttackToAllTurn = 0; HaveDamageThisTurn = 0;
         IsDefending = false;
         this.beforeSetBuffEffect = new List<BuffEffectWithType>();
     }
@@ -431,21 +431,21 @@ public class BattleCharacter : MonoBehaviour
     /// 所持Spの増減(addValueが負で減少)
     /// </summary>
     /// <param name="addValue">Sp増加量</param>
-    public void AddHaveSkillPoint(int addValue)
+    public void AddBsp(int addValue)
     {
-        if(this.HaveSkillPoint + addValue < 0)
+        if(this.Bsp + addValue < 0)
         {
-            Debug.Log(CharaClass.CharaName + "のスキルポイントが" + this.HaveSkillPoint + "減少した");
-            this.HaveSkillPoint = 0;
+            Debug.Log(CharaClass.CharaName + "のスキルポイントが" + this.Bsp + "減少した");
+            this.Bsp = 0;
         }else if(addValue < 0)
         {
             Debug.Log(CharaClass.CharaName + "のスキルポイントが" + addValue + "減少した");
-            this.HaveSkillPoint += addValue;
+            this.Bsp += addValue;
         }
         else
         {
             Debug.Log(CharaClass.CharaName + "のスキルポイントが" + addValue + "増加した");
-            this.HaveSkillPoint += addValue;
+            this.Bsp += addValue;
         }
     }
 
@@ -670,7 +670,7 @@ public class BattleCharacter : MonoBehaviour
         }
         foreach(BuffEffect bf in this.spRegeneration)
         {
-            AddHaveSkillPoint((int)bf.Rate);
+            AddBsp((int)bf.Rate);
         }
         ElapseTurn(this.hpRegeneration);
         ElapseTurn(this.spRegeneration);
@@ -683,7 +683,7 @@ public class BattleCharacter : MonoBehaviour
     public void SetAfterSelfAction()
     {
         ElapseAllTurn();
-        AddHaveSkillPoint(PassiveHealSpInTurn);
+        AddBsp(PassiveHealSpInTurn);
     }
 
     /// <summary>

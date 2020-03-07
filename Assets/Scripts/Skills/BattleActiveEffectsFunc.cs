@@ -56,7 +56,7 @@ public class BattleActiveEffectsFunc : MonoBehaviour
                 EffectToAllTarget(effect, invoker, target, BuffToDamageRate);
                 break;
             case E_BattleActiveEffectType.スキルポイント増減:
-                EffectToAllTarget(effect, invoker, target, AddHaveSkillPoint);
+                EffectToAllTarget(effect, invoker, target, AddBsp);
                 break;
             case E_BattleActiveEffectType.属性変化:
                 EffectToAllTarget(effect, invoker, target, SetElementChanged);
@@ -185,9 +185,9 @@ public class BattleActiveEffectsFunc : MonoBehaviour
     {
         target.AddAttractEffectTurn(effect.EffectElement, effect.EffectTurn);
     }
-    private void AddHaveSkillPoint(BattleCharacter target, BattleActiveEffect effect)
+    private void AddBsp(BattleCharacter target, BattleActiveEffect effect)
     {
-        target.AddHaveSkillPoint((int)effect.RateOrValue);
+        target.AddBsp((int)effect.RateOrValue);
     }
     private void AddNormalAttackToAllTurn(BattleCharacter target, BattleActiveEffect effect)
     {
