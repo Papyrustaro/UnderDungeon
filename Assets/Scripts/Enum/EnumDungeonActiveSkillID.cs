@@ -2,11 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// DungeonActiveSkillのIDリスト(スキル名も兼ねている)
+/// </summary>
 public enum E_DungeonActiveSkill
 {
-    チームHP回復1,
-    攻撃強化アイテム獲得,
-    対火攻撃強化アイテム獲得,
-    対水攻撃強化アイテム獲得,
-    対木攻撃強化アイテム獲得,
+    移動量増加A,
+    サイコロ変化A,
+    回復薬獲得A,
 }

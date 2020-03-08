@@ -2,14 +2,19 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DungeonPassiveSkill : MonoBehaviour
+
+public class DungeonPassiveSkill : DungeonPassiveEffect
 {
     [SerializeField]
     private E_DungeonPassiveSkill id;
-    [SerializeField]
-    private string description;
 
+    /// <summary>
+    /// スキルID
+    /// </summary>
     public E_DungeonPassiveSkill Id => id;
-    public string SkillName => id.ToString();
-    public string Description => description;
+
+    /// <summary>
+    /// スキル名
+    /// </summary>
+    public override string EffectName => id.ToString();
 }

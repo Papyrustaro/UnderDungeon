@@ -14,12 +14,19 @@ public class DungeonManager : MonoBehaviour
 
     private List<PlayerCharacter> dropCharacters = new List<PlayerCharacter>(); //IDとして持ってもよい
 
+    private DungeonSquare[,] currentFloorDungeonSquares;
+
     private int fullness = 100;
 
     /// <summary>
     /// 満腹度(マス移動する度に減少?)
     /// </summary>
-    public int Fullness { get { return this.fullness; } }
+    public int FullNess => this.fullness;
+
+    /// <summary>
+    /// 最大満腹度
+    /// </summary>
+    public int MaxFullNess { get; set; }
 
     public List<PlayerCharacter> Allys => this.allys;
 
@@ -62,4 +69,9 @@ public class DungeonManager : MonoBehaviour
     /// 所持ゴールド量
     /// </summary>
     public int HaveGold { get; set; } = 0;
+
+    private void GenerateFloor(int rowSize, int columnSize)
+    {
+        this.currentFloorDungeonSquares = new DungeonSquare[rowSize, columnSize];
+    }
 }

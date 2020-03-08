@@ -7,13 +7,19 @@ public class MapManager : MonoBehaviour
     [SerializeField] private int mapWidth = 10;
     [SerializeField] private int mapHeight = 10;
 
-    [SerializeField] private GameObject roadMass;
+    /*[SerializeField] private GameObject roadMass;
     [SerializeField] private GameObject wallMass;
-    [SerializeField] private GameObject playerOnRoadMass;
+    [SerializeField] private GameObject playerOnRoadMass;*/
 
     [SerializeField] private GameObject cameraObject;
 
-    [SerializeField] private DungeonSquare dungeonSquare;
+    [SerializeField] private DungeonSquare wallSquare;
+
+    /// <summary>
+    /// 出現する可能性のあるマスイベント
+    /// </summary>
+    [SerializeField] private List<DungeonSquare> mayApeearDungeonSquares = new List<DungeonSquare>();
+
 
     private List<GameObject> mapData = new List<GameObject>();
 
@@ -21,9 +27,7 @@ public class MapManager : MonoBehaviour
 
     private void Start()
     {
-        //GenerateMap();
-        this.dungeonSquare.SquareEvent();
-        Debug.Log(this.dungeonSquare.ColumnPosition);
+        
     }
 
     private void Update()
@@ -41,9 +45,18 @@ public class MapManager : MonoBehaviour
             if (Input.GetAxis("Vertical") < 0) this.cameraObject.transform.Translate(0, -1, 0);
         }
     }
-    private void GenerateMap()
+    public void GenerateFloor(DungeonSquare[,] currentFloorDungeonSquares)
     {
+        currentFloorDungeonSquares = new DungeonSquare[mapHeight, mapWidth];
+        int countOfDungeonSquaresKind = this.mayApeearDungeonSquares.Count;
         for(int i = 0; i < this.mapWidth; i++)
+        {
+            for(int j = 0; j < this.mapHeight; j++)
+            {
+                currentFloorDungeonSquares[i, j] = this.mayApeearDungeonSquares[UnityEngine.Random.Range(0, countOfDungeonSquaresKind)];
+            }
+        }
+        /*for(int i = 0; i < this.mapWidth; i++)
         {
             for(int j = 0; j < this.mapHeight; j++)
             {
@@ -63,6 +76,6 @@ public class MapManager : MonoBehaviour
                     }
                 }
             }
-        }
+        }*/
     }
 }

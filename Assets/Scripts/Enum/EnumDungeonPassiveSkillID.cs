@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// DungeonPassiveSkillのIDリスト(スキル名も兼ねている)
+/// </summary>
 public enum E_DungeonPassiveSkill
 {
-    チームHP強化1,
-    店イベント出現率UP1,
-    宝箱出現率UP1,
-    罠回避率UP1,
+    最大満腹度増加A,
+    獲得ゴールド増加A,
+    店イベント増加A,
 }

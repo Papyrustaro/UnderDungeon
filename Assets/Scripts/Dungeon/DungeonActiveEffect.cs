@@ -16,9 +16,20 @@ public enum E_DungeonActiveEffectType
     マップ全体可視化, //全マスのイベントタイプがわかる(?)
     満腹度回復,
 }
-public class DungeonActiveEffect : MonoBehaviour
+public abstract class DungeonActiveEffect : MonoBehaviour
 {
     [SerializeField] private E_DungeonActiveEffectType effectType;
-
+    [SerializeField] private string description;
     public E_DungeonActiveEffectType EffectType => this.effectType;
+
+    public abstract string EffectName { get; }
+
+    public string Description
+    {
+        get
+        {
+            if (this.description != "") return this.description;
+            else return "効果の説明";
+        }
+    }
 }

@@ -2,23 +2,18 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DungeonActiveSkill : MonoBehaviour
+public class DungeonActiveSkill : DungeonActiveEffect
 {
     [SerializeField]
     private E_DungeonActiveSkill id;
-    [SerializeField]
-    private string description; //スキルの説明
-    [SerializeField]
-    private int needTurn; //必要なターン
-    [SerializeField]
-    private E_Element element;
-    [SerializeField]
-    private bool needTarget; //プレイヤーにターゲットを訊くかどうか(特定の味方対象など)
 
-    public E_DungeonActiveSkill ID => id;
-    public string SkillName => id.ToString();
-    public string Description => description;
-    public int NeedTurn => needTurn;
-    public E_Element Element => element;
-    public bool NeedTarget => needTarget;
+    /// <summary>
+    /// スキルID
+    /// </summary>
+    public E_DungeonActiveSkill Id => id;
+
+    /// <summary>
+    /// スキル名
+    /// </summary>
+    public override string EffectName => id.ToString();
 }
