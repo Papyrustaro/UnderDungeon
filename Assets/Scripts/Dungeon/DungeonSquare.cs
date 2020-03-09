@@ -25,7 +25,7 @@ public abstract class DungeonSquare : MonoBehaviour
     /// <summary>
     /// マスに止まったときのイベント(抽象)
     /// </summary>
-    public abstract void SquareEvent();
+    public abstract void SquareEvent(DungeonManager dm);
 }
 
 

@@ -4,10 +4,12 @@ using UnityEngine;
 
 public class DS_BossBattle : DungeonSquare
 {
-    public override E_DungeonSquareType SquareType { get { return E_DungeonSquareType.ボス戦; } }
+    [SerializeField] private EnemyCharacter bossCharacter;
+    public override E_DungeonSquareType SquareType => E_DungeonSquareType.ボス戦;
 
-    public override void SquareEvent()
+    public override void SquareEvent(DungeonManager dm)
     {
         Debug.Log("ボス戦イベント発生");
+        Debug.Log("ボス名: " + bossCharacter.CharaName);
     }
 }

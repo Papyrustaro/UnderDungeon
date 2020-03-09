@@ -5,7 +5,7 @@ using UnityEngine;
 public class DungeonManager : MonoBehaviour
 {
     [SerializeField]
-    private List<PlayerCharacter> allys; //battleCharacterとして持つべきか？
+    private List<BattleCharacter> allys; //battleCharacterとして持つべきか？
 
     private List<DungeonActiveItem> haveDungeonActiveItems = new List<DungeonActiveItem>();
     private List<DungeonPassiveItem> haveDungeonPassiveItems = new List<DungeonPassiveItem>();
@@ -14,7 +14,8 @@ public class DungeonManager : MonoBehaviour
 
     private List<PlayerCharacter> dropCharacters = new List<PlayerCharacter>(); //IDとして持ってもよい
 
-    private DungeonSquare[,] currentFloorDungeonSquares;
+    private E_DungeonSquareType[,] currentFloorDungeonSquares;
+    private bool[,] understandDungeonSquareType; //マスイベントが何かわかるか(自分の周囲のマスのタイプを記憶する)
 
     private int fullness = 100;
 
@@ -28,7 +29,7 @@ public class DungeonManager : MonoBehaviour
     /// </summary>
     public int MaxFullNess { get; set; }
 
-    public List<PlayerCharacter> Allys => this.allys;
+    public List<BattleCharacter> Allys => this.allys;
 
     /// <summary>
     /// マップの上から何行目か(0スタート)
@@ -70,8 +71,61 @@ public class DungeonManager : MonoBehaviour
     /// </summary>
     public int HaveGold { get; set; } = 0;
 
+    public List<DungeonActiveItem> HaveDungeonActiveItems => this.haveDungeonActiveItems;
+    public List<DungeonPassiveItem> HaveDungoenPassiveItems => this.haveDungeonPassiveItems;
+    public List<BattleActiveItem> HaveBattleActiveItems => this.haveBattleActiveItems;
+    public List<BattlePassiveItem> HaveBattlePassiveItems => this.haveBattlePassiveItems;
+
     private void GenerateFloor(int rowSize, int columnSize)
     {
-        this.currentFloorDungeonSquares = new DungeonSquare[rowSize, columnSize];
+        //this.currentFloorDungeonSquares = new DungeonSquare[rowSize, columnSize];
+    }
+
+    /// <summary>
+    /// ランダムでひとつ悪い効果適用
+    /// </summary>
+    private void ActivateRandomBadEffect()
+    {
+        switch(UnityEngine.Random.Range(0, 5))
+        {
+            case 0:
+                Debug.Log("チームHp全回復");
+
+                break;
+            case 1:
+                break;
+            case 2:
+                break;
+            case 3:
+                break;
+            case 4:
+                break;
+        }
+    }
+
+    /// <summary>
+    /// ランダムでひとつ良い効果発動
+    /// </summary>
+    private void ActivateRandomGoodEffect()
+    {
+        switch (UnityEngine.Random.Range(0, 5))
+        {
+            case 0:
+                Debug.Log("チームHp全回復");
+                foreach(BattleCharacter bc in this.allys)
+                {
+                    bc.RecoverHpByRate(1);
+                }
+                break;
+            case 1:
+
+                break;
+            case 2:
+                break;
+            case 3:
+                break;
+            case 4:
+                break;
+        }
     }
 }

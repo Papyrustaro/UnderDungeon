@@ -2,9 +2,15 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DungeonActiveItem : MonoBehaviour
+public class DungeonActiveItem : DungeonActiveEffect
 {
+    [SerializeField] private E_DungeonActiveItem id;
     [SerializeField] private int sellPrice;
+
+
+    public E_DungeonActiveItem Id => this.id;
+
+    public override string EffectName => this.id.ToString();
 
     /// <summary>
     /// 売却額

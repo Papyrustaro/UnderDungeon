@@ -6,7 +6,7 @@ public class DS_Shop : DungeonSquare
 {
     public override E_DungeonSquareType SquareType { get { return E_DungeonSquareType.店; } }
 
-    public override void SquareEvent()
+    public override void SquareEvent(DungeonManager dm)
     {
         Debug.Log("店イベント発生");
     }

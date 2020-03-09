@@ -16,15 +16,23 @@ public class MapManager : MonoBehaviour
     [SerializeField] private DungeonSquare wallSquare;
 
     /// <summary>
-    /// 出現する可能性のあるマスイベント
+    /// 出現する可能性のあるマスイベントクラス
     /// </summary>
     [SerializeField] private List<DungeonSquare> mayApeearDungeonSquares = new List<DungeonSquare>();
+
+    /// <summary>
+    /// 出現する可能性のあるマスイベントの種類
+    /// </summary>
+    private List<E_DungeonSquareType> mayApeearDungeonSquareTypes = new List<E_DungeonSquareType>();
 
 
     private List<GameObject> mapData = new List<GameObject>();
 
 
-
+    private void Awake()
+    {
+        SetMayApeearDungeonSquareTypes();
+    }
     private void Start()
     {
         
@@ -35,6 +43,24 @@ public class MapManager : MonoBehaviour
         //MoveCamara();
     }
 
+    /// <summary>
+    /// マスイベントクラス群から、マスイベント種類群を生成
+    /// </summary>
+    private void SetMayApeearDungeonSquareTypes()
+    {
+        this.mayApeearDungeonSquareTypes = new List<E_DungeonSquareType>();
+        foreach(DungeonSquare ds in this.mayApeearDungeonSquares)
+        {
+            if (this.mayApeearDungeonSquareTypes.Contains(ds.SquareType))
+            {
+                Debug.Log("error: 同じマスタイプが複数あります");
+            }
+            else
+            {
+                this.mayApeearDungeonSquareTypes.Add(ds.SquareType);
+            }
+        }
+    }
     private void MoveCamara()
     {
         if (Input.GetKey(KeyCode.LeftShift))
@@ -45,15 +71,15 @@ public class MapManager : MonoBehaviour
             if (Input.GetAxis("Vertical") < 0) this.cameraObject.transform.Translate(0, -1, 0);
         }
     }
-    public void GenerateFloor(DungeonSquare[,] currentFloorDungeonSquares)
+    public void GenerateFloor(E_DungeonSquareType[,] currentFloorDungeonSquares)
     {
-        currentFloorDungeonSquares = new DungeonSquare[mapHeight, mapWidth];
+        currentFloorDungeonSquares = new E_DungeonSquareType[mapHeight, mapWidth];
         int countOfDungeonSquaresKind = this.mayApeearDungeonSquares.Count;
         for(int i = 0; i < this.mapWidth; i++)
         {
             for(int j = 0; j < this.mapHeight; j++)
             {
-                currentFloorDungeonSquares[i, j] = this.mayApeearDungeonSquares[UnityEngine.Random.Range(0, countOfDungeonSquaresKind)];
+                currentFloorDungeonSquares[i, j] = this.mayApeearDungeonSquareTypes[UnityEngine.Random.Range(0, countOfDungeonSquaresKind)];
             }
         }
         /*for(int i = 0; i < this.mapWidth; i++)

@@ -6,7 +6,7 @@ public class DS_Wall : DungeonSquare
 {
     public override E_DungeonSquareType SquareType { get { return E_DungeonSquareType.壁; } }
 
-    public override void SquareEvent()
+    public override void SquareEvent(DungeonManager dm)
     {
         Debug.Log("壁にめり込んでるぞ");
     }
