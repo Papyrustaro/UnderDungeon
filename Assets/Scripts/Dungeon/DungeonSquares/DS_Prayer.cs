@@ -9,26 +9,19 @@ public class DS_Prayer : DungeonSquare
     public override void SquareEvent(DungeonManager dm)
     {
         Debug.Log("祈祷イベント発生");
+        Pray(dm);
     }
 
-    private void Pray()
+    private void Pray(DungeonManager dm)
     {
-
-    }
-
-    /// <summary>
-    /// ランダムでひとつ悪い効果適用
-    /// </summary>
-    private void ActivateRandomBadEffect()
-    {
-
-    }
-
-    /// <summary>
-    /// ランダムでひとつ良い効果発動
-    /// </summary>
-    private void ActivateRandomGoodEffect()
-    {
-
+        switch(UnityEngine.Random.Range(0, 2))
+        {
+            case 0:
+                dm.ActivateRandomGoodEffect();
+                break;
+            case 1:
+                dm.ActivateRandomBadEffect();
+                break;
+        }
     }
 }

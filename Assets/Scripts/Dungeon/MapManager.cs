@@ -28,6 +28,16 @@ public class MapManager : MonoBehaviour
 
     private List<GameObject> mapData = new List<GameObject>();
 
+    /// <summary>
+    /// マップ横のマス目数(row)
+    /// </summary>
+    public int MapWidth => this.mapWidth;
+
+    /// <summary>
+    /// マップ縦のマス目数(column)
+    /// </summary>
+    public int MapHeight => this.mapHeight;
+
 
     private void Awake()
     {
@@ -73,7 +83,7 @@ public class MapManager : MonoBehaviour
     }
     public void GenerateFloor(E_DungeonSquareType[,] currentFloorDungeonSquares)
     {
-        currentFloorDungeonSquares = new E_DungeonSquareType[mapHeight, mapWidth];
+        currentFloorDungeonSquares = new E_DungeonSquareType[mapWidth, mapHeight];
         int countOfDungeonSquaresKind = this.mayApeearDungeonSquares.Count;
         for(int i = 0; i < this.mapWidth; i++)
         {
@@ -104,4 +114,21 @@ public class MapManager : MonoBehaviour
             }
         }*/
     }
+
+    public void SetFlagUnderstandDungeonSquareType(bool[,] understandDungeonSquareTypes, bool flag)
+    {
+        understandDungeonSquareTypes = new bool[mapWidth, mapHeight];
+        if (flag)
+        {
+            for(int i = 0; i < mapWidth; i++)
+            {
+                for(int j = 0; j < mapHeight; j++)
+                {
+                    understandDungeonSquareTypes[i, j] = true;
+                }
+            }
+        }
+    }
+
+    
 }

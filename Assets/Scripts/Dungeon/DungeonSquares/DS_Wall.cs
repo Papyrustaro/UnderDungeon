@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class DS_Wall : DungeonSquare
 {
-    public override E_DungeonSquareType SquareType { get { return E_DungeonSquareType.壁; } }
+    public override E_DungeonSquareType SquareType => E_DungeonSquareType.壁;
 
     public override void SquareEvent(DungeonManager dm)
     {
