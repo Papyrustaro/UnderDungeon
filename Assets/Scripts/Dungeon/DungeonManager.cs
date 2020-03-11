@@ -4,8 +4,7 @@ using UnityEngine;
 
 public class DungeonManager : MonoBehaviour
 {
-    [SerializeField]
-    private List<BattleCharacter> allys; //battleCharacterとして持つべきか？
+    [SerializeField] private List<BattleCharacter> allys; //battleCharacterとして持つべきか？
 
     /// <summary>
     /// ご褒美用アイテム
@@ -16,6 +15,8 @@ public class DungeonManager : MonoBehaviour
     /// 罰用アイテム
     /// </summary>
     [SerializeField] private BattlePassiveItem badItem;
+
+    [SerializeField] private DungeonSquaresFunc dungeonSquaresFunc;
 
     private List<DungeonActiveItem> haveDungeonActiveItems = new List<DungeonActiveItem>();
     private List<DungeonPassiveItem> haveDungeonPassiveItems = new List<DungeonPassiveItem>();
@@ -30,7 +31,7 @@ public class DungeonManager : MonoBehaviour
     private List<int> haveDsp = new List<int>(); //保持しているDsp(とりあえずこのクラスで保持)
     private List<int> needDsp = new List<int>(); //それぞれのスキルに必要なDsp(とりあえずこのクラスで保持)
 
-    private MapManager mapManager;
+    [SerializeField] private MapManager mapManager;
 
     /// <summary>
     /// 満腹度(マス移動する度に減少?)
@@ -47,12 +48,12 @@ public class DungeonManager : MonoBehaviour
     /// <summary>
     /// マップの上から何行目か(0スタート)
     /// </summary>
-    public int CurrentLocationRow { get; set; }
+    public int CurrentLocationRow { get; set; } = 0;
 
     /// <summary>
     /// マップの左から何列目か(0スタート)
     /// </summary>
-    public int CurrentLocationColumn { get; set; }
+    public int CurrentLocationColumn { get; set; } = 0;
 
     /// <summary>
     /// ダンジョン潜入してからの経過ターン(階層降りる毎にリセット?)
@@ -98,6 +99,25 @@ public class DungeonManager : MonoBehaviour
     public List<DungeonPassiveItem> HaveDungeonPassiveItems => this.haveDungeonPassiveItems;
     public List<BattleActiveItem> HaveBattleActiveItems => this.haveBattleActiveItems;
     public List<BattlePassiveItem> HaveBattlePassiveItems => this.haveBattlePassiveItems;
+
+    /// <summary>
+    /// DungeonSquareイベントの処理待ちかどうか
+    /// </summary>
+    public bool WaitDungeonSquareEvent { get; set; } = false;
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.W)) MoveDungeonSquare(E_Direction.Up);
+        else if (Input.GetKeyDown(KeyCode.D)) MoveDungeonSquare(E_Direction.Right);
+        else if (Input.GetKeyDown(KeyCode.S)) MoveDungeonSquare(E_Direction.Down);
+        else if (Input.GetKeyDown(KeyCode.A)) MoveDungeonSquare(E_Direction.Left);
+
+        if (this.WaitDungeonSquareEvent)
+        {
+            this.dungeonSquaresFunc.DungeonSquareEvent(this, this.currentFloorDungeonSquares[CurrentLocationRow, CurrentLocationColumn]);
+            this.WaitDungeonSquareEvent = false;
+        }
+    }
 
     private void GenerateFloor(int rowSize, int columnSize)
     {
@@ -322,4 +342,39 @@ public class DungeonManager : MonoBehaviour
         this.CurrentLocationRow = UnityEngine.Random.Range(0, this.mapManager.MapWidth);
         this.CurrentLocationColumn = UnityEngine.Random.Range(0, this.mapManager.MapHeight);
     }
+
+    /// <summary>
+    /// マス移動処理(とりあえず、自分の入力で上下左右にマス移動できるようにする)
+    /// </summary>
+    public void MoveDungeonSquare(E_Direction direction)
+    {
+        switch (direction)
+        {
+            case E_Direction.Up:
+                if (CurrentLocationRow < 1) return;
+                else CurrentLocationRow--;
+                break;
+            case E_Direction.Right:
+                if (CurrentLocationColumn > this.mapManager.MapWidth - 2) return;
+                else CurrentLocationColumn++;
+                break;
+            case E_Direction.Down:
+                if (CurrentLocationRow > this.mapManager.MapHeight - 2) return;
+                else CurrentLocationRow++;
+                break;
+            case E_Direction.Left:
+                if (CurrentLocationColumn < 1) return;
+                else CurrentLocationColumn--;
+                break;
+        }
+        this.WaitDungeonSquareEvent = true;
+    }
+}
+
+public enum E_Direction
+{
+    Up,
+    Right,
+    Down,
+    Left
 }
