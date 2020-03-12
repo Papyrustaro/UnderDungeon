@@ -43,4 +43,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0396b9b6d69ceaf4eb1cf1f4f39438e2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mayApeearEnemys: []
+  mayApeearEnemys:
+  - {fileID: 5718644004716360450, guid: f742b5ca6598aac48b1d0d53292133ec, type: 3}
+  - {fileID: 6298358982417061629, guid: 0d7edd86743a98b4a91188fdc93de21c, type: 3}
+  - {fileID: 5733513469560255904, guid: 91f2ed6384ce6a242b8da9ac0c9022f2, type: 3}
+  - {fileID: 8707441320245096014, guid: f1bb903aa89bb5b4c98631d39c6fc8b6, type: 3}

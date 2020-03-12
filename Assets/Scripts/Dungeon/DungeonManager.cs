@@ -105,6 +105,14 @@ public class DungeonManager : MonoBehaviour
     /// </summary>
     public bool WaitDungeonSquareEvent { get; set; } = false;
 
+    private void Start()
+    {
+        //this.mapManager.GenerateFloor(this.currentFloorDungeonSquares);
+        this.GenerateFloor(this.mapManager.MapWidth, this.mapManager.MapHeight);
+        this.dungeonSquaresFunc.SetMayApeearDungeonSquares(this.mapManager.MayApeearDungeonSquares);
+        Debug.Log(this.currentFloorDungeonSquares[0, 0]);
+    }
+
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.W)) MoveDungeonSquare(E_Direction.Up);
@@ -121,7 +129,15 @@ public class DungeonManager : MonoBehaviour
 
     private void GenerateFloor(int rowSize, int columnSize)
     {
-        //this.currentFloorDungeonSquares = new DungeonSquare[rowSize, columnSize];
+        this.currentFloorDungeonSquares = new E_DungeonSquareType[rowSize, columnSize];
+        int countOfDungeonSquaresKind = this.mapManager.MayApeearDungeonSquares.Count;
+        for (int i = 0; i < rowSize; i++)
+        {
+            for (int j = 0; j < columnSize; j++)
+            {
+                this.currentFloorDungeonSquares[i, j] = this.mapManager.MayApeearDungeonSquareTypes[UnityEngine.Random.Range(0, countOfDungeonSquaresKind)];
+            }
+        }
     }
 
     /// <summary>
@@ -368,6 +384,7 @@ public class DungeonManager : MonoBehaviour
                 break;
         }
         this.WaitDungeonSquareEvent = true;
+        Debug.Log("row/column = " + CurrentLocationRow + "/" + CurrentLocationColumn);
     }
 }
 

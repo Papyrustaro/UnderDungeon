@@ -4,17 +4,22 @@ using UnityEngine;
 
 public class DungeonSquaresFunc : MonoBehaviour
 {
-    [SerializeField] private List<DungeonSquare> dungeonSquaresInThisFloor;
+    private List<DungeonSquare> dungeonSquares;
 
     public void DungeonSquareEvent(DungeonManager dm, E_DungeonSquareType dungeonSquareType)
     {
         if(dungeonSquareType != E_DungeonSquareType.ランダム)
         {
-            this.dungeonSquaresInThisFloor.Find(ds => ds.SquareType == dungeonSquareType).SquareEvent(dm);
+            this.dungeonSquares.Find(ds => ds.SquareType == dungeonSquareType).SquareEvent(dm);
         }
         else
         {
-            this.dungeonSquaresInThisFloor[UnityEngine.Random.Range(0, this.dungeonSquaresInThisFloor.Count)].SquareEvent(dm);
+            this.dungeonSquares[UnityEngine.Random.Range(0, this.dungeonSquares.Count)].SquareEvent(dm);
         }
+    }
+
+    public void SetMayApeearDungeonSquares(List<DungeonSquare> dungeonSquares)
+    {
+        this.dungeonSquares = dungeonSquares;
     }
 }

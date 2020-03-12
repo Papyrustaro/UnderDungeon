@@ -38,6 +38,10 @@ public class MapManager : MonoBehaviour
     /// </summary>
     public int MapHeight => this.mapHeight;
 
+    public List<DungeonSquare> MayApeearDungeonSquares => this.mayApeearDungeonSquares;
+
+    public List<E_DungeonSquareType> MayApeearDungeonSquareTypes => this.mayApeearDungeonSquareTypes;
+
 
     private void Awake()
     {
@@ -81,6 +85,11 @@ public class MapManager : MonoBehaviour
             if (Input.GetAxis("Vertical") < 0) this.cameraObject.transform.Translate(0, -1, 0);
         }
     }
+
+    /// <summary>
+    /// ランダムでマスタイプ設置
+    /// </summary>
+    /// <param name="currentFloorDungeonSquares">マスタイプ保持配列</param>
     public void GenerateFloor(E_DungeonSquareType[,] currentFloorDungeonSquares)
     {
         currentFloorDungeonSquares = new E_DungeonSquareType[mapWidth, mapHeight];
@@ -129,6 +138,5 @@ public class MapManager : MonoBehaviour
             }
         }
     }
-
     
 }
