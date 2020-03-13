@@ -2,12 +2,15 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DAS_RecoverDsp : DungeonActiveSkill
+public class DAS_IncreaseBsp : DungeonActiveSkill
 {
-    [SerializeField] private int recoverValue;
     [SerializeField] private E_TargetType targetTypeToAlly;
+    [SerializeField] private int increaseValue;
+
+    public override E_DungeonActiveEffectType EffectType => E_DungeonActiveEffectType.Bsp回復;
+
     public override void EffectFunc(DungeonManager dm)
     {
-        dm.ChangeAllDsp(recoverValue);
+        //処理
     }
 }

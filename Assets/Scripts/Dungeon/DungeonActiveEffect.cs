@@ -18,9 +18,8 @@ public enum E_DungeonActiveEffectType
 }
 public abstract class DungeonActiveEffect : MonoBehaviour
 {
-    [SerializeField] private E_DungeonActiveEffectType effectType;
     [SerializeField] private string description;
-    public E_DungeonActiveEffectType EffectType => this.effectType;
+    public abstract E_DungeonActiveEffectType EffectType { get; }
 
     public abstract string EffectName { get; }
 
