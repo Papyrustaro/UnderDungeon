@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DungeonActiveItem : DungeonActiveEffect
+public abstract class DungeonActiveItem : DungeonActiveEffect
 {
     [SerializeField] private E_DungeonActiveItem id;
     [SerializeField] private int sellPrice;

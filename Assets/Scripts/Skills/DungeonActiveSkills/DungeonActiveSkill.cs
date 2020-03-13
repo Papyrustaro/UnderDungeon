@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DungeonActiveSkill : DungeonActiveEffect
+public abstract class DungeonActiveSkill : DungeonActiveEffect
 {
     [SerializeField]
     private E_DungeonActiveSkill id;

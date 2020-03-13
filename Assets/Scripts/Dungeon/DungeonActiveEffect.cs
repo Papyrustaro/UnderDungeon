@@ -24,6 +24,8 @@ public abstract class DungeonActiveEffect : MonoBehaviour
 
     public abstract string EffectName { get; }
 
+    public abstract void EffectFunc(DungeonManager dm);
+
     public string Description
     {
         get

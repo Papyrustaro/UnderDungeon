@@ -5,6 +5,7 @@ using System;
 
 public class BattleActiveEffectsFunc : MonoBehaviour
 {
+    
     [SerializeField]
     private List<BattleActiveSkill> skillList = new List<BattleActiveSkill>();
     [SerializeField]
@@ -12,11 +13,11 @@ public class BattleActiveEffectsFunc : MonoBehaviour
 
     public void SkillFunc(E_BattlePassiveSkill skillID, BattleCharacter invoker, List<BattleCharacter> target)
     {
-        EffectFunc(skillList[(int)skillID], invoker, target);
+        EffectFunc(skillList[(int)skillID], invoker, target); //Idの要素番号では間違うことがあるので、Idの値検索のほうが良い気もする
     }
     public void ItemFunc(E_BattlePassiveItem itemID, BattleCharacter invoker, List<BattleCharacter> target)
     {
-        EffectFunc(itemList[(int)itemID], invoker, target);
+        EffectFunc(itemList[(int)itemID], invoker, target); //Idの要素番号では間違うことがあるので、Idの値検索のほうが良い気もする
     }
 
     /// <summary>
