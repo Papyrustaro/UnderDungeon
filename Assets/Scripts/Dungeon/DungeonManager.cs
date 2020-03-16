@@ -454,6 +454,14 @@ public class DungeonManager : MonoBehaviour
             bc.AddBsp(increaseValue);
         }
     }
+
+    public void IncreaseDsp(int increaseValue)
+    {
+        foreach(BattleCharacter bc in this.targetAllys)
+        {
+            bc.Dsp += increaseValue;
+        }
+    }
 }
 
 public enum E_Direction

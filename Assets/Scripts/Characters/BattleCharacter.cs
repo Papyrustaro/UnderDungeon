@@ -136,6 +136,8 @@ public class BattleCharacter : MonoBehaviour
     public bool IsAlive => Hp > 0;
     public bool IsDefending { get; set; } = false;
 
+    public int Dsp { get; set; } = 0;
+
     /// <summary>
     /// 複数回呼ばれる可能性あり
     /// </summary>
