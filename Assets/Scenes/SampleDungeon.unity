@@ -533,13 +533,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 1637499868}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f3e53f2ec03230f48aacce37ebfc6d95, type: 3}
+  m_Script: {fileID: 11500000, guid: a1839241ab4e3c54cb16f7a6e00eb98f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   description: 
   id: 0
-  targetTypeToAlly: 0
-  increaseValue: 0
+  needBsp: 0
+  dungeonActiveItemId: 00000000
+  dungeonPassiveItemId: 
+  battleActiveItemId: 
+  battlePassiveItemId: 
 --- !u!4 &1637499870
 Transform:
   m_ObjectHideFlags: 0
@@ -780,6 +783,10 @@ MonoBehaviour:
     type: 3}
   badItem: {fileID: 4677454765080924915, guid: 87d5dcf6b45f4ad4b8b6d7a50777be24, type: 3}
   dungeonSquaresFunc: {fileID: 287261170}
+  dungeonActiveEffectsFunc: {fileID: 0}
+  dungeonPassiveEffectsFunc: {fileID: 0}
+  battleActiveEffectsFunc: {fileID: 0}
+  battlePassiveEffectsFunc: {fileID: 0}
   mapManager: {fileID: 1226314385}
 --- !u!1001 &2123981809381221676
 PrefabInstance:

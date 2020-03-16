@@ -16,6 +16,30 @@ public enum E_DungeonActiveEffectType
     マップ全体可視化, //全マスのイベントタイプがわかる(?)
     満腹度回復,
 }
+
+public enum E_TargetTypeToAlly
+{
+    OneAlly,
+    AllAlly,
+    SelfAlly,
+}
+
+public enum E_TargetTypeToDungeonSquare
+{
+    OneDungeonSquare,
+    AllDungeonSquare,
+}
+
+public enum E_DungeonActiveEffectTargetType
+{
+    OneAlly,
+    AllAlly,
+    SelfAlly,
+    OneDungeonSquare,
+    AllDungeonSquare,
+    Other,
+    Error
+}
 public abstract class DungeonActiveEffect : MonoBehaviour
 {
     [SerializeField] private string description;
@@ -33,9 +57,6 @@ public abstract class DungeonActiveEffect : MonoBehaviour
             else return "error";
         }
     }
-}
 
-public interface ISample
-{
-    
+    public virtual E_DungeonActiveEffectTargetType DungeonActiveEffectTargetType => E_DungeonActiveEffectTargetType.Error;
 }

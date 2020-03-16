@@ -11,6 +11,11 @@ public class BattleActiveEffectsFunc : MonoBehaviour
     [SerializeField]
     private List<BattleActiveItem> itemList = new List<BattleActiveItem>();
 
+    public BattleActiveItem GetItem(E_BattleActiveItem itemId)
+    {
+        return this.itemList[(int)itemId];
+    }
+
     public void SkillFunc(E_BattlePassiveSkill skillID, BattleCharacter invoker, List<BattleCharacter> target)
     {
         EffectFunc(skillList[(int)skillID], invoker, target); //Idの要素番号では間違うことがあるので、Idの値検索のほうが良い気もする

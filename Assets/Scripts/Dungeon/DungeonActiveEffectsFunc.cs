@@ -17,48 +17,8 @@ public class DungeonActiveEffectsFunc : MonoBehaviour
     /// </summary>
     [SerializeField] private List<DungeonActiveItem> dungeonActiveItems = new List<DungeonActiveItem>();
 
-    private DungeonManager dm;
-    E_DungeonActiveEffectType effectType = E_DungeonActiveEffectType.サイコロ変化;
-
-    /// <summary>
-    /// 味方全員のBsp回復
-    /// </summary>
-    /// <param name="addValue">回復量</param>
-    public void AddBspToAllAlly(int addValue)
+    public DungeonActiveItem GetItem(E_DungeonActiveItem itemId) 
     {
-        foreach(BattleCharacter bc in this.dm.Allys)
-        {
-            bc.AddBsp(addValue);
-        }
-    }
-
-    /// <summary>
-    /// 味方全員のDsp回復
-    /// </summary>
-    /// <param name="addValue">回復量</param>
-    public void AddDspToAllAlly(int addValue)
-    {
-        dm.ChangeAllDsp(addValue);
-    }
-
-    public void RecoverHpByRateAllAlly(double recoverRate)
-    {
-        foreach(BattleCharacter bc in this.dm.Allys)
-        {
-            bc.RecoverHpByRate(recoverRate);
-        }
-    }
-
-    public void RecoverHpAllAlly(int recoverValue)
-    {
-        foreach(BattleCharacter bc in this.dm.Allys)
-        {
-            bc.RecoverHp(recoverValue);
-        }
-    }
-
-    public void GetItem(E_DungeonActiveItem itemId) 
-    {
-        dm.HaveDungeonActiveItems.Add(this.dungeonActiveItems[(int)itemId]);
+        return this.dungeonActiveItems[(int)itemId];
     }
 }

@@ -18,12 +18,18 @@ public class DungeonManager : MonoBehaviour
 
     [SerializeField] private DungeonSquaresFunc dungeonSquaresFunc;
 
+    [SerializeField] private DungeonActiveEffectsFunc dungeonActiveEffectsFunc;
+    [SerializeField] private DungeonPassiveEffectsFunc dungeonPassiveEffectsFunc;
+    [SerializeField] private BattleActiveEffectsFunc battleActiveEffectsFunc;
+    [SerializeField] private BattlePassiveEffectsFunc battlePassiveEffectsFunc;
+
     private List<DungeonActiveItem> haveDungeonActiveItems = new List<DungeonActiveItem>();
     private List<DungeonPassiveItem> haveDungeonPassiveItems = new List<DungeonPassiveItem>();
     private List<BattleActiveItem> haveBattleActiveItems = new List<BattleActiveItem>();
     private List<BattlePassiveItem> haveBattlePassiveItems = new List<BattlePassiveItem>();
     private int[] baseDice = new int[6] { 1, 1, 2, 2, 3, 3 };
     private int[] changedDice = null;
+
 
     private List<PlayerCharacter> dropCharacters = new List<PlayerCharacter>(); //IDとして持ってもよい
 
@@ -34,6 +40,9 @@ public class DungeonManager : MonoBehaviour
     private List<int> needDsp = new List<int>(); //それぞれのスキルに必要なDsp(とりあえずこのクラスで保持)
 
     [SerializeField] private MapManager mapManager;
+
+    private List<BattleCharacter> targetAllys = null; //効果対象味方(とりあえず)
+    private List<DungeonSquare> targetDungeonSquares = null; //効果対象マス(とりあえず)
 
     /// <summary>
     /// 満腹度(マス移動する度に減少?)
@@ -415,6 +424,35 @@ public class DungeonManager : MonoBehaviour
     {
         //targetTypeに一致するマスからひとつ選択する処理(または戻る)
         //選択したマスをafterChangeのマスに変化させる処理
+    }
+
+    public void AddHaveItem(E_DungeonActiveItem itemId)
+    {
+        this.haveDungeonActiveItems.Add(this.dungeonActiveEffectsFunc.GetItem(itemId));
+    }
+    public void AddHaveItem(E_DungeonPassiveItem itemId)
+    {
+        this.haveDungeonPassiveItems.Add(this.dungeonPassiveEffectsFunc.GetItem(itemId));
+    }
+    public void AddHaveItem(E_BattleActiveItem itemId)
+    {
+        this.haveBattleActiveItems.Add(this.battleActiveEffectsFunc.GetItem(itemId));
+    }
+    public void AddHaveItem(E_BattlePassiveItem itemId)
+    {
+        this.haveBattlePassiveItems.Add(this.battlePassiveEffectsFunc.GetItem(itemId));
+    }
+
+    /// <summary>
+    /// targetAllysのBspを増加させる
+    /// </summary>
+    /// <param name="increaseValue">Bsp増加量</param>
+    public void IncreaseBsp(int increaseValue)
+    {
+        foreach(BattleCharacter bc in this.targetAllys)
+        {
+            bc.AddBsp(increaseValue);
+        }
     }
 }
 

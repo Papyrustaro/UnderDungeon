@@ -4,15 +4,10 @@ using UnityEngine;
 
 public class DungeonPassiveEffectsFunc : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    [SerializeField] private List<DungeonPassiveItem> dungeonPassiveItems = new List<DungeonPassiveItem>();
 
-    // Update is called once per frame
-    void Update()
+    public DungeonPassiveItem GetItem(E_DungeonPassiveItem itemId)
     {
-        
+        return this.dungeonPassiveItems[(int)itemId];
     }
 }
