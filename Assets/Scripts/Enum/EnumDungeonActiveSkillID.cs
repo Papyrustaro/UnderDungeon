@@ -10,4 +10,6 @@ public enum E_DungeonActiveSkill
     移動量増加A,
     サイコロ変化A,
     回復薬獲得A,
+    Hp回復A,
+    マス変化A,
 }

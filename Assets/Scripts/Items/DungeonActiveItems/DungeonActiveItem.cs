@@ -7,7 +7,6 @@ public abstract class DungeonActiveItem : DungeonActiveEffect
     [SerializeField] private E_DungeonActiveItem id;
     [SerializeField] private int sellPrice;
 
-
     public E_DungeonActiveItem Id => this.id;
 
     public override string EffectName => this.id.ToString();

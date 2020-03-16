@@ -22,6 +22,8 @@ public class DungeonManager : MonoBehaviour
     private List<DungeonPassiveItem> haveDungeonPassiveItems = new List<DungeonPassiveItem>();
     private List<BattleActiveItem> haveBattleActiveItems = new List<BattleActiveItem>();
     private List<BattlePassiveItem> haveBattlePassiveItems = new List<BattlePassiveItem>();
+    private int[] baseDice = new int[6] { 1, 1, 2, 2, 3, 3 };
+    private int[] changedDice = null;
 
     private List<PlayerCharacter> dropCharacters = new List<PlayerCharacter>(); //IDとして持ってもよい
 
@@ -95,10 +97,21 @@ public class DungeonManager : MonoBehaviour
     /// </summary>
     public int EnclosedUseDungeonActiveSkillTurn { get; set; } = 0;
 
+    /// <summary>
+    /// 基本のサイコロの目
+    /// </summary>
+    public int[] BaseDice => this.baseDice;
+
+    /// <summary>
+    /// 変化したサイコロの目(無いときはnull)
+    /// </summary>
+    public int[] ChangedDice => this.changedDice;
+
     public List<DungeonActiveItem> HaveDungeonActiveItems => this.haveDungeonActiveItems;
     public List<DungeonPassiveItem> HaveDungeonPassiveItems => this.haveDungeonPassiveItems;
     public List<BattleActiveItem> HaveBattleActiveItems => this.haveBattleActiveItems;
     public List<BattlePassiveItem> HaveBattlePassiveItems => this.haveBattlePassiveItems;
+
 
     /// <summary>
     /// DungeonSquareイベントの処理待ちかどうか
@@ -385,6 +398,23 @@ public class DungeonManager : MonoBehaviour
         }
         this.WaitDungeonSquareEvent = true;
         Debug.Log("row/column = " + CurrentLocationRow + "/" + CurrentLocationColumn);
+    }
+
+    public void SetChangedDiceEyes(int[] diceEyesToChange)
+    {
+        this.changedDice = diceEyesToChange;
+        string s = "";
+        for (int i = 0; i < 6; i++)
+        {
+            s += diceEyesToChange[i].ToString() + ",";
+        }
+        Debug.Log("次のサイコロの目を" + s + "に変更");
+    }
+
+    public void ChangeDungeonSquareType(List<E_DungeonSquareType> targetType, E_DungeonSquareType afterChangeDungeonSquareType, int effectRange)
+    {
+        //targetTypeに一致するマスからひとつ選択する処理(または戻る)
+        //選択したマスをafterChangeのマスに変化させる処理
     }
 }
 

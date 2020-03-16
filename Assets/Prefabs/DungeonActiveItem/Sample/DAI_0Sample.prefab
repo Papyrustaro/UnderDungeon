@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6155084913094239846}
-  - component: {fileID: 6155084913094239865}
+  - component: {fileID: 114942000187379210}
   m_Layer: 0
   m_Name: DAI_0Sample
   m_TagString: Untagged
@@ -31,7 +31,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &6155084913094239865
+--- !u!114 &114942000187379210
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -40,10 +40,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 6155084913094239847}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cb4fe727709f87c409b931d35b73e835, type: 3}
+  m_Script: {fileID: 11500000, guid: c3eede28ddac35a4e9354167f0c47654, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  effectType: 8
-  description: "DAI0_\u30DE\u30C3\u30D7\u5168\u4F53\u53EF\u8996\u5316"
+  description: "\u30DE\u30C3\u30D7\u3092\u628A\u63E1\u3059\u308B"
   id: 0
-  sellPrice: 100
+  sellPrice: 300
+  effectTurn: 3

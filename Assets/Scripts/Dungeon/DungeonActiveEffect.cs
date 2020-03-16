@@ -30,7 +30,12 @@ public abstract class DungeonActiveEffect : MonoBehaviour
         get
         {
             if (this.description != "") return this.description;
-            else return "効果の説明";
+            else return "error";
         }
     }
+}
+
+public interface ISample
+{
+    
 }
