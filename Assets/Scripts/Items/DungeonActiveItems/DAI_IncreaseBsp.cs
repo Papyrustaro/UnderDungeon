@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DAS_IncreaseDsp : DungeonActiveSkill
+public class DAI_IncreaseBsp : DungeonActiveItem
 {
     [SerializeField] private int increaseValue;
-    [SerializeField] private E_TargetTypeToAlly targetTypeToAlly;
+    [SerializeField] private E_TargetTypeToAlly targetTypeToAlly = E_TargetTypeToAlly.AllAlly;
 
     public override E_DungeonActiveEffectType EffectType => E_DungeonActiveEffectType.Bsp回復;
 
@@ -13,6 +13,6 @@ public class DAS_IncreaseDsp : DungeonActiveSkill
 
     public override void EffectFunc(DungeonManager dm)
     {
-        dm.IncreaseDsp(this.increaseValue);
+        dm.IncreaseBsp(this.increaseValue);
     }
 }

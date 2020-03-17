@@ -116,6 +116,16 @@ public class DungeonManager : MonoBehaviour
     /// </summary>
     public int[] ChangedDice => this.changedDice;
 
+    /// <summary>
+    /// マス移動量増加量(基本0)
+    /// </summary>
+    public int MovementIncreaseValue { get; set; } = 0;
+
+    /// <summary>
+    /// マス移動量の倍率(基本1倍)
+    /// </summary>
+    public int MovementRate { get; set; } = 1;
+
     public List<DungeonActiveItem> HaveDungeonActiveItems => this.haveDungeonActiveItems;
     public List<DungeonPassiveItem> HaveDungeonPassiveItems => this.haveDungeonPassiveItems;
     public List<BattleActiveItem> HaveBattleActiveItems => this.haveBattleActiveItems;
@@ -455,12 +465,43 @@ public class DungeonManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// targetAllysのDspを増加させる
+    /// </summary>
+    /// <param name="increaseValue">Dsp増加量</param>
     public void IncreaseDsp(int increaseValue)
     {
         foreach(BattleCharacter bc in this.targetAllys)
         {
             bc.Dsp += increaseValue;
         }
+    }
+
+    /// <summary>
+    /// targetAllysのHpを回復させる
+    /// </summary>
+    /// <param name="recoverRateOrValue">回復量(1以下で割合回復)</param>
+    public void RecoverHp(double recoverRateOrValue)
+    {
+        if(recoverRateOrValue > 1)
+        {
+            foreach(BattleCharacter bc in this.targetAllys)
+            {
+                bc.RecoverHp(recoverRateOrValue);
+            }
+        }
+        else
+        {
+            foreach(BattleCharacter bc in this.targetAllys)
+            {
+                bc.RecoverHpByRate(recoverRateOrValue);
+            }
+        }
+    }
+
+    public void SetFlagUnderstandDungeonSquareType(bool flag)
+    {
+        this.mapManager.SetFlagUnderstandDungeonSquareType(this.understandDungeonSquareType, flag);
     }
 }
 

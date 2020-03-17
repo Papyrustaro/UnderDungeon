@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DAS_IncreaseDsp : DungeonActiveSkill
+public class DAI_IncreaseDsp : DungeonActiveItem
 {
     [SerializeField] private int increaseValue;
     [SerializeField] private E_TargetTypeToAlly targetTypeToAlly;

@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class DAS_IncreaseBsp : DungeonActiveSkill
 {
-    [SerializeField] private E_TargetTypeToAlly targetTypeToAlly = E_TargetTypeToAlly.AllAlly;
     [SerializeField] private int increaseValue;
+    [SerializeField] private E_TargetTypeToAlly targetTypeToAlly = E_TargetTypeToAlly.AllAlly;
 
     public override E_DungeonActiveEffectType EffectType => E_DungeonActiveEffectType.Bsp回復;
 

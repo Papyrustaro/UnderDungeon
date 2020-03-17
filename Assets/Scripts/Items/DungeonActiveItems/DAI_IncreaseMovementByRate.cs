@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DAS_IncreaseMovementByRate : DungeonActiveSkill
+public class DAI_IncreaseMovementByRate : DungeonActiveItem
 {
     [SerializeField] private int movementRate;
     public override E_DungeonActiveEffectType EffectType => E_DungeonActiveEffectType.移動量倍増;

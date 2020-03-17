@@ -126,6 +126,9 @@ public class MapManager : MonoBehaviour
 
     public void SetFlagUnderstandDungeonSquareType(bool[,] understandDungeonSquareTypes, bool flag)
     {
+        if (flag) Debug.Log("マップ全体可視化");
+        else Debug.Log("マップ全体忘却");
+
         understandDungeonSquareTypes = new bool[mapWidth, mapHeight];
         if (flag)
         {
