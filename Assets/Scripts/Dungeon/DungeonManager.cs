@@ -129,6 +129,11 @@ public class DungeonManager : MonoBehaviour
     /// </summary>
     public int MovementRate { get; set; } = 1;
 
+    /// <summary>
+    /// 残りの移動量(一次記憶用)
+    /// </summary>
+    public int RemainingAmountOfMovement { get; set; } = 0;
+
     public List<DungeonActiveItem> HaveDungeonActiveItems => this.haveDungeonActiveItems;
     public List<DungeonPassiveItem> HaveDungeonPassiveItems => this.haveDungeonPassiveItems;
     public List<BattleActiveItem> HaveBattleActiveItems => this.haveBattleActiveItems;
@@ -139,6 +144,11 @@ public class DungeonManager : MonoBehaviour
     /// DungeonSquareイベントの処理待ちかどうか
     /// </summary>
     public bool WaitDungeonSquareEvent { get; set; } = false;
+
+    /// <summary>
+    /// 移動している方向
+    /// </summary>
+    public E_Direction CurrentMovingDirection { get; set; }
 
     private void Start()
     {
@@ -191,6 +201,8 @@ public class DungeonManager : MonoBehaviour
             case E_DungeonScene.ViewMap:
                 break;
             case E_DungeonScene.WaitDungeonSquareEvent:
+                //マスイベント処理
+                this.dungeonSquaresFunc.DungeonSquareEvent(this, this.currentFloorDungeonSquares[CurrentLocationRow, CurrentLocationColumn]);
                 break;
         }
     }
@@ -200,7 +212,7 @@ public class DungeonManager : MonoBehaviour
     /// </summary>
     private void SelectAction()
     {
-        this.dungeonUIManager.AnnounceByText("0.サイコロを投げる, 1.アイテム使用, 2.スキル使用, 3.マップ確認, 4.パーティ確認,");
+        this.dungeonUIManager.AnnounceByText("0.サイコロを投げる, 1.アイテム使用, 2.スキル使用, 3.マップ確認, 4.パーティ確認");
     }
 
     
@@ -228,7 +240,7 @@ public class DungeonManager : MonoBehaviour
         }
     }
 
-    private int RollDice()
+    private void RollDice()
     {
         int diceEye;
         string s = "使用するダイス[";
@@ -252,8 +264,12 @@ public class DungeonManager : MonoBehaviour
         this.dungeonUIManager.AnnounceByText(s);
 
         this.dungeonUIManager.AnnounceByText("出た目:" + diceEye.ToString());
-        return diceEye;
+
+        this.RemainingAmountOfMovement = diceEye;
+        //移動に遷移
     }
+
+    
 
     /// <summary>
     /// 所持DAIの使用(今は0~9までキーボード入力)
@@ -543,7 +559,18 @@ public class DungeonManager : MonoBehaviour
     }
 
     /// <summary>
-    /// マス移動処理(とりあえず、自分の入力で上下左右にマス移動できるようにする)
+    /// 移動先が分岐しているかどうか
+    /// </summary>
+    /// <param name="currentMoveDirection">現在の進行方向</param>
+    /// <returns>分岐しているならtrue、していないならfalse</returns>
+    private bool IsJunction(E_Direction currentMoveDirection)
+    {
+        if (currentMoveDirection == E_Direction.Right) return true;
+        else return false;
+    }
+
+    /// <summary>
+    /// directionの方向に1マス移動する
     /// </summary>
     public void MoveDungeonSquare(E_Direction direction)
     {
