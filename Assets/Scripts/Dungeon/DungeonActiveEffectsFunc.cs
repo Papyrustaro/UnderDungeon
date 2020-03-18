@@ -21,4 +21,14 @@ public class DungeonActiveEffectsFunc : MonoBehaviour
     {
         return this.dungeonActiveItems[(int)itemId];
     }
+
+    public DungeonActiveSkill GetSkill(E_DungeonActiveSkill skillId)
+    {
+        return this.dungeonActiveSkills[(int)skillId];
+    }
+
+    public void EffectFunc(DungeonActiveEffect effect, DungeonManager dm)
+    {
+        effect.EffectFunc(dm);
+    }
 }

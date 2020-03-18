@@ -23,6 +23,8 @@ public class DungeonManager : MonoBehaviour
     [SerializeField] private BattleActiveEffectsFunc battleActiveEffectsFunc;
     [SerializeField] private BattlePassiveEffectsFunc battlePassiveEffectsFunc;
 
+    [SerializeField] private DungeonUIManager dungeonUIManager;
+
     private List<DungeonActiveItem> haveDungeonActiveItems = new List<DungeonActiveItem>();
     private List<DungeonPassiveItem> haveDungeonPassiveItems = new List<DungeonPassiveItem>();
     private List<BattleActiveItem> haveBattleActiveItems = new List<BattleActiveItem>();
@@ -161,7 +163,7 @@ public class DungeonManager : MonoBehaviour
     }
 
     /// <summary>
-    /// 現在の状態に合わせてプレイヤーの入力などの分岐処理
+    /// 現在の状態に合わせてプレイヤーの入力などの分岐処理(Updateで呼ばれる)
     /// </summary>
     private void ActionInCurrentScene()
     {
@@ -170,12 +172,15 @@ public class DungeonManager : MonoBehaviour
             case E_DungeonScene.WaitSetFirstData:
                 break;
             case E_DungeonScene.SelectAction:
+                InputSelectAction();
                 break;
             case E_DungeonScene.SelectDAI:
+                InputUseDungeonActiveItem();
                 break;
             case E_DungeonScene.SelectDAITarget:
                 break;
             case E_DungeonScene.SelectDAS:
+                InputInvokeDungeonActiveSkill();
                 break;
             case E_DungeonScene.SelectDASTarget:
                 break;
@@ -190,7 +195,121 @@ public class DungeonManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 行動選択の入力受付(アイテム・スキル使用、サイコロ投げる、マップ見るなど)
+    /// </summary>
+    private void SelectAction()
+    {
+        this.dungeonUIManager.AnnounceByText("0.サイコロを投げる, 1.アイテム使用, 2.スキル使用, 3.マップ確認, 4.パーティ確認,");
+    }
 
+    
+
+    /// <summary>
+    /// 行動選択の入力受付(0:サイコロ, 1:アイテム使用, 2:DAS発動, 3:マップ確認, 4:パーティ確認)
+    /// </summary>
+    private void InputSelectAction()
+    {
+        if (Input.GetKeyDown(E_DungeonPlayerSelect.RollDice.ToString()))
+        {
+            //サイコロ投げに遷移
+        }else if (Input.GetKeyDown(E_DungeonPlayerSelect.UseDungeonActiveItem.ToString()))
+        {
+            //所持アイテム確認に遷移
+        }else if (Input.GetKeyDown(E_DungeonPlayerSelect.InvokeDungeonActiveSkill.ToString()))
+        {
+            //DAS発動に遷移
+        }else if (Input.GetKeyDown(E_DungeonPlayerSelect.VerificateMap.ToString()))
+        {
+            //マップ確認に遷移
+        }else if (Input.GetKeyDown(E_DungeonPlayerSelect.VerificateAlly.ToString()))
+        {
+            //パーティ確認に遷移
+        }
+    }
+
+    private int RollDice()
+    {
+        int diceEye;
+        string s = "使用するダイス[";
+        if (this.changedDice == null)
+        {
+            for(int i = 0; i < 6; i++)
+            {
+                s += this.baseDice[i].ToString() + ",";
+            }
+            diceEye = this.baseDice[UnityEngine.Random.Range(0, 6)];
+        }
+        else
+        {
+            for(int i = 0; i < this.changedDice.Length; i++)
+            {
+                s += this.changedDice[i].ToString() + ",";
+            }
+            diceEye = this.changedDice[UnityEngine.Random.Range(0, this.changedDice.Length)];
+        }
+        s += "]";
+        this.dungeonUIManager.AnnounceByText(s);
+
+        this.dungeonUIManager.AnnounceByText("出た目:" + diceEye.ToString());
+        return diceEye;
+    }
+
+    /// <summary>
+    /// 所持DAIの使用(今は0~9までキーボード入力)
+    /// </summary>
+    private void InputUseDungeonActiveItem()
+    {
+        int itemNum = this.haveDungeonActiveItems.Count;
+        for(int i = 0; i < itemNum; i++) //とりあえず9以下まで(10以上の入力ができないため)
+        {
+            if (Input.GetKeyDown(i.ToString()))
+            {
+                this.haveDungeonActiveItems[i].EffectFunc(this);
+            }
+        }
+    }
+
+    /// <summary>
+    /// 所持しているDAIを先頭から番号づけて表示
+    /// </summary>
+    private void ShowHaveDungeonActiveItem()
+    {
+        string s = "所持しているDAI\n";
+        int itemNum = this.haveDungeonActiveItems.Count;
+        for(int i = 0; i < itemNum; i++)
+        {
+            s += i.ToString() + ":" + this.haveDungeonActiveItems[i].EffectName;
+        }
+        this.dungeonUIManager.AnnounceByText(s);
+    }
+
+    /// <summary>
+    /// 所持しているDASを先頭から番号づけて表示
+    /// </summary>
+    private void ShowHaveDungeonActiveSkill()
+    {
+        string s = "使用するDAS\n";
+        for(int i = 0; i < this.allys.Count; i++)
+        {
+            s += i.ToString() + ":(" + this.allys[i].CharaClass.CharaName + "):" + this.allys[i].PC.HaveDungeonActiveSkillID.ToString() + "\n";
+        }
+        this.dungeonUIManager.AnnounceByText(s);
+    }
+
+    /// <summary>
+    /// 番号入力により、BAS発動
+    /// </summary>
+    private void InputInvokeDungeonActiveSkill()
+    {
+        for(int i = 0; i < this.allys.Count; i++)
+        {
+            if (Input.GetKeyDown(i.ToString()))
+            {
+                this.dungeonActiveEffectsFunc.GetSkill(this.allys[i].PC.HaveDungeonActiveSkillID).EffectFunc(this);
+            }
+        }
+    }
     private void GenerateFloor(int rowSize, int columnSize)
     {
         this.currentFloorDungeonSquares = new E_DungeonSquareType[rowSize, columnSize];

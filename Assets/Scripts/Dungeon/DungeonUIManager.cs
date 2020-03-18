@@ -7,8 +7,9 @@ public class DungeonUIManager : MonoBehaviour
 {
     [SerializeField] private Text announceText;
 
-    public static void AnnounceByText(string announceText)
+    public void AnnounceByText(string announceText)
     {
-        //announceText.text = announceText;
+        Debug.Log(announceText);
+        this.announceText.text = announceText;
     }
 }
