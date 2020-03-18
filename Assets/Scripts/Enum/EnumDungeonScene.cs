@@ -4,6 +4,7 @@ using UnityEngine;
 
 public enum E_DungeonScene
 {
+    WaitSetFirstData, //ダンジョン潜入時の最初のデータセット
     SelectAction, //行動選択(サイコロを振る、アイテム使用、スキル使用、マップを見る)
     SelectDAS, //使用するDAS選択
     SelectDASTarget, //DASのターゲット選択

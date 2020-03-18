@@ -29,6 +29,7 @@ public class DungeonManager : MonoBehaviour
     private List<BattlePassiveItem> haveBattlePassiveItems = new List<BattlePassiveItem>();
     private int[] baseDice = new int[6] { 1, 1, 2, 2, 3, 3 };
     private int[] changedDice = null;
+    private E_DungeonScene currentScene = E_DungeonScene.WaitSetFirstData;
 
 
     private List<PlayerCharacter> dropCharacters = new List<PlayerCharacter>(); //IDとして持ってもよい
@@ -158,6 +159,37 @@ public class DungeonManager : MonoBehaviour
             this.WaitDungeonSquareEvent = false;
         }
     }
+
+    /// <summary>
+    /// 現在の状態に合わせてプレイヤーの入力などの分岐処理
+    /// </summary>
+    private void ActionInCurrentScene()
+    {
+        switch (this.currentScene)
+        {
+            case E_DungeonScene.WaitSetFirstData:
+                break;
+            case E_DungeonScene.SelectAction:
+                break;
+            case E_DungeonScene.SelectDAI:
+                break;
+            case E_DungeonScene.SelectDAITarget:
+                break;
+            case E_DungeonScene.SelectDAS:
+                break;
+            case E_DungeonScene.SelectDASTarget:
+                break;
+            case E_DungeonScene.SelectMoveDirection:
+                break;
+            case E_DungeonScene.ViewAllyStatus:
+                break;
+            case E_DungeonScene.ViewMap:
+                break;
+            case E_DungeonScene.WaitDungeonSquareEvent:
+                break;
+        }
+    }
+
 
     private void GenerateFloor(int rowSize, int columnSize)
     {
