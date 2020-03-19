@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class DungeonManager : MonoBehaviour
 {
@@ -68,6 +69,11 @@ public class DungeonManager : MonoBehaviour
     /// マップの左から何列目か(0スタート)
     /// </summary>
     public int CurrentLocationColumn { get; set; } = 0;
+
+    /// <summary>
+    /// 現在乗っているマスのタイプ
+    /// </summary>
+    public E_DungeonSquareType CurrentOnDungeonSquareType => this.currentFloorDungeonSquares[this.CurrentLocationRow, this.CurrentLocationColumn];
 
     /// <summary>
     /// ダンジョン潜入してからの経過ターン(階層降りる毎にリセット?)
@@ -148,7 +154,7 @@ public class DungeonManager : MonoBehaviour
     /// <summary>
     /// 移動している方向
     /// </summary>
-    public E_Direction CurrentMovingDirection { get; set; }
+    public E_Direction CurrentMovingDirection { get; set; } = E_Direction.None;
 
     private void Start()
     {
@@ -194,7 +200,11 @@ public class DungeonManager : MonoBehaviour
                 break;
             case E_DungeonScene.SelectDASTarget:
                 break;
+            case E_DungeonScene.MovingDungeonSquare:
+                MoveDungeonSquare();
+                break;
             case E_DungeonScene.SelectMoveDirection:
+                InputMoveDirection();
                 break;
             case E_DungeonScene.ViewAllyStatus:
                 break;
@@ -559,16 +569,96 @@ public class DungeonManager : MonoBehaviour
     }
 
     /// <summary>
-    /// 移動先が分岐しているかどうか
+    /// 移動先が分岐しているかどうか(現在の進行方向から左右に曲がる道があるかどうか)
     /// </summary>
     /// <param name="currentMoveDirection">現在の進行方向</param>
     /// <returns>分岐しているならtrue、していないならfalse</returns>
     private bool IsJunction(E_Direction currentMoveDirection)
     {
-        if (currentMoveDirection == E_Direction.Right) return true;
-        else return false;
+        try
+        {
+            switch (currentMoveDirection)
+            {
+                case E_Direction.Up:
+                case E_Direction.Down:
+                    return AbleMoveDirection(E_Direction.Right) || AbleMoveDirection(E_Direction.Left);
+                case E_Direction.Right:
+                case E_Direction.Left:
+                    return AbleMoveDirection(E_Direction.Up) || AbleMoveDirection(E_Direction.Down);
+                case E_Direction.None:
+                    return true;
+                case E_Direction _:
+                    return false;
+            }
+        }
+        catch (Exception)
+        {
+            return false;
+        }
     }
 
+    /// <summary>
+    /// 現在いるマスからsearchDirection方向に移動できるかどうか
+    /// </summary>
+    /// <param name="searchDirection">移動できるか確かめる方向</param>
+    /// <returns>searchDirection方向に移動できたらtrue</returns>
+    private bool AbleMoveDirection(E_Direction searchDirection)
+    {
+        try
+        {
+            switch (searchDirection)
+            {
+                case E_Direction.Up:
+                    return CurrentLocationRow > 0 && currentFloorDungeonSquares[CurrentLocationRow - 1, CurrentLocationColumn] != E_DungeonSquareType.壁;
+                case E_Direction.Right:
+                    return CurrentLocationColumn < mapManager.MapWidth - 1 && currentFloorDungeonSquares[CurrentLocationRow, CurrentLocationColumn + 1] != E_DungeonSquareType.壁;
+                case E_Direction.Left:
+                    return CurrentLocationColumn > 0 && currentFloorDungeonSquares[CurrentLocationRow, CurrentLocationColumn - 1] != E_DungeonSquareType.壁;
+                case E_Direction.Down:
+                    return CurrentLocationRow < mapManager.MapHeight - 1 && currentFloorDungeonSquares[CurrentLocationRow + 1, CurrentLocationColumn] != E_DungeonSquareType.壁;
+                case E_Direction _:
+                    return false;
+            }
+        }
+        catch(Exception)
+        {
+            return false;
+        }
+    }
+
+    /// <summary>
+    /// プレイヤーの移動方向入力受付
+    /// </summary>
+    private void InputMoveDirection()
+    {
+        if (Input.GetKeyDown(KeyCode.W) && CurrentMovingDirection != E_Direction.Down) this.CurrentMovingDirection = E_Direction.Up;
+        else if (Input.GetKeyDown(KeyCode.D) && CurrentMovingDirection != E_Direction.Left) this.CurrentMovingDirection = E_Direction.Right;
+        else if (Input.GetKeyDown(KeyCode.S) && CurrentMovingDirection != E_Direction.Up) this.CurrentMovingDirection = E_Direction.Down;
+        else if (Input.GetKeyDown(KeyCode.A) && CurrentMovingDirection != E_Direction.Right) this.CurrentMovingDirection = E_Direction.Left;
+
+        this.currentScene = E_DungeonScene.MovingDungeonSquare; //入力終了フラグ
+    }
+
+    /// <summary>
+    /// プレイヤーの移動処理。分岐点に着いたら方向入力へ切り替え
+    /// </summary>
+    private void MoveDungeonSquare()
+    {
+        if(RemainingAmountOfMovement < 1)
+        {
+            //初期化処理?
+            this.currentScene = E_DungeonScene.WaitDungeonSquareEvent;
+        }else if (IsJunction(this.CurrentMovingDirection))
+        {
+            Debug.Log("進行方向を選択してください");
+            this.currentScene = E_DungeonScene.SelectMoveDirection;
+        }
+        else
+        {
+            MoveDungeonSquare(this.CurrentMovingDirection);
+            this.RemainingAmountOfMovement--;
+        }
+    }
     /// <summary>
     /// directionの方向に1マス移動する
     /// </summary>
@@ -593,7 +683,7 @@ public class DungeonManager : MonoBehaviour
                 else CurrentLocationColumn--;
                 break;
         }
-        this.WaitDungeonSquareEvent = true;
+        //this.WaitDungeonSquareEvent = true;
         Debug.Log("row/column = " + CurrentLocationRow + "/" + CurrentLocationColumn);
     }
 
@@ -688,5 +778,6 @@ public enum E_Direction
     Up,
     Right,
     Down,
-    Left
+    Left,
+    None
 }

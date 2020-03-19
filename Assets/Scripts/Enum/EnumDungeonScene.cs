@@ -15,6 +15,7 @@ public enum E_DungeonScene
     SelectDAITarget, //DAIのターゲット選択
     ViewMap, //マップ全体を見る
     ViewAllyStatus, //味方の状態確認
+    MovingDungeonSquare, //決まった移動方向に移動中
     SelectMoveDirection, //分岐路にて、移動する方向選択
     WaitDungeonSquareEvent, //マスイベント終了待機(本来は、それぞれのイベントでも状態保存が必要)
 }
