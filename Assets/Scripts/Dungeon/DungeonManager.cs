@@ -207,12 +207,17 @@ public class DungeonManager : MonoBehaviour
                 InputMoveDirection();
                 break;
             case E_DungeonScene.ViewAllyStatus:
+                ShowAllysStatus();
+                this.currentScene = E_DungeonScene.SelectAction;
                 break;
             case E_DungeonScene.ViewMap:
+                ViewMap();
+                this.currentScene = E_DungeonScene.SelectAction;
                 break;
             case E_DungeonScene.WaitDungeonSquareEvent:
                 //マスイベント処理
                 this.dungeonSquaresFunc.DungeonSquareEvent(this, this.currentFloorDungeonSquares[CurrentLocationRow, CurrentLocationColumn]);
+                this.currentScene = E_DungeonScene.SelectAction;
                 break;
         }
     }
@@ -250,6 +255,76 @@ public class DungeonManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 味方パーティの状態確認
+    /// </summary>
+    private void ShowAllysStatus()
+    {
+        string s = "味方の状態\n";
+        foreach(BattleCharacter bc in this.allys)
+        {
+            s += bc.CharaClass.CharaName + ". HP:" + bc.Hp + "/" + bc.MaxHp + " Dsp:" + bc.Dsp + "\n";
+        }
+        this.dungeonUIManager.AnnounceByText(s);
+    }
+
+    /// <summary>
+    /// 現在いるフロアのマップを確認
+    /// </summary>
+    private void ViewMap()
+    {
+        string s = "マップ状態\n";
+        for(int i = 0; i < this.mapManager.MapHeight; i++)
+        {
+            for(int j = 0; j < this.mapManager.MapWidth; j++)
+            {
+                if (understandDungeonSquareType[i, j]) s += DungeonManager.GetStringDungeonSquareType(this.currentFloorDungeonSquares[i, j]) + " ";
+                else s += "? ";
+            }
+            s += "\n";
+        }
+        this.dungeonUIManager.AnnounceByText(s);
+    }
+
+    /// <summary>
+    /// マスタイプを簡略化した文字を返す
+    /// </summary>
+    /// <param name="dungeonSquareType">文字を得るマスタイプ</param>
+    /// <returns>マスタイプを簡略化した文字</returns>
+    public static string GetStringDungeonSquareType(E_DungeonSquareType dungeonSquareType)
+    {
+        switch (dungeonSquareType)
+        {
+            case E_DungeonSquareType.なにもなし:
+                return "無";
+            case E_DungeonSquareType.ボス戦:
+                return "ボ";
+            case E_DungeonSquareType.ランダム:
+                return "ラ";
+            case E_DungeonSquareType.呪いの宝箱:
+                return "呪";
+            case E_DungeonSquareType.回復の泉:
+                return "泉";
+            case E_DungeonSquareType.壁:
+                return "壁";
+            case E_DungeonSquareType.宝箱:
+                return "宝";
+            case E_DungeonSquareType.店:
+                return "店";
+            case E_DungeonSquareType.祈祷:
+                return "祈";
+            case E_DungeonSquareType.罠:
+                return "罠";
+            case E_DungeonSquareType.通常戦闘:
+                return "戦";
+            case E_DungeonSquareType.闇商人:
+                return "闇";
+            case E_DungeonSquareType.階段:
+                return "階";
+            case E_DungeonSquareType _:
+                return "error";
+        }
+    }
     private void RollDice()
     {
         int diceEye;
@@ -276,7 +351,7 @@ public class DungeonManager : MonoBehaviour
         this.dungeonUIManager.AnnounceByText("出た目:" + diceEye.ToString());
 
         this.RemainingAmountOfMovement = diceEye;
-        //移動に遷移
+        this.currentScene = E_DungeonScene.MovingDungeonSquare; //移動に遷移
     }
 
     
