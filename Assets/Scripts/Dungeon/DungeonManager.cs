@@ -45,8 +45,10 @@ public class DungeonManager : MonoBehaviour
 
     [SerializeField] private MapManager mapManager;
 
-    private List<BattleCharacter> targetAllys = null; //効果対象味方(とりあえず)
-    private List<DungeonSquare> targetDungeonSquares = null; //効果対象マス(とりあえず)
+    private List<BattleCharacter> targetAllys = null; //効果対象にする味方記憶用
+    private List<PositionXY> targetableDungeonSquares = null; //効果対象にできるマスの座標
+    private List<PositionXY> targetDungeonSquares = null; //効果対象にするマスの座標
+    private int currentIndexOfTargetableDungeonSquares = 0; //現在選んでいるtargetableDungeonSquaresの番地
 
     /// <summary>
     /// 満腹度(マス移動する度に減少?)
@@ -166,16 +168,7 @@ public class DungeonManager : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.W)) MoveDungeonSquare(E_Direction.Up);
-        else if (Input.GetKeyDown(KeyCode.D)) MoveDungeonSquare(E_Direction.Right);
-        else if (Input.GetKeyDown(KeyCode.S)) MoveDungeonSquare(E_Direction.Down);
-        else if (Input.GetKeyDown(KeyCode.A)) MoveDungeonSquare(E_Direction.Left);
-
-        if (this.WaitDungeonSquareEvent)
-        {
-            this.dungeonSquaresFunc.DungeonSquareEvent(this, this.currentFloorDungeonSquares[CurrentLocationRow, CurrentLocationColumn]);
-            this.WaitDungeonSquareEvent = false;
-        }
+        ActionInCurrentScene();
     }
 
     /// <summary>
@@ -193,12 +186,16 @@ public class DungeonManager : MonoBehaviour
             case E_DungeonScene.SelectDAI:
                 InputUseDungeonActiveItem();
                 break;
-            case E_DungeonScene.SelectDAITarget:
+            case E_DungeonScene.SelectDAITargetToAlly:
+                break;
+            case E_DungeonScene.SelectDAITargetToDungeonSquare:
                 break;
             case E_DungeonScene.SelectDAS:
                 InputInvokeDungeonActiveSkill();
                 break;
-            case E_DungeonScene.SelectDASTarget:
+            case E_DungeonScene.SelectDASTargetToAlly:
+                break;
+            case E_DungeonScene.SelectDASTargetToDungeonSquare:
                 break;
             case E_DungeonScene.MovingDungeonSquare:
                 MoveDungeonSquare();
@@ -240,21 +237,47 @@ public class DungeonManager : MonoBehaviour
         if (Input.GetKeyDown(E_DungeonPlayerSelect.RollDice.ToString()))
         {
             //サイコロ投げに遷移
+            RollDice();
         }else if (Input.GetKeyDown(E_DungeonPlayerSelect.UseDungeonActiveItem.ToString()))
         {
-            //所持アイテム確認に遷移
+            //DAI使用に遷移
+            this.currentScene = E_DungeonScene.SelectDAI;
         }else if (Input.GetKeyDown(E_DungeonPlayerSelect.InvokeDungeonActiveSkill.ToString()))
         {
             //DAS発動に遷移
+            this.currentScene = E_DungeonScene.SelectDAS;
         }else if (Input.GetKeyDown(E_DungeonPlayerSelect.VerificateMap.ToString()))
         {
             //マップ確認に遷移
+            ViewMap();
         }else if (Input.GetKeyDown(E_DungeonPlayerSelect.VerificateAlly.ToString()))
         {
             //パーティ確認に遷移
+            ShowAllysStatus();
         }
     }
 
+    /// <summary>
+    /// 戻るボタン押したときの処理
+    /// </summary>
+    private void InputBack()
+    {
+        switch (this.currentScene)
+        {
+            case E_DungeonScene.SelectDAI:
+            case E_DungeonScene.SelectDAS:
+                this.currentScene = E_DungeonScene.SelectAction;
+                break;
+            case E_DungeonScene.SelectDAITargetToAlly:
+            case E_DungeonScene.SelectDAITargetToDungeonSquare:
+                this.currentScene = E_DungeonScene.SelectDAI;
+                break;
+            case E_DungeonScene.SelectDASTargetToAlly:
+            case E_DungeonScene.SelectDASTargetToDungeonSquare:
+                this.currentScene = E_DungeonScene.SelectDAS;
+                break;
+        }
+    }
     /// <summary>
     /// 味方パーティの状態確認
     /// </summary>
@@ -371,6 +394,52 @@ public class DungeonManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// DAIの味方へのターゲットをセット
+    /// </summary>
+    /// <param name="targetType">DAIのターゲットタイプ</param>
+    private void SetDungeonActiveItemTargetToAlly(E_DungeonActiveEffectTargetType targetType)
+    {
+        switch (targetType)
+        {
+            case E_DungeonActiveEffectTargetType.OneAlly:
+                this.currentScene = E_DungeonScene.SelectDAITargetToAlly;
+                break;
+            case E_DungeonActiveEffectTargetType.AllAlly:
+                this.targetAllys = this.allys;
+                break;
+            case E_DungeonActiveEffectTargetType _:
+                throw new Exception();
+        }
+    }
+
+    /// <summary>
+    /// DASの味方へのターゲットセット
+    /// </summary>
+    /// <param name="targetType">DASのターゲットタイプ</param>
+    /// <param name="invoker">スキル発動者</param>
+    private void SetDungeonActiveSkillTargetToAlly(E_DungeonActiveEffectTargetType targetType, BattleCharacter invoker)
+    {
+        switch (targetType)
+        {
+            case E_DungeonActiveEffectTargetType.OneAlly:
+                this.currentScene = E_DungeonScene.SelectDASTargetToAlly;
+                break;
+            case E_DungeonActiveEffectTargetType.AllAlly:
+                this.targetAllys = this.allys;
+                break;
+            case E_DungeonActiveEffectTargetType.SelfAlly:
+                this.targetAllys = new List<BattleCharacter>() { invoker };
+                break;
+            case E_DungeonActiveEffectTargetType _:
+                throw new Exception();
+        }
+    }
+
+    private void SetTargetToDungeonSquare()
+    {
+        
+    }
     /// <summary>
     /// 所持しているDAIを先頭から番号づけて表示
     /// </summary>
@@ -779,6 +848,56 @@ public class DungeonManager : MonoBehaviour
         //選択したマスをafterChangeのマスに変化させる処理
     }
 
+    /// <summary>
+    /// マスのターゲットタイプと効果範囲から、効果を適用できるマス(tragetableDungeonSquares)をセット
+    /// </summary>
+    /// <param name="targetTypes">対象にできるマスの種類</param>
+    /// <param name="effectRange">効果範囲</param>
+    private void SetTargetableDungeonSquare(List<E_DungeonSquareType> targetTypes, int effectRange)
+    {
+        this.targetableDungeonSquares = new List<PositionXY>();
+        for(int i = CurrentLocationRow - effectRange; i < CurrentLocationRow + effectRange; i++)
+        {
+            for(int j = CurrentLocationColumn - effectRange + i; Math.Abs(CurrentLocationColumn - j) + Math.Abs(CurrentLocationRow - i) <= effectRange; j++)
+            {
+                foreach(E_DungeonSquareType dsType in targetTypes)
+                {
+                    if (this.currentFloorDungeonSquares[i, j] == dsType) this.targetableDungeonSquares.Add(new PositionXY(i, j));
+                }
+            }
+        }
+    }
+
+    private void ShowTargetableDungeonSquares()
+    {
+        string s = "対象にできるマス\n";
+        foreach(PositionXY position in this.targetableDungeonSquares)
+        {
+            s += "[" + position.Row + "," +  position.Column + "]" +  DungeonManager.GetStringDungeonSquareType(this.currentFloorDungeonSquares[position.Row, position.Column]) + "\n";
+        }
+        this.dungeonUIManager.AnnounceByText(s);
+    }
+
+    /// <summary>
+    /// 対象にするマス決定の入力
+    /// </summary>
+    private void InputTargetToDungeonSquare()
+    {
+        if (Input.GetKeyDown(KeyCode.D))
+        {
+            if (this.currentIndexOfTargetableDungeonSquares > this.targetableDungeonSquares.Count - 2) this.currentIndexOfTargetableDungeonSquares = 0;
+            else this.currentIndexOfTargetableDungeonSquares++;
+            Debug.Log("現在選択中のマス:[" + "," + "]" + DungeonManager.GetStringDungeonSquareType(this.currentFloorDungeonSquares[this.targetableDungeonSquares[this.currentIndexOfTargetableDungeonSquares].Row, this.targetableDungeonSquares[this.currentIndexOfTargetableDungeonSquares].Column]));
+        }else if (Input.GetKeyDown(KeyCode.A))
+        {
+            if (this.currentIndexOfTargetableDungeonSquares == 0) this.currentIndexOfTargetableDungeonSquares = this.targetableDungeonSquares.Count - 1;
+            else this.currentIndexOfTargetableDungeonSquares--;
+        }else if (Input.GetKeyDown(KeyCode.Return))
+        {
+            //ターゲット決定処理
+            this.targetDungeonSquares = new List<PositionXY>() { this.targetableDungeonSquares[this.currentIndexOfTargetableDungeonSquares] };
+        }
+    }
     public void AddHaveItem(E_DungeonActiveItem itemId)
     {
         this.haveDungeonActiveItems.Add(this.dungeonActiveEffectsFunc.GetItem(itemId));
@@ -855,4 +974,14 @@ public enum E_Direction
     Down,
     Left,
     None
+}
+
+public class PositionXY
+{
+    public int Row { get; set; }
+    public int Column { get; set; }
+    public PositionXY(int row, int column)
+    {
+        this.Row = row; this.Column = column;
+    }
 }
