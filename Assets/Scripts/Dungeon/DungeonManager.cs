@@ -170,6 +170,8 @@ public class DungeonManager : MonoBehaviour
         this.GenerateFloor(this.mapManager.MapWidth, this.mapManager.MapHeight);
         this.dungeonSquaresFunc.SetMayApeearDungeonSquares(this.mapManager.MayApeearDungeonSquares);
         Debug.Log(this.currentFloorDungeonSquares[0, 0]);
+        SelectAction();
+        this.currentScene = E_DungeonScene.SelectAction;
     }
 
     private void Update()
@@ -193,6 +195,7 @@ public class DungeonManager : MonoBehaviour
                 InputUseDungeonActiveItem();
                 break;
             case E_DungeonScene.SelectDAITargetToAlly:
+                InputTargetToAlly();
                 break;
             case E_DungeonScene.SelectDAITargetToDungeonSquare:
                 InputTargetToDungeonSquare();
@@ -201,6 +204,7 @@ public class DungeonManager : MonoBehaviour
                 InputInvokeDungeonActiveSkill();
                 break;
             case E_DungeonScene.SelectDASTargetToAlly:
+                InputTargetToAlly();
                 break;
             case E_DungeonScene.SelectDASTargetToDungeonSquare:
                 InputTargetToDungeonSquare();
@@ -246,23 +250,23 @@ public class DungeonManager : MonoBehaviour
     /// </summary>
     private void InputSelectAction()
     {
-        if (Input.GetKeyDown(E_DungeonPlayerSelect.RollDice.ToString()))
+        if (Input.GetKeyDown(((int)E_DungeonPlayerSelect.RollDice).ToString()))
         {
             //サイコロ投げに遷移
             RollDice();
-        }else if (Input.GetKeyDown(E_DungeonPlayerSelect.UseDungeonActiveItem.ToString()))
+        }else if (Input.GetKeyDown(((int)E_DungeonPlayerSelect.UseDungeonActiveItem).ToString()))
         {
             //DAI使用に遷移
             this.currentScene = E_DungeonScene.SelectDAI;
-        }else if (Input.GetKeyDown(E_DungeonPlayerSelect.InvokeDungeonActiveSkill.ToString()))
+        }else if (Input.GetKeyDown(((int)E_DungeonPlayerSelect.InvokeDungeonActiveSkill).ToString()))
         {
             //DAS発動に遷移
             this.currentScene = E_DungeonScene.SelectDAS;
-        }else if (Input.GetKeyDown(E_DungeonPlayerSelect.VerificateMap.ToString()))
+        }else if (Input.GetKeyDown(((int)E_DungeonPlayerSelect.VerificateMap).ToString()))
         {
             //マップ確認に遷移
             ViewMap();
-        }else if (Input.GetKeyDown(E_DungeonPlayerSelect.VerificateAlly.ToString()))
+        }else if (Input.GetKeyDown(((int)E_DungeonPlayerSelect.VerificateAlly).ToString()))
         {
             //パーティ確認に遷移
             ShowAllysStatus();
@@ -806,10 +810,10 @@ public class DungeonManager : MonoBehaviour
     /// </summary>
     private void InputMoveDirection()
     {
-        if (Input.GetKeyDown(KeyCode.W) && CurrentMovingDirection != E_Direction.Down) this.CurrentMovingDirection = E_Direction.Up;
-        else if (Input.GetKeyDown(KeyCode.D) && CurrentMovingDirection != E_Direction.Left) this.CurrentMovingDirection = E_Direction.Right;
-        else if (Input.GetKeyDown(KeyCode.S) && CurrentMovingDirection != E_Direction.Up) this.CurrentMovingDirection = E_Direction.Down;
-        else if (Input.GetKeyDown(KeyCode.A) && CurrentMovingDirection != E_Direction.Right) this.CurrentMovingDirection = E_Direction.Left;
+        if (Input.GetKeyDown(KeyCode.W) && CurrentMovingDirection != E_Direction.Down && AbleMoveDirection(E_Direction.Up)) this.CurrentMovingDirection = E_Direction.Up;
+        else if (Input.GetKeyDown(KeyCode.D) && CurrentMovingDirection != E_Direction.Left && AbleMoveDirection(E_Direction.Right)) this.CurrentMovingDirection = E_Direction.Right;
+        else if (Input.GetKeyDown(KeyCode.S) && CurrentMovingDirection != E_Direction.Up && AbleMoveDirection(E_Direction.Down)) this.CurrentMovingDirection = E_Direction.Down;
+        else if (Input.GetKeyDown(KeyCode.A) && CurrentMovingDirection != E_Direction.Right && AbleMoveDirection(E_Direction.Left)) this.CurrentMovingDirection = E_Direction.Left;
 
         this.currentScene = E_DungeonScene.MovingDungeonSquare; //入力終了フラグ
     }
@@ -822,6 +826,7 @@ public class DungeonManager : MonoBehaviour
         if(RemainingAmountOfMovement < 1)
         {
             //初期化処理?
+            this.RemainingAmountOfMovement = 0;
             this.currentScene = E_DungeonScene.WaitDungeonSquareEvent;
         }else if (IsJunction(this.CurrentMovingDirection))
         {
