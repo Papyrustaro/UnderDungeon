@@ -15,6 +15,7 @@ public enum E_DungeonScene
     SelectDAI, //使用するDAI選択
     SelectDAITargetToAlly, //DAIのターゲット選択
     SelectDAITargetToDungeonSquare, //DAIターゲット選択
+    InvokeActiveEffect, //現在waitActiveEffectで記憶している効果発動
     ViewMap, //マップ全体を見る
     ViewAllyStatus, //味方の状態確認
     MovingDungeonSquare, //決まった移動方向に移動中

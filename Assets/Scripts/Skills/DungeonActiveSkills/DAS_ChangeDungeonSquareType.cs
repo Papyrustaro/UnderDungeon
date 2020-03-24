@@ -11,6 +11,8 @@ public class DAS_ChangeDungeonSquareType : DungeonActiveSkill
     public override E_DungeonActiveEffectType EffectType => E_DungeonActiveEffectType.マスタイプ変化;
 
     public override E_DungeonActiveEffectTargetType DungeonActiveEffectTargetType => EnumManager.GetDungeonActiveEffectTargetType(this.targetTypeToDungeonSquare);
+    public override List<E_DungeonSquareType> TargetDungeonSquareTypes => this.targetDungeonSquareTypes;
+    public override int EffectRange => this.effectRange;
 
     public override void EffectFunc(DungeonManager dm)
     {
