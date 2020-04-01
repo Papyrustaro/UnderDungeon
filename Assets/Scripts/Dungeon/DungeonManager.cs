@@ -175,7 +175,7 @@ public class DungeonManager : MonoBehaviour
         this.GenerateFloor(this.mapManager.MapWidth, this.mapManager.MapHeight);
         this.dungeonSquaresFunc.SetMayApeearDungeonSquares(this.mapManager.MayApeearDungeonSquares);
         Debug.Log(this.currentFloorDungeonSquares[0, 0]);
-        this.currentScene = E_DungeonScene.SelectAction;
+        this.MoveScene(E_DungeonScene.SelectAction);
     }
 
     private void Update()
@@ -197,6 +197,7 @@ public class DungeonManager : MonoBehaviour
                 InputSelectAction();
                 break;
             case E_DungeonScene.SelectDAI:
+                if (NeedAnnounce) ShowHaveDungeonActiveItem();
                 InputUseDungeonActiveItem();
                 break;
             case E_DungeonScene.SelectDAITargetToAlly:
@@ -216,7 +217,7 @@ public class DungeonManager : MonoBehaviour
                 break;
             case E_DungeonScene.InvokeActiveEffect:
                 this.waitActiveEffect.EffectFunc(this);
-                this.currentScene = E_DungeonScene.SelectAction;
+                this.MoveScene(E_DungeonScene.SelectAction);
                 break;
             case E_DungeonScene.MovingDungeonSquare:
                 MoveDungeonSquare();
@@ -226,21 +227,42 @@ public class DungeonManager : MonoBehaviour
                 break;
             case E_DungeonScene.ViewAllyStatus:
                 ShowAllysStatus();
-                this.currentScene = E_DungeonScene.SelectAction;
+                this.MoveScene(E_DungeonScene.SelectAction);
                 break;
             case E_DungeonScene.ViewMap:
                 ViewMap();
-                this.currentScene = E_DungeonScene.SelectAction;
+                this.MoveScene(E_DungeonScene.SelectAction);
                 break;
             case E_DungeonScene.WaitDungeonSquareEvent:
                 //マスイベント処理
                 this.dungeonSquaresFunc.DungeonSquareEvent(this, this.currentFloorDungeonSquares[CurrentLocationRow, CurrentLocationColumn]);
-                this.currentScene = E_DungeonScene.SelectAction;
+                this.MoveScene(E_DungeonScene.SelectAction);
                 this.NeedAnnounce = true;
                 break;
         }
     }
 
+    /// <summary>
+    /// 現在の状態を変化させる
+    /// </summary>
+    /// <param name="toMoveScene">移動先の状態</param>
+    private void MoveScene(E_DungeonScene toMoveScene)
+    {
+        this.currentScene = toMoveScene;
+        switch (toMoveScene)
+        {
+            case E_DungeonScene.SelectAction:
+            case E_DungeonScene.SelectDAI:
+            case E_DungeonScene.SelectDAITargetToAlly:
+            case E_DungeonScene.SelectDAITargetToDungeonSquare:
+            case E_DungeonScene.SelectDAS:
+            case E_DungeonScene.SelectDASTargetToAlly:
+            case E_DungeonScene.SelectDASTargetToDungeonSquare:
+            case E_DungeonScene.SelectMoveDirection:
+                this.NeedAnnounce = true;
+                break;
+        }
+    }
     private void AnnounceByText(string announceText)
     {
         this.dungeonUIManager.AnnounceByText(announceText);
@@ -259,11 +281,13 @@ public class DungeonManager : MonoBehaviour
         }else if (Input.GetKeyDown(((int)E_DungeonPlayerSelect.UseDungeonActiveItem).ToString()))
         {
             //DAI使用に遷移
-            this.currentScene = E_DungeonScene.SelectDAI;
+            MoveScene(E_DungeonScene.SelectDAI);
+            this.NeedAnnounce = true;
         }else if (Input.GetKeyDown(((int)E_DungeonPlayerSelect.InvokeDungeonActiveSkill).ToString()))
         {
             //DAS発動に遷移
-            this.currentScene = E_DungeonScene.SelectDAS;
+            this.MoveScene(E_DungeonScene.SelectDAS);
+            this.NeedAnnounce = true;
         }else if (Input.GetKeyDown(((int)E_DungeonPlayerSelect.VerificateMap).ToString()))
         {
             //マップ確認に遷移
@@ -278,21 +302,21 @@ public class DungeonManager : MonoBehaviour
     /// <summary>
     /// 戻るボタン押したときの処理
     /// </summary>
-    private void InputBack()
+    public void InputBack()
     {
         switch (this.currentScene)
         {
             case E_DungeonScene.SelectDAI:
             case E_DungeonScene.SelectDAS:
-                this.currentScene = E_DungeonScene.SelectAction;
+                this.MoveScene(E_DungeonScene.SelectAction);
                 break;
             case E_DungeonScene.SelectDAITargetToAlly:
             case E_DungeonScene.SelectDAITargetToDungeonSquare:
-                this.currentScene = E_DungeonScene.SelectDAI;
+                this.MoveScene(E_DungeonScene.SelectDAI);
                 break;
             case E_DungeonScene.SelectDASTargetToAlly:
             case E_DungeonScene.SelectDASTargetToDungeonSquare:
-                this.currentScene = E_DungeonScene.SelectDAS;
+                this.MoveScene(E_DungeonScene.SelectDAS);
                 break;
         }
     }
@@ -306,7 +330,7 @@ public class DungeonManager : MonoBehaviour
         {
             s += bc.CharaClass.CharaName + ". HP:" + bc.Hp + "/" + bc.MaxHp + " Dsp:" + bc.Dsp + "\n";
         }
-        this.dungeonUIManager.AnnounceByText(s);
+        this.AnnounceByText(s);
     }
 
     /// <summary>
@@ -324,7 +348,7 @@ public class DungeonManager : MonoBehaviour
             }
             s += "\n";
         }
-        this.dungeonUIManager.AnnounceByText(s);
+        this.AnnounceByText(s);
     }
 
     /// <summary>
@@ -387,12 +411,12 @@ public class DungeonManager : MonoBehaviour
             diceEye = this.changedDice[UnityEngine.Random.Range(0, this.changedDice.Length)];
         }
         s += "]";
-        this.dungeonUIManager.AnnounceByText(s);
+        this.AnnounceByText(s);
 
-        this.dungeonUIManager.AnnounceByText("出た目:" + diceEye.ToString());
+        this.AnnounceByText("出た目:" + diceEye.ToString());
 
         this.RemainingAmountOfMovement = diceEye;
-        this.currentScene = E_DungeonScene.MovingDungeonSquare; //移動に遷移
+        this.MoveScene(E_DungeonScene.MovingDungeonSquare); //移動に遷移
     }
 
     
@@ -403,7 +427,7 @@ public class DungeonManager : MonoBehaviour
     private void InputUseDungeonActiveItem()
     {
         int itemNum = this.haveDungeonActiveItems.Count;
-        for(int i = 0; i < itemNum; i++) //とりあえず9以下まで(10以上の入力ができないため)
+        for(int i = 0; i < itemNum && i < 9; i++) //とりあえず9以下まで(10以上の入力ができないため)
         {
             if (Input.GetKeyDown(i.ToString()))
             {
@@ -421,20 +445,20 @@ public class DungeonManager : MonoBehaviour
         switch (targetType)
         {
             case E_DungeonActiveEffectTargetType.OneAlly:
-                this.currentScene = E_DungeonScene.SelectDAITargetToAlly;
+                this.MoveScene(E_DungeonScene.SelectDAITargetToAlly);
                 break;
             case E_DungeonActiveEffectTargetType.AllAlly:
                 this.targetAllys = this.allys;
-                this.currentScene = E_DungeonScene.InvokeActiveEffect;
+                this.MoveScene(E_DungeonScene.InvokeActiveEffect);
                 break;
             case E_DungeonActiveEffectTargetType.AllDungeonSquare:
                 SetTargetableDungeonSquare(this.waitActiveEffect.TargetDungeonSquareTypes, this.waitActiveEffect.EffectRange);
                 this.targetDungeonSquares = this.targetableDungeonSquares;
-                this.currentScene = E_DungeonScene.InvokeActiveEffect;
+                this.MoveScene(E_DungeonScene.InvokeActiveEffect);
                 break;
             case E_DungeonActiveEffectTargetType.OneDungeonSquare:
                 SetTargetableDungeonSquare(this.waitActiveEffect.TargetDungeonSquareTypes, this.waitActiveEffect.EffectRange);
-                this.currentScene = E_DungeonScene.SelectDAITargetToDungeonSquare;
+                this.MoveScene(E_DungeonScene.SelectDAITargetToDungeonSquare);
                 break;
             case E_DungeonActiveEffectTargetType _:
                 throw new Exception();
@@ -451,7 +475,7 @@ public class DungeonManager : MonoBehaviour
         switch (targetType)
         {
             case E_DungeonActiveEffectTargetType.OneAlly:
-                this.currentScene = E_DungeonScene.SelectDASTargetToAlly;
+                this.MoveScene(E_DungeonScene.SelectDASTargetToAlly);
                 break;
             case E_DungeonActiveEffectTargetType.AllAlly:
                 this.targetAllys = this.allys;
@@ -462,11 +486,11 @@ public class DungeonManager : MonoBehaviour
             case E_DungeonActiveEffectTargetType.AllDungeonSquare:
                 SetTargetableDungeonSquare(this.waitActiveEffect.TargetDungeonSquareTypes, this.waitActiveEffect.EffectRange);
                 this.targetDungeonSquares = this.targetableDungeonSquares;
-                this.currentScene = E_DungeonScene.InvokeActiveEffect;
+                this.MoveScene(E_DungeonScene.InvokeActiveEffect);
                 break;
             case E_DungeonActiveEffectTargetType.OneDungeonSquare:
                 SetTargetableDungeonSquare(this.waitActiveEffect.TargetDungeonSquareTypes, this.waitActiveEffect.EffectRange);
-                this.currentScene = E_DungeonScene.SelectDASTargetToDungeonSquare;
+                this.MoveScene(E_DungeonScene.SelectDASTargetToDungeonSquare);
                 break;
             case E_DungeonActiveEffectTargetType _:
                 throw new Exception();
@@ -488,7 +512,7 @@ public class DungeonManager : MonoBehaviour
         {
             s += i.ToString() + ":" + this.haveDungeonActiveItems[i].EffectName;
         }
-        this.dungeonUIManager.AnnounceByText(s);
+        this.AnnounceByText(s);
     }
 
     /// <summary>
@@ -501,7 +525,7 @@ public class DungeonManager : MonoBehaviour
         {
             s += i.ToString() + ":(" + this.allys[i].CharaClass.CharaName + "):" + this.allys[i].PC.HaveDungeonActiveSkillID.ToString() + "\n";
         }
-        this.dungeonUIManager.AnnounceByText(s);
+        this.AnnounceByText(s);
     }
 
     /// <summary>
@@ -816,25 +840,25 @@ public class DungeonManager : MonoBehaviour
         {
             this.CurrentMovingDirection = E_Direction.Up;
             MoveDungeonSquare(E_Direction.Up);
-            this.currentScene = E_DungeonScene.MovingDungeonSquare;
+            this.MoveScene(E_DungeonScene.MovingDungeonSquare);
         }
         else if (Input.GetKeyDown(KeyCode.D) && CurrentMovingDirection != E_Direction.Left && AbleMoveDirection(E_Direction.Right))
         {
             this.CurrentMovingDirection = E_Direction.Right;
             MoveDungeonSquare(E_Direction.Right);
-            this.currentScene = E_DungeonScene.MovingDungeonSquare;
+            this.MoveScene(E_DungeonScene.MovingDungeonSquare);
         }
         else if (Input.GetKeyDown(KeyCode.S) && CurrentMovingDirection != E_Direction.Up && AbleMoveDirection(E_Direction.Down))
         {
             this.CurrentMovingDirection = E_Direction.Down;
             MoveDungeonSquare(E_Direction.Down);
-            this.currentScene = E_DungeonScene.MovingDungeonSquare;
+            this.MoveScene(E_DungeonScene.MovingDungeonSquare);
         }
         else if (Input.GetKeyDown(KeyCode.A) && CurrentMovingDirection != E_Direction.Right && AbleMoveDirection(E_Direction.Left))
         {
             this.CurrentMovingDirection = E_Direction.Left;
             MoveDungeonSquare(E_Direction.Left);
-            this.currentScene = E_DungeonScene.MovingDungeonSquare;
+            this.MoveScene(E_DungeonScene.MovingDungeonSquare);
         }
     }
 
@@ -847,11 +871,11 @@ public class DungeonManager : MonoBehaviour
         {
             //初期化処理?
             this.RemainingAmountOfMovement = 0;
-            this.currentScene = E_DungeonScene.WaitDungeonSquareEvent;
+            this.MoveScene(E_DungeonScene.WaitDungeonSquareEvent);
         }else if (IsJunction(this.CurrentMovingDirection))
         {
             Debug.Log("進行方向を選択してください");
-            this.currentScene = E_DungeonScene.SelectMoveDirection;
+            this.MoveScene(E_DungeonScene.SelectMoveDirection);
         }
         else
         {
@@ -931,7 +955,7 @@ public class DungeonManager : MonoBehaviour
         {
             s += "[" + position.Row + "," +  position.Column + "]" +  DungeonManager.GetStringDungeonSquareType(this.currentFloorDungeonSquares[position.Row, position.Column]) + "\n";
         }
-        this.dungeonUIManager.AnnounceByText(s);
+        this.AnnounceByText(s);
     }
 
     /// <summary>
@@ -952,7 +976,7 @@ public class DungeonManager : MonoBehaviour
         }else if (Input.GetKeyDown(KeyCode.Return))
         {
             this.targetAllys = new List<BattleCharacter>() { this.allys[this.currentIndexOfTargetableAllys] };
-            this.currentScene = E_DungeonScene.InvokeActiveEffect;
+            this.MoveScene(E_DungeonScene.InvokeActiveEffect);
         }
     }
 
@@ -976,7 +1000,7 @@ public class DungeonManager : MonoBehaviour
         {
             //ターゲット決定処理
             this.targetDungeonSquares = new List<PositionXY>() { this.targetableDungeonSquares[this.currentIndexOfTargetableDungeonSquares] };
-            this.currentScene = E_DungeonScene.InvokeActiveEffect;
+            this.MoveScene(E_DungeonScene.InvokeActiveEffect);
         }
     }
     public void AddHaveItem(E_DungeonActiveItem itemId)
