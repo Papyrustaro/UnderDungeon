@@ -164,13 +164,17 @@ public class DungeonManager : MonoBehaviour
     /// </summary>
     public E_Direction CurrentMovingDirection { get; set; } = E_Direction.None;
 
+    /// <summary>
+    /// アナウンスが必要か(必要ならtrue)
+    /// </summary>
+    public bool NeedAnnounce { get; set; } = true;
+
     private void Start()
     {
         //this.mapManager.GenerateFloor(this.currentFloorDungeonSquares);
         this.GenerateFloor(this.mapManager.MapWidth, this.mapManager.MapHeight);
         this.dungeonSquaresFunc.SetMayApeearDungeonSquares(this.mapManager.MayApeearDungeonSquares);
         Debug.Log(this.currentFloorDungeonSquares[0, 0]);
-        SelectAction();
         this.currentScene = E_DungeonScene.SelectAction;
     }
 
@@ -189,6 +193,7 @@ public class DungeonManager : MonoBehaviour
             case E_DungeonScene.WaitSetFirstData:
                 break;
             case E_DungeonScene.SelectAction:
+                if (NeedAnnounce) AnnounceByText("0.サイコロを投げる, 1.アイテム使用, 2.スキル使用, 3.マップ確認, 4.パーティ確認");
                 InputSelectAction();
                 break;
             case E_DungeonScene.SelectDAI:
@@ -231,19 +236,16 @@ public class DungeonManager : MonoBehaviour
                 //マスイベント処理
                 this.dungeonSquaresFunc.DungeonSquareEvent(this, this.currentFloorDungeonSquares[CurrentLocationRow, CurrentLocationColumn]);
                 this.currentScene = E_DungeonScene.SelectAction;
+                this.NeedAnnounce = true;
                 break;
         }
     }
 
-    /// <summary>
-    /// 行動選択の入力受付(アイテム・スキル使用、サイコロ投げる、マップ見るなど)
-    /// </summary>
-    private void SelectAction()
+    private void AnnounceByText(string announceText)
     {
-        this.dungeonUIManager.AnnounceByText("0.サイコロを投げる, 1.アイテム使用, 2.スキル使用, 3.マップ確認, 4.パーティ確認");
+        this.dungeonUIManager.AnnounceByText(announceText);
+        this.NeedAnnounce = false;
     }
-
-    
 
     /// <summary>
     /// 行動選択の入力受付(0:サイコロ, 1:アイテム使用, 2:DAS発動, 3:マップ確認, 4:パーティ確認)
@@ -576,7 +578,7 @@ public class DungeonManager : MonoBehaviour
                 }
                 break;
             case 1:
-                Debug.Log("マップ全体可視化");
+                //マップ全体可視化
                 this.mapManager.SetFlagUnderstandDungeonSquareType(this.understandDungeonSquareType, true);
                 break;
             case 2:
@@ -810,12 +812,30 @@ public class DungeonManager : MonoBehaviour
     /// </summary>
     private void InputMoveDirection()
     {
-        if (Input.GetKeyDown(KeyCode.W) && CurrentMovingDirection != E_Direction.Down && AbleMoveDirection(E_Direction.Up)) this.CurrentMovingDirection = E_Direction.Up;
-        else if (Input.GetKeyDown(KeyCode.D) && CurrentMovingDirection != E_Direction.Left && AbleMoveDirection(E_Direction.Right)) this.CurrentMovingDirection = E_Direction.Right;
-        else if (Input.GetKeyDown(KeyCode.S) && CurrentMovingDirection != E_Direction.Up && AbleMoveDirection(E_Direction.Down)) this.CurrentMovingDirection = E_Direction.Down;
-        else if (Input.GetKeyDown(KeyCode.A) && CurrentMovingDirection != E_Direction.Right && AbleMoveDirection(E_Direction.Left)) this.CurrentMovingDirection = E_Direction.Left;
-
-        this.currentScene = E_DungeonScene.MovingDungeonSquare; //入力終了フラグ
+        if (Input.GetKeyDown(KeyCode.W) && CurrentMovingDirection != E_Direction.Down && AbleMoveDirection(E_Direction.Up))
+        {
+            this.CurrentMovingDirection = E_Direction.Up;
+            MoveDungeonSquare(E_Direction.Up);
+            this.currentScene = E_DungeonScene.MovingDungeonSquare;
+        }
+        else if (Input.GetKeyDown(KeyCode.D) && CurrentMovingDirection != E_Direction.Left && AbleMoveDirection(E_Direction.Right))
+        {
+            this.CurrentMovingDirection = E_Direction.Right;
+            MoveDungeonSquare(E_Direction.Right);
+            this.currentScene = E_DungeonScene.MovingDungeonSquare;
+        }
+        else if (Input.GetKeyDown(KeyCode.S) && CurrentMovingDirection != E_Direction.Up && AbleMoveDirection(E_Direction.Down))
+        {
+            this.CurrentMovingDirection = E_Direction.Down;
+            MoveDungeonSquare(E_Direction.Down);
+            this.currentScene = E_DungeonScene.MovingDungeonSquare;
+        }
+        else if (Input.GetKeyDown(KeyCode.A) && CurrentMovingDirection != E_Direction.Right && AbleMoveDirection(E_Direction.Left))
+        {
+            this.CurrentMovingDirection = E_Direction.Left;
+            MoveDungeonSquare(E_Direction.Left);
+            this.currentScene = E_DungeonScene.MovingDungeonSquare;
+        }
     }
 
     /// <summary>
@@ -836,11 +856,10 @@ public class DungeonManager : MonoBehaviour
         else
         {
             MoveDungeonSquare(this.CurrentMovingDirection);
-            this.RemainingAmountOfMovement--;
         }
     }
     /// <summary>
-    /// directionの方向に1マス移動する
+    /// directionの方向に1マス移動する(残り移動量-1)
     /// </summary>
     public void MoveDungeonSquare(E_Direction direction)
     {
@@ -864,6 +883,7 @@ public class DungeonManager : MonoBehaviour
                 break;
         }
         //this.WaitDungeonSquareEvent = true;
+        this.RemainingAmountOfMovement--;
         Debug.Log("row/column = " + CurrentLocationRow + "/" + CurrentLocationColumn);
     }
 

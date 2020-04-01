@@ -44,9 +44,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mayApeearDungeonActiveItems:
-  - {fileID: 6155084913094239865, guid: 195e1ce4806345143b962f71a3ef8f52, type: 3}
-  - {fileID: 6310726381487290578, guid: e9647a502ed75cf479e313d80a77565b, type: 3}
-  - {fileID: 5154817061786871977, guid: b44819d612680404bafcc2f2563eeef3, type: 3}
+  - {fileID: 114942000187379210, guid: 195e1ce4806345143b962f71a3ef8f52, type: 3}
+  - {fileID: 114284534676414212, guid: e9647a502ed75cf479e313d80a77565b, type: 3}
+  - {fileID: 1981961961123053877, guid: b44819d612680404bafcc2f2563eeef3, type: 3}
   mayApeearDungeonPassiveItems:
   - {fileID: 6543817864932578012, guid: 6300b6d7606121e46b14f2a2cc112e7a, type: 3}
   - {fileID: 6834273460707874119, guid: c3f532898f844bd4ea5ee152ccd2c4b5, type: 3}

@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5154817061786871990}
-  - component: {fileID: 5154817061786871977}
+  - component: {fileID: 1981961961123053877}
   m_Layer: 0
   m_Name: DAI_2Sample
   m_TagString: Untagged
@@ -31,7 +31,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &5154817061786871977
+--- !u!114 &1981961961123053877
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -40,10 +40,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 5154817061786871991}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cb4fe727709f87c409b931d35b73e835, type: 3}
+  m_Script: {fileID: 11500000, guid: 416f01d53ca78a44294de80d633f028c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  effectType: 9
-  description: "DAI2_\u6E80\u8179\u5EA6\u56DE\u5FA9"
+  description: "\u6E80\u8179\u5EA650%\u56DE\u5FA9"
   id: 2
-  sellPrice: 50
+  sellPrice: 100
+  recoverRateOrValue: 0.5
