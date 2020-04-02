@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &8524167073632810053
+--- !u!1 &7962764388449604330
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,22 +8,22 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 7564510979144882380}
-  - component: {fileID: 1908839966105076739}
+  - component: {fileID: 3451255752988501421}
+  - component: {fileID: 7823956362790169906}
   m_Layer: 0
-  m_Name: DAI_1Sample
+  m_Name: DAS_4Sample
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &7564510979144882380
+--- !u!4 &3451255752988501421
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8524167073632810053}
+  m_GameObject: {fileID: 7962764388449604330}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
@@ -31,20 +31,22 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1908839966105076739
+--- !u!114 &7823956362790169906
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8524167073632810053}
+  m_GameObject: {fileID: 7962764388449604330}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 70e61a054c3f1e945a8f2ff8b5d17151, type: 3}
+  m_Script: {fileID: 11500000, guid: d8463e51083cc5a468f2c1c0b6849d88, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  description: "\u5473\u65B91\u4EBA\u306EDsp\u30922\u5897\u52A0\u3055\u305B\u308B"
-  id: 1
-  sellPrice: 1000
-  increaseValue: 2
-  targetTypeToAlly: 0
+  description: "\u7F60\u30DE\u30B9\u3092\u7948\u7977\u30DE\u30B9\u306B\u5909\u5316\u3055\u305B\u308B"
+  id: 4
+  needBsp: 0
+  targetTypeToDungeonSquare: 0
+  targetDungeonSquareTypes: 04000000
+  afterChangeDungeonSquareType: 5
+  effectRange: 10

@@ -58,7 +58,7 @@ public abstract class DungeonActiveEffect : MonoBehaviour
         }
     }
 
-    public virtual E_DungeonActiveEffectTargetType DungeonActiveEffectTargetType => throw new System.Exception();
+    public virtual E_DungeonActiveEffectTargetType DungeonActiveEffectTargetType => E_DungeonActiveEffectTargetType.Other;
     public virtual List<E_DungeonSquareType> TargetDungeonSquareTypes => throw new System.Exception();
     public virtual int EffectRange => throw new System.Exception();
 }

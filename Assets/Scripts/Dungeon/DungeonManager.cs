@@ -207,6 +207,7 @@ public class DungeonManager : MonoBehaviour
                 InputTargetToDungeonSquare();
                 break;
             case E_DungeonScene.SelectDAS:
+                if (NeedAnnounce) ShowHaveDungeonActiveSkill();
                 InputInvokeDungeonActiveSkill();
                 break;
             case E_DungeonScene.SelectDASTargetToAlly:
@@ -537,8 +538,81 @@ public class DungeonManager : MonoBehaviour
         {
             if (Input.GetKeyDown(i.ToString()))
             {
+                DungeonActiveSkill skill = this.dungeonActiveEffectsFunc.GetSkill(this.allys[i].PC.HaveDungeonActiveSkillID);
                 this.dungeonActiveEffectsFunc.GetSkill(this.allys[i].PC.HaveDungeonActiveSkillID).EffectFunc(this);
             }
+        }
+    }
+
+    private void UseDungeonActiveItem(DungeonActiveItem item)
+    {
+        switch (item.DungeonActiveEffectTargetType)
+        {
+            case E_DungeonActiveEffectTargetType.Other:
+                item.EffectFunc(this);
+                MoveScene(E_DungeonScene.SelectAction);
+                break;
+            case E_DungeonActiveEffectTargetType.AllAlly:
+                this.targetAllys = this.allys;
+                item.EffectFunc(this);
+                MoveScene(E_DungeonScene.SelectAction);
+                break;
+            case E_DungeonActiveEffectTargetType.AllDungeonSquare:
+                SetTargetableDungeonSquare(item.TargetDungeonSquareTypes, item.EffectRange);
+                this.targetDungeonSquares = this.targetableDungeonSquares;
+                item.EffectFunc(this);
+                MoveScene(E_DungeonScene.SelectAction);
+                break;
+            case E_DungeonActiveEffectTargetType.OneAlly:
+                this.waitActiveEffect = item;
+                MoveScene(E_DungeonScene.SelectDAITargetToAlly);
+                break;
+            case E_DungeonActiveEffectTargetType.OneDungeonSquare:
+                this.waitActiveEffect = item;
+                MoveScene(E_DungeonScene.SelectDAITargetToDungeonSquare);
+                break;
+            case E_DungeonActiveEffectTargetType.Error:
+                throw new Exception();
+        }
+    }
+
+    
+    private void InvokeDungeonActiveSkill(DungeonActiveSkill skill, BattleCharacter invoker)
+    {
+        switch (skill.DungeonActiveEffectTargetType)
+        {
+            case E_DungeonActiveEffectTargetType.Other:
+                skill.EffectFunc(this);
+                MoveScene(E_DungeonScene.SelectAction);
+                break;
+            case E_DungeonActiveEffectTargetType.AllAlly:
+                this.targetAllys = this.allys;
+                skill.EffectFunc(this);
+                MoveScene(E_DungeonScene.SelectAction);
+                break;
+            case E_DungeonActiveEffectTargetType.AllDungeonSquare:
+                SetTargetableDungeonSquare(skill.TargetDungeonSquareTypes, skill.EffectRange);
+                this.targetDungeonSquares = this.targetableDungeonSquares;
+                skill.EffectFunc(this);
+                MoveScene(E_DungeonScene.SelectAction);
+                break;
+            case E_DungeonActiveEffectTargetType.OneAlly:
+                this.waitActiveEffect = skill;
+                MoveScene(E_DungeonScene.SelectDASTargetToAlly);
+                break;
+            case E_DungeonActiveEffectTargetType.OneDungeonSquare:
+                this.waitActiveEffect = skill;
+                MoveScene(E_DungeonScene.SelectDASTargetToDungeonSquare);
+                break;
+            case E_DungeonActiveEffectTargetType.SelfAlly:
+                this.targetAllys = new List<BattleCharacter>() { invoker };
+                skill.EffectFunc(this);
+                MoveScene(E_DungeonScene.SelectAction);
+                break;
+            case E_DungeonActiveEffectTargetType.Error:
+                throw new Exception();
+             
+
         }
     }
     private void GenerateFloor(int rowSize, int columnSize)

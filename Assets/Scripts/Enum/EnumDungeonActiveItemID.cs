@@ -11,4 +11,6 @@ public enum E_DungeonActiveItem
     Dsp回復A,
     満腹度回復A,
     サイコロ変化A,
+    味方全員Hp全回復,
+
 }
