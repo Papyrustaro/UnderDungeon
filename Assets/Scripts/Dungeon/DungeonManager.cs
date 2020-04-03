@@ -175,7 +175,7 @@ public class DungeonManager : MonoBehaviour
         this.GenerateFloor(this.mapManager.MapWidth, this.mapManager.MapHeight);
         this.dungeonSquaresFunc.SetMayApeearDungeonSquares(this.mapManager.MayApeearDungeonSquares);
         this.MoveScene(E_DungeonScene.SelectAction);
-        InitSet();
+        FirstSet();
         SetFlagUnderstandDungeonSquareType(true);
     }
 
@@ -186,12 +186,20 @@ public class DungeonManager : MonoBehaviour
         {
             InputBack();
         }
+        if (Input.GetKeyDown(KeyCode.M))
+        {
+            ViewMap();
+        }
+        if (Input.GetKeyDown(KeyCode.P))
+        {
+            Debug.Log("現在いる座標: [" + this.CurrentLocationRow + "," + this.CurrentLocationColumn + "]");
+        }
     }
 
     /// <summary>
     /// 各データの初期化。Startで呼ぶ.
     /// </summary>
-    private void InitSet()
+    private void FirstSet()
     {
         this.understandDungeonSquareType = new bool[this.mapManager.MapWidth, this.mapManager.MapHeight];
     }
@@ -362,7 +370,8 @@ public class DungeonManager : MonoBehaviour
             }
             s += "\n";
         }
-        this.AnnounceByText(s);
+        //this.AnnounceByText(s);
+        Debug.Log(s);
     }
 
     /// <summary>
@@ -426,10 +435,19 @@ public class DungeonManager : MonoBehaviour
         }
         s += "]";
         this.AnnounceByText(s);
-
+        
         this.AnnounceByText("出た目:" + diceEye.ToString());
-
-        this.RemainingAmountOfMovement = diceEye;
+        if(MovementIncreaseValue > 0 || MovementRate > 1)
+        {
+            this.RemainingAmountOfMovement = (diceEye + MovementIncreaseValue) * MovementRate;
+            this.AnnounceByText("(効果適用)目の数: " + RemainingAmountOfMovement);
+        }
+        else
+        {
+            this.RemainingAmountOfMovement = diceEye;
+        }
+        this.MovementRate = 1;
+        this.MovementIncreaseValue = 0;
         this.MoveScene(E_DungeonScene.MovingDungeonSquare); //移動に遷移
     }
 
@@ -905,7 +923,7 @@ public class DungeonManager : MonoBehaviour
             this.MoveScene(E_DungeonScene.WaitDungeonSquareEvent);
         }else if (IsJunction(this.CurrentMovingDirection))
         {
-            Debug.Log("進行方向を選択してください");
+            Debug.Log("進行方向を選択してください(現在の進行方向: " + this.CurrentMovingDirection + ")"); ;
             this.MoveScene(E_DungeonScene.SelectMoveDirection);
         }
         else
