@@ -16,6 +16,6 @@ public class DAI_ChangeDungeonSquareType : DungeonActiveItem
 
     public override void EffectFunc(DungeonManager dm)
     {
-        dm.ChangeDungeonSquareType(targetDungeonSquareTypes, afterChangeDungeonSquareType, effectRange);
+        dm.ChangeDungeonSquareType(afterChangeDungeonSquareType);
     }
 }

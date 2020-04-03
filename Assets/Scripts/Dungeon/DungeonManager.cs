@@ -448,6 +448,7 @@ public class DungeonManager : MonoBehaviour
         }
         this.MovementRate = 1;
         this.MovementIncreaseValue = 0;
+        this.changedDice = null;
         this.MoveScene(E_DungeonScene.MovingDungeonSquare); //移動に遷移
     }
 
@@ -971,10 +972,16 @@ public class DungeonManager : MonoBehaviour
         Debug.Log("次のサイコロの目を" + s + "に変更");
     }
 
-    public void ChangeDungeonSquareType(List<E_DungeonSquareType> targetType, E_DungeonSquareType afterChangeDungeonSquareType, int effectRange)
+    /// <summary>
+    /// targetDungeonSquaresに格納されているマスのタイプをafterに変化させる
+    /// </summary>
+    /// <param name="afterChangeDungeonSquareType">変化先のマスタイプ</param>
+    public void ChangeDungeonSquareType(E_DungeonSquareType afterChangeDungeonSquareType)
     {
-        //targetTypeに一致するマスからひとつ選択する処理(または戻る)
-        //選択したマスをafterChangeのマスに変化させる処理
+        foreach(PositionXY position in this.targetDungeonSquares)
+        {
+            this.currentFloorDungeonSquares[position.Row, position.Column] = afterChangeDungeonSquareType;
+        }
     }
 
     /// <summary>
@@ -991,7 +998,14 @@ public class DungeonManager : MonoBehaviour
             {
                 foreach(E_DungeonSquareType dsType in targetTypes)
                 {
-                    if (this.currentFloorDungeonSquares[i, j] == dsType) this.targetableDungeonSquares.Add(new PositionXY(i, j));
+                    try
+                    {
+                        if (this.currentFloorDungeonSquares[i, j] == dsType) this.targetableDungeonSquares.Add(new PositionXY(i, j));
+                    }
+                    catch (IndexOutOfRangeException)
+                    {
+                        break;
+                    }
                 }
             }
         }

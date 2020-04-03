@@ -16,6 +16,6 @@ public class DAS_ChangeDungeonSquareType : DungeonActiveSkill
 
     public override void EffectFunc(DungeonManager dm)
     {
-        dm.ChangeDungeonSquareType(targetDungeonSquareTypes, afterChangeDungeonSquareType, effectRange);
+        dm.ChangeDungeonSquareType(afterChangeDungeonSquareType);
     }
 }

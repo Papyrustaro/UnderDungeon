@@ -12,4 +12,5 @@ public enum E_DungeonActiveSkill
     回復薬獲得A,
     Hp回復A,
     マス変化A,
+    Debug,
 }
