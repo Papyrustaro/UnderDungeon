@@ -968,8 +968,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 33a1225b5121b8249b2b6508acefbbb8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mapWidth: 10
-  mapHeight: 10
+  mapWidth: 5
+  mapHeight: 5
   cameraObject: {fileID: 64831829}
   wallSquare: {fileID: 7794394096360812020, guid: 59aac5ead1627d8448a66407c2cdeb3b,
     type: 3}

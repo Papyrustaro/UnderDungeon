@@ -6,7 +6,7 @@ public abstract class DungeonActiveSkill : DungeonActiveEffect
 {
     [SerializeField]
     private E_DungeonActiveSkill id;
-    [SerializeField] private int needBsp;
+    [SerializeField] private int needDsp;
 
     /// <summary>
     /// スキルID
@@ -17,4 +17,6 @@ public abstract class DungeonActiveSkill : DungeonActiveEffect
     /// スキル名
     /// </summary>
     public override string EffectName => id.ToString();
+
+    public int NeedDsp => this.needDsp;
 }

@@ -174,13 +174,26 @@ public class DungeonManager : MonoBehaviour
         //this.mapManager.GenerateFloor(this.currentFloorDungeonSquares);
         this.GenerateFloor(this.mapManager.MapWidth, this.mapManager.MapHeight);
         this.dungeonSquaresFunc.SetMayApeearDungeonSquares(this.mapManager.MayApeearDungeonSquares);
-        Debug.Log(this.currentFloorDungeonSquares[0, 0]);
         this.MoveScene(E_DungeonScene.SelectAction);
+        InitSet();
+        SetFlagUnderstandDungeonSquareType(true);
     }
 
     private void Update()
     {
         ActionInCurrentScene();
+        if (Input.GetKeyDown(KeyCode.Backspace))
+        {
+            InputBack();
+        }
+    }
+
+    /// <summary>
+    /// 各データの初期化。Startで呼ぶ.
+    /// </summary>
+    private void InitSet()
+    {
+        this.understandDungeonSquareType = new bool[this.mapManager.MapWidth, this.mapManager.MapHeight];
     }
 
     /// <summary>
@@ -292,11 +305,11 @@ public class DungeonManager : MonoBehaviour
         }else if (Input.GetKeyDown(((int)E_DungeonPlayerSelect.VerificateMap).ToString()))
         {
             //マップ確認に遷移
-            ViewMap();
+            this.MoveScene(E_DungeonScene.ViewMap);
         }else if (Input.GetKeyDown(((int)E_DungeonPlayerSelect.VerificateAlly).ToString()))
         {
             //パーティ確認に遷移
-            ShowAllysStatus();
+            this.MoveScene(E_DungeonScene.ViewAllyStatus);
         }
     }
 
@@ -432,76 +445,11 @@ public class DungeonManager : MonoBehaviour
         {
             if (Input.GetKeyDown(i.ToString()))
             {
-                this.haveDungeonActiveItems[i].EffectFunc(this);
+                UseDungeonActiveItem(this.haveDungeonActiveItems[i]);
             }
         }
     }
 
-    /// <summary>
-    /// DAIの味方へのターゲットをセット
-    /// </summary>
-    /// <param name="targetType">DAIのターゲットタイプ</param>
-    private void SetDungeonActiveItemTargetToAlly(E_DungeonActiveEffectTargetType targetType)
-    {
-        switch (targetType)
-        {
-            case E_DungeonActiveEffectTargetType.OneAlly:
-                this.MoveScene(E_DungeonScene.SelectDAITargetToAlly);
-                break;
-            case E_DungeonActiveEffectTargetType.AllAlly:
-                this.targetAllys = this.allys;
-                this.MoveScene(E_DungeonScene.InvokeActiveEffect);
-                break;
-            case E_DungeonActiveEffectTargetType.AllDungeonSquare:
-                SetTargetableDungeonSquare(this.waitActiveEffect.TargetDungeonSquareTypes, this.waitActiveEffect.EffectRange);
-                this.targetDungeonSquares = this.targetableDungeonSquares;
-                this.MoveScene(E_DungeonScene.InvokeActiveEffect);
-                break;
-            case E_DungeonActiveEffectTargetType.OneDungeonSquare:
-                SetTargetableDungeonSquare(this.waitActiveEffect.TargetDungeonSquareTypes, this.waitActiveEffect.EffectRange);
-                this.MoveScene(E_DungeonScene.SelectDAITargetToDungeonSquare);
-                break;
-            case E_DungeonActiveEffectTargetType _:
-                throw new Exception();
-        }
-    }
-
-    /// <summary>
-    /// DASの味方へのターゲットセット
-    /// </summary>
-    /// <param name="targetType">DASのターゲットタイプ</param>
-    /// <param name="invoker">スキル発動者</param>
-    private void SetDungeonActiveSkillTargetToAlly(E_DungeonActiveEffectTargetType targetType, BattleCharacter invoker)
-    {
-        switch (targetType)
-        {
-            case E_DungeonActiveEffectTargetType.OneAlly:
-                this.MoveScene(E_DungeonScene.SelectDASTargetToAlly);
-                break;
-            case E_DungeonActiveEffectTargetType.AllAlly:
-                this.targetAllys = this.allys;
-                break;
-            case E_DungeonActiveEffectTargetType.SelfAlly:
-                this.targetAllys = new List<BattleCharacter>() { invoker };
-                break;
-            case E_DungeonActiveEffectTargetType.AllDungeonSquare:
-                SetTargetableDungeonSquare(this.waitActiveEffect.TargetDungeonSquareTypes, this.waitActiveEffect.EffectRange);
-                this.targetDungeonSquares = this.targetableDungeonSquares;
-                this.MoveScene(E_DungeonScene.InvokeActiveEffect);
-                break;
-            case E_DungeonActiveEffectTargetType.OneDungeonSquare:
-                SetTargetableDungeonSquare(this.waitActiveEffect.TargetDungeonSquareTypes, this.waitActiveEffect.EffectRange);
-                this.MoveScene(E_DungeonScene.SelectDASTargetToDungeonSquare);
-                break;
-            case E_DungeonActiveEffectTargetType _:
-                throw new Exception();
-        }
-    }
-
-    private void SetTargetOfDungeonActiveEffect(E_DungeonActiveEffectTargetType targetType)
-    {
-
-    }
     /// <summary>
     /// 所持しているDAIを先頭から番号づけて表示
     /// </summary>
@@ -539,11 +487,16 @@ public class DungeonManager : MonoBehaviour
             if (Input.GetKeyDown(i.ToString()))
             {
                 DungeonActiveSkill skill = this.dungeonActiveEffectsFunc.GetSkill(this.allys[i].PC.HaveDungeonActiveSkillID);
-                this.dungeonActiveEffectsFunc.GetSkill(this.allys[i].PC.HaveDungeonActiveSkillID).EffectFunc(this);
+                if (skill.NeedDsp > this.allys[i].Dsp) continue;
+                InvokeDungeonActiveSkill(skill, this.allys[i]);
             }
         }
     }
 
+    /// <summary>
+    /// DAIを使用する。対象選択があれば対象選択へ移動。なければ発動。
+    /// </summary>
+    /// <param name="item">使用するDAI</param>
     private void UseDungeonActiveItem(DungeonActiveItem item)
     {
         switch (item.DungeonActiveEffectTargetType)
@@ -576,7 +529,11 @@ public class DungeonManager : MonoBehaviour
         }
     }
 
-    
+    /// <summary>
+    /// DASをinvokerが発動する。対象選択があれば対象選択へ移動。なければ発動
+    /// </summary>
+    /// <param name="skill">発動するDAS</param>
+    /// <param name="invoker">発動者</param>
     private void InvokeDungeonActiveSkill(DungeonActiveSkill skill, BattleCharacter invoker)
     {
         switch (skill.DungeonActiveEffectTargetType)
@@ -644,7 +601,7 @@ public class DungeonManager : MonoBehaviour
                 break;
             case 1:
                 Debug.Log("マップ忘却");
-                this.mapManager.SetFlagUnderstandDungeonSquareType(this.understandDungeonSquareType, false);
+                this.mapManager.SetFlagUnderstandDungeonSquareType(ref this.understandDungeonSquareType, false);
                 break;
             case 2:
                 Debug.Log("満腹度半減");
@@ -677,7 +634,7 @@ public class DungeonManager : MonoBehaviour
                 break;
             case 1:
                 //マップ全体可視化
-                this.mapManager.SetFlagUnderstandDungeonSquareType(this.understandDungeonSquareType, true);
+                this.mapManager.SetFlagUnderstandDungeonSquareType(ref this.understandDungeonSquareType, true);
                 break;
             case 2:
                 Debug.Log("満腹度全回復");
@@ -790,7 +747,7 @@ public class DungeonManager : MonoBehaviour
                 break;
             case 9:
                 Debug.Log("マップ忘却");
-                this.mapManager.SetFlagUnderstandDungeonSquareType(this.understandDungeonSquareType, false);
+                this.mapManager.SetFlagUnderstandDungeonSquareType(ref this.understandDungeonSquareType, false);
                 break;
             case 10:
                 Debug.Log("デメリットアイテム獲得");
@@ -1142,7 +1099,7 @@ public class DungeonManager : MonoBehaviour
 
     public void SetFlagUnderstandDungeonSquareType(bool flag)
     {
-        this.mapManager.SetFlagUnderstandDungeonSquareType(this.understandDungeonSquareType, flag);
+        this.mapManager.SetFlagUnderstandDungeonSquareType(ref this.understandDungeonSquareType, flag);
     }
 }
 
