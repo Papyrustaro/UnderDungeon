@@ -221,24 +221,27 @@ public class DungeonManager : MonoBehaviour
                 if (NeedAnnounce) ShowHaveDungeonActiveItem();
                 InputUseDungeonActiveItem();
                 break;
-            case E_DungeonScene.SelectDAITargetToAlly:
-                InputTargetToAlly();
-                break;
-            case E_DungeonScene.SelectDAITargetToDungeonSquare:
-                InputTargetToDungeonSquare();
-                break;
             case E_DungeonScene.SelectDAS:
                 if (NeedAnnounce) ShowHaveDungeonActiveSkill();
                 InputInvokeDungeonActiveSkill();
                 break;
+            case E_DungeonScene.SelectDAITargetToAlly:
             case E_DungeonScene.SelectDASTargetToAlly:
+                if (NeedAnnounce) AnnounceByText("現在選択中の味方: " + allys[currentIndexOfTargetableAllys].CharaClass.CharaName);
                 InputTargetToAlly();
                 break;
+            case E_DungeonScene.SelectDAITargetToDungeonSquare:
             case E_DungeonScene.SelectDASTargetToDungeonSquare:
+                if (NeedAnnounce)
+                {
+                    ShowTargetableDungeonSquares();
+                    AnnounceByText("現在選択中のマス:[" + targetableDungeonSquares[0].Row + "," + targetableDungeonSquares[0].Column + "]" + DungeonManager.GetStringDungeonSquareType(currentFloorDungeonSquares[targetableDungeonSquares[0].Row, targetableDungeonSquares[0].Column]));
+                }
                 InputTargetToDungeonSquare();
                 break;
             case E_DungeonScene.InvokeActiveEffect:
                 this.waitActiveEffect.EffectFunc(this);
+                this.waitActiveEffect = null;
                 this.MoveScene(E_DungeonScene.SelectAction);
                 break;
             case E_DungeonScene.MovingDungeonSquare:
@@ -275,13 +278,16 @@ public class DungeonManager : MonoBehaviour
         {
             case E_DungeonScene.SelectAction:
             case E_DungeonScene.SelectDAI:
-            case E_DungeonScene.SelectDAITargetToAlly:
             case E_DungeonScene.SelectDAITargetToDungeonSquare:
             case E_DungeonScene.SelectDAS:
-            case E_DungeonScene.SelectDASTargetToAlly:
             case E_DungeonScene.SelectDASTargetToDungeonSquare:
             case E_DungeonScene.SelectMoveDirection:
                 this.NeedAnnounce = true;
+                break;
+            case E_DungeonScene.SelectDASTargetToAlly:
+            case E_DungeonScene.SelectDAITargetToAlly:
+                this.NeedAnnounce = true;
+                this.currentIndexOfTargetableAllys = 0;
                 break;
         }
     }
@@ -541,10 +547,12 @@ public class DungeonManager : MonoBehaviour
                 break;
             case E_DungeonActiveEffectTargetType.OneDungeonSquare:
                 this.waitActiveEffect = item;
+                SetTargetableDungeonSquare(item.TargetDungeonSquareTypes, item.EffectRange);
                 MoveScene(E_DungeonScene.SelectDAITargetToDungeonSquare);
                 break;
             case E_DungeonActiveEffectTargetType.Error:
                 throw new Exception();
+
         }
     }
 
@@ -578,6 +586,7 @@ public class DungeonManager : MonoBehaviour
                 break;
             case E_DungeonActiveEffectTargetType.OneDungeonSquare:
                 this.waitActiveEffect = skill;
+                SetTargetableDungeonSquare(skill.TargetDungeonSquareTypes, skill.EffectRange);
                 MoveScene(E_DungeonScene.SelectDASTargetToDungeonSquare);
                 break;
             case E_DungeonActiveEffectTargetType.SelfAlly:
@@ -588,7 +597,6 @@ public class DungeonManager : MonoBehaviour
             case E_DungeonActiveEffectTargetType.Error:
                 throw new Exception();
              
-
         }
     }
     private void GenerateFloor(int rowSize, int columnSize)
@@ -1009,6 +1017,17 @@ public class DungeonManager : MonoBehaviour
                 }
             }
         }
+
+        if(targetableDungeonSquares.Count < 1)
+        {
+            AnnounceByText("対象にできるマスがありません\n");
+            this.waitActiveEffect = null;
+            MoveScene(E_DungeonScene.SelectDAS);
+        }
+        else
+        {
+            this.currentIndexOfTargetableDungeonSquares = 0;
+        }
     }
 
     private void ShowTargetableDungeonSquares()
@@ -1030,12 +1049,12 @@ public class DungeonManager : MonoBehaviour
         {
             if (this.currentIndexOfTargetableAllys > this.allys.Count - 2) this.currentIndexOfTargetableAllys = 0;
             else this.currentIndexOfTargetableAllys++;
-            Debug.Log("現在選択中の味方:" + this.allys[this.currentIndexOfTargetableAllys]);
+            AnnounceByText("現在選択中の味方:" + this.allys[this.currentIndexOfTargetableAllys]);
         }else if (Input.GetKeyDown(KeyCode.A))
         {
             if (this.currentIndexOfTargetableAllys <= 0) this.currentIndexOfTargetableAllys = this.allys.Count - 1;
             else this.currentIndexOfTargetableAllys--;
-            Debug.Log("現在選択中の味方:" + this.allys[this.currentIndexOfTargetableAllys]);
+            AnnounceByText("現在選択中の味方:" + this.allys[this.currentIndexOfTargetableAllys]);
         }else if (Input.GetKeyDown(KeyCode.Return))
         {
             this.targetAllys = new List<BattleCharacter>() { this.allys[this.currentIndexOfTargetableAllys] };
@@ -1052,12 +1071,14 @@ public class DungeonManager : MonoBehaviour
         {
             if (this.currentIndexOfTargetableDungeonSquares > this.targetableDungeonSquares.Count - 2) this.currentIndexOfTargetableDungeonSquares = 0;
             else this.currentIndexOfTargetableDungeonSquares++;
-            Debug.Log("現在選択中のマス:[" + "," + "]" + DungeonManager.GetStringDungeonSquareType(this.currentFloorDungeonSquares[this.targetableDungeonSquares[this.currentIndexOfTargetableDungeonSquares].Row, this.targetableDungeonSquares[this.currentIndexOfTargetableDungeonSquares].Column]));
+            AnnounceByText("現在選択中のマス:[" + targetableDungeonSquares[currentIndexOfTargetableDungeonSquares].Row + "," + targetableDungeonSquares[currentIndexOfTargetableDungeonSquares].Column + "]" + 
+                DungeonManager.GetStringDungeonSquareType(this.currentFloorDungeonSquares[this.targetableDungeonSquares[this.currentIndexOfTargetableDungeonSquares].Row, this.targetableDungeonSquares[this.currentIndexOfTargetableDungeonSquares].Column]));
         }else if (Input.GetKeyDown(KeyCode.A))
         {
             if (this.currentIndexOfTargetableDungeonSquares <= 0) this.currentIndexOfTargetableDungeonSquares = this.targetableDungeonSquares.Count - 1;
             else this.currentIndexOfTargetableDungeonSquares--;
-            Debug.Log("現在選択中のマス:[" + "," + "]" + DungeonManager.GetStringDungeonSquareType(this.currentFloorDungeonSquares[this.targetableDungeonSquares[this.currentIndexOfTargetableDungeonSquares].Row, this.targetableDungeonSquares[this.currentIndexOfTargetableDungeonSquares].Column]));
+            AnnounceByText("現在選択中のマス:[" + targetableDungeonSquares[currentIndexOfTargetableDungeonSquares].Row + "," + targetableDungeonSquares[currentIndexOfTargetableDungeonSquares].Column + "]" +
+                DungeonManager.GetStringDungeonSquareType(this.currentFloorDungeonSquares[this.targetableDungeonSquares[this.currentIndexOfTargetableDungeonSquares].Row, this.targetableDungeonSquares[this.currentIndexOfTargetableDungeonSquares].Column]));
         }
         else if (Input.GetKeyDown(KeyCode.Return))
         {

@@ -478,7 +478,7 @@ MonoBehaviour:
   - {fileID: 2900296621225300562, guid: 02f559d797569b3498d47446fc008f7d, type: 3}
   - {fileID: 8598278835611485875, guid: 09aaf0b0dc702a94f98ecab0e5956461, type: 3}
   - {fileID: 7823956362790169906, guid: b102e04d47cf3c645a05ee1b88bf9c06, type: 3}
-  - {fileID: 114022702941481188, guid: 2eeab7cc542b49943a57bf91c61a6fc9, type: 3}
+  - {fileID: 114288951912543862, guid: 2eeab7cc542b49943a57bf91c61a6fc9, type: 3}
   dungeonActiveItems:
   - {fileID: 114942000187379210, guid: 195e1ce4806345143b962f71a3ef8f52, type: 3}
   - {fileID: 1908839966105076739, guid: 2a726b7e329c605498cafc020e68d083, type: 3}
