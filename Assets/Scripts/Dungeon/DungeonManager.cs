@@ -177,6 +177,8 @@ public class DungeonManager : MonoBehaviour
         this.MoveScene(E_DungeonScene.SelectAction);
         FirstSet();
         SetFlagUnderstandDungeonSquareType(true);
+
+        HaveGold = 5000000;
     }
 
     private void Update()
@@ -193,6 +195,10 @@ public class DungeonManager : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.P))
         {
             Debug.Log("現在いる座標: [" + this.CurrentLocationRow + "," + this.CurrentLocationColumn + "]");
+        }
+        if (Input.GetKeyDown(KeyCode.G))
+        {
+            Debug.Log("所持G: " + HaveGold);
         }
     }
 
@@ -261,8 +267,7 @@ public class DungeonManager : MonoBehaviour
             case E_DungeonScene.WaitDungeonSquareEvent:
                 //マスイベント処理
                 this.dungeonSquaresFunc.DungeonSquareEvent(this, this.currentFloorDungeonSquares[CurrentLocationRow, CurrentLocationColumn]);
-                this.MoveScene(E_DungeonScene.SelectAction);
-                this.NeedAnnounce = true;
+                //this.MoveScene(E_DungeonScene.SelectAction);
                 break;
         }
     }
@@ -271,7 +276,7 @@ public class DungeonManager : MonoBehaviour
     /// 現在の状態を変化させる
     /// </summary>
     /// <param name="toMoveScene">移動先の状態</param>
-    private void MoveScene(E_DungeonScene toMoveScene)
+    public void MoveScene(E_DungeonScene toMoveScene)
     {
         this.currentScene = toMoveScene;
         switch (toMoveScene)
@@ -291,7 +296,7 @@ public class DungeonManager : MonoBehaviour
                 break;
         }
     }
-    private void AnnounceByText(string announceText)
+    public void AnnounceByText(string announceText)
     {
         this.dungeonUIManager.AnnounceByText(announceText);
         this.NeedAnnounce = false;
