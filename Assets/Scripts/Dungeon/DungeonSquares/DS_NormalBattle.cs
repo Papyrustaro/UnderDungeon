@@ -7,31 +7,33 @@ public class DS_NormalBattle : DungeonSquare
     /// <summary>
     /// 出現しうる敵リスト
     /// </summary>
-    [SerializeField] private List<EnemyCharacter> mayApeearEnemys = new List<EnemyCharacter>();
+    [SerializeField] private List<BattleCharacter> mayApeearEnemys = new List<BattleCharacter>();
 
     public override E_DungeonSquareType SquareType => E_DungeonSquareType.通常戦闘;
 
     public override void SquareEvent(DungeonManager dm)
     {
         Debug.Log("通常戦闘イベント発生");
-        ChooseEnemys();
+        ChooseEnemys(dm);
     }
 
     /// <summary>
     /// 出現する敵選択(2~4体)
     /// </summary>
-    private void ChooseEnemys()
+    private void ChooseEnemys(DungeonManager dm)
     {
-        List<EnemyCharacter> enemys = new List<EnemyCharacter>();
+        List<BattleCharacter> enemys = new List<BattleCharacter>();
         int countOfEnemyKind = this.mayApeearEnemys.Count;
         for(int i = 0; i < UnityEngine.Random.Range(2, 5); i++)
         {
             enemys.Add(this.mayApeearEnemys[UnityEngine.Random.Range(0, countOfEnemyKind)]);
         }
+        dm.Enemys = enemys;
 
-        foreach(EnemyCharacter enemy in enemys)
+        foreach(BattleCharacter enemy in enemys)
         {
-            Debug.Log("敵: " + enemy.CharaName);
+            Debug.Log("敵: " + enemy.CharaClass.CharaName);
         }
+        dm.MoveBattleScene();
     }
 }

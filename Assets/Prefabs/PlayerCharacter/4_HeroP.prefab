@@ -82,7 +82,7 @@ MonoBehaviour:
   useAbleBattleActiveSkillLV: 01000000010000001e0000003c000000
   haveBattlePassiveSkillID: 00000000000000000000000000000000
   useAbleBattlePassiveSkillLV: 14000000320000005000000064000000
-  haveDungeonActiveSkillID: 0
+  haveDungeonActiveSkillID: 5
   useAbleDungeonActiveSkillLV: 0
   haveDungeonPassiveSkillID: 00000000000000000000000000000000
   useAbleDungeonPassiveSkillLV: 0a00000028000000460000005a000000

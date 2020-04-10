@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class DungeonManager : MonoBehaviour
 {
@@ -50,6 +52,7 @@ public class DungeonManager : MonoBehaviour
     private List<PositionXY> targetableDungeonSquares = null; //効果対象にできるマスの座標
     private List<PositionXY> targetDungeonSquares = null; //効果対象にするマスの座標
     private int currentIndexOfTargetableDungeonSquares = 0; //現在選んでいるtargetableDungeonSquaresの番地
+    private bool isFinishFirstSet = false; //ダンジョン潜入直後のセットが終わったかどうか
 
     /// <summary>
     /// ActiveEffect発動前記憶用
@@ -169,20 +172,49 @@ public class DungeonManager : MonoBehaviour
     /// </summary>
     public bool NeedAnnounce { get; set; } = true;
 
+    /// <summary>
+    /// 出現した敵保存用
+    /// </summary>
+    public List<BattleCharacter> Enemys { get; set; } = new List<BattleCharacter>();
+
+    public static DungeonManager Instance
+    {
+        get; private set;
+    }
+
+    private void Awake()
+    {
+        if (Instance != null)
+        {
+            Destroy(this.gameObject);
+            return;
+        }
+        Instance = this;
+        DontDestroyOnLoad(this.gameObject);
+
+
+    }
+
     private void Start()
     {
         //this.mapManager.GenerateFloor(this.currentFloorDungeonSquares);
-        this.GenerateFloor(this.mapManager.MapWidth, this.mapManager.MapHeight);
-        this.dungeonSquaresFunc.SetMayApeearDungeonSquares(this.mapManager.MayApeearDungeonSquares);
-        this.MoveScene(E_DungeonScene.SelectAction);
-        FirstSet();
-        SetFlagUnderstandDungeonSquareType(true);
+        if (!isFinishFirstSet)
+        {
+            Debug.Log(this.mapManager.MapHeight + ":" + this.mapManager.MapWidth);
+            this.GenerateFloor(this.mapManager.MapWidth, this.mapManager.MapHeight);
+            this.dungeonSquaresFunc.SetMayApeearDungeonSquares(this.mapManager.MayApeearDungeonSquares);
+            this.MoveScene(E_DungeonScene.SelectAction);
+            FirstSet();
+            SetFlagUnderstandDungeonSquareType(true);
 
-        HaveGold = 5000000;
+            HaveGold = 5000000;
+            this.isFinishFirstSet = true;
+        }
     }
 
     private void Update()
     {
+        if (this.currentScene == E_DungeonScene.Battle) return;
         ActionInCurrentScene();
         if (Input.GetKeyDown(KeyCode.Backspace))
         {
@@ -201,6 +233,8 @@ public class DungeonManager : MonoBehaviour
             Debug.Log("所持G: " + HaveGold);
         }
     }
+
+    
 
     /// <summary>
     /// 各データの初期化。Startで呼ぶ.
@@ -617,6 +651,12 @@ public class DungeonManager : MonoBehaviour
         }
     }
 
+    public void MoveBattleScene()
+    {
+        this.currentScene = E_DungeonScene.Battle;
+        this.dungeonUIManager.AnnounceText.text = "";
+        SceneManager.LoadScene("TestBattle");
+    }
     /// <summary>
     /// ランダムでひとつ悪い効果適用
     /// </summary>

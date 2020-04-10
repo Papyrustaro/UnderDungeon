@@ -11,7 +11,7 @@ public class MapManager : MonoBehaviour
     [SerializeField] private GameObject wallMass;
     [SerializeField] private GameObject playerOnRoadMass;*/
 
-    [SerializeField] private GameObject cameraObject;
+    //[SerializeField] private GameObject cameraObject;
 
     [SerializeField] private DungeonSquare wallSquare;
 
@@ -42,14 +42,23 @@ public class MapManager : MonoBehaviour
 
     public List<E_DungeonSquareType> MayApeearDungeonSquareTypes => this.mayApeearDungeonSquareTypes;
 
+    public static MapManager Instance
+    {
+        get; private set;
+    }
 
     private void Awake()
     {
+        if(Instance != null)
+        {
+            Destroy(this.gameObject);
+            return;
+        }
+        Instance = this;
+        DontDestroyOnLoad(this.gameObject);
+
+
         SetMayApeearDungeonSquareTypes();
-    }
-    private void Start()
-    {
-        
     }
 
     private void Update()
@@ -73,16 +82,6 @@ public class MapManager : MonoBehaviour
             {
                 this.mayApeearDungeonSquareTypes.Add(ds.SquareType);
             }
-        }
-    }
-    private void MoveCamara()
-    {
-        if (Input.GetKey(KeyCode.LeftShift))
-        {
-            if (Input.GetAxis("Horizontal") > 0) this.cameraObject.transform.Translate(1, 0, 0);
-            if (Input.GetAxis("Horizontal") < 0) this.cameraObject.transform.Translate(-1, 0, 0);
-            if (Input.GetAxis("Vertical") > 0) this.cameraObject.transform.Translate(0, 1, 0);
-            if (Input.GetAxis("Vertical") < 0) this.cameraObject.transform.Translate(0, -1, 0);
         }
     }
 

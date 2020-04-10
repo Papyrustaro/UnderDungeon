@@ -5,7 +5,30 @@ using UnityEngine.UI;
 
 public class DungeonUIManager : MonoBehaviour
 {
-    [SerializeField] private Text announceText;
+    private Text announceText;
+
+    public DungeonUIManager Instance { get; private set; }
+
+    public Text AnnounceText => this.announceText;
+    private void Awake()
+    {
+        if (Instance != null)
+        {
+            Destroy(this.gameObject);
+            return;
+        }
+        Instance = this;
+        DontDestroyOnLoad(this.gameObject);
+
+        try
+        {
+            this.announceText = GameObject.Find("DungeonCanvas/AnnounceText").GetComponent<Text>();
+        }
+        catch
+        {
+            throw new System.Exception();
+        }
+    }
 
     public void AnnounceByText(string announceText)
     {

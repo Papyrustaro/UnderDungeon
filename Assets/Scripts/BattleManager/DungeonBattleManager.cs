@@ -5,14 +5,14 @@ using UnityEngine.UI;
 
 public class DungeonBattleManager : MonoBehaviour
 {
-    [SerializeField] private List<BattleCharacter> charaList = new List<BattleCharacter>();
+    private List<BattleCharacter> charaList = new List<BattleCharacter>();
     [SerializeField] private Text announceText;
     [SerializeField] private BattleActiveEffectsFunc activeEffectFuncs;
     [SerializeField] private BattlePassiveEffectsFunc passiveEffectFuncs;
     [SerializeField] private BattleUIManager uiManager;
 
-    [SerializeField] private List<BattleActiveItem> haveActiveItems;
-    [SerializeField] private List<BattlePassiveItem> havePassiveItems;
+    private List<BattleActiveItem> haveActiveItems;
+    private List<BattlePassiveItem> havePassiveItems;
 
     private bool finishAction = true;
     private int charaNum; //戦闘に参加しているchara数
@@ -24,20 +24,59 @@ public class DungeonBattleManager : MonoBehaviour
 
     private List<BattleCharacter> allyList = new List<BattleCharacter>();
     private List<BattleCharacter> enemyList = new List<BattleCharacter>();
+    private DungeonManager dungeonManager;
+
+    public static DungeonBattleManager Instance
+    {
+        get; private set;
+    }
+
+    public List<BattleCharacter> Allys => this.allyList;
+    public List<BattleCharacter> Enemys => this.enemyList;
+
+    private void Awake()
+    {
+        if (Instance != null)
+        {
+            throw new System.Exception();
+        }
+        Instance = this;
+
+        this.dungeonManager = DungeonManager.Instance;
+        foreach(BattleCharacter ally in this.dungeonManager.Allys)
+        {
+            this.charaList.Add(ally);
+            this.allyList.Add(ally);
+        }
+        foreach(BattleCharacter enemy in this.dungeonManager.Enemys)
+        {
+            this.charaList.Add(enemy);
+            this.enemyList.Add(enemy);
+        }
+        this.haveActiveItems = this.dungeonManager.HaveBattleActiveItems;
+        this.havePassiveItems = this.dungeonManager.HaveBattlePassiveItems;
+        foreach(BattleCharacter bc in this.charaList)
+        {
+            bc.Start();
+        }
+    }
+
 
     private void Start()
     {
         charaNum = charaList.Count;
+        /*
         foreach(BattleCharacter bc in charaList)
         {
             if(!bc.StatusChange) bc.Start(); //BattleCharacterのStartが終了していないとき、呼ぶ
             if (bc.IsEnemy) this.enemyList.Add(bc);
             else this.allyList.Add(bc);
-        }
+        }*/
         
         this.target = this.GetAliveList(this.enemyList)[0];
         this.currentSituation = E_BattleSituation.SetParameterBeforeStartBattle;
         SetPassiveEffect();
+        
         foreach (BattleCharacter bc in this.allyList)
         {
             bc.Hp = bc.MaxHp;
