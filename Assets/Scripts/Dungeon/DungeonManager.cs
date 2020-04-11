@@ -27,6 +27,8 @@ public class DungeonManager : MonoBehaviour
     [SerializeField] private BattlePassiveEffectsFunc battlePassiveEffectsFunc;
 
     [SerializeField] private DungeonUIManager dungeonUIManager;
+    [SerializeField] private GameObject allysRootObject;
+    [SerializeField] private GameObject enemysRootObject;
 
     private List<DungeonActiveItem> haveDungeonActiveItems = new List<DungeonActiveItem>();
     private List<DungeonPassiveItem> haveDungeonPassiveItems = new List<DungeonPassiveItem>();
@@ -150,6 +152,12 @@ public class DungeonManager : MonoBehaviour
     /// 残りの移動量(一次記憶用)
     /// </summary>
     public int RemainingAmountOfMovement { get; set; } = 0;
+
+    /// <summary>
+    /// enemyオブジェクトをシーン間記憶用親オブジェクト
+    /// </summary>
+    public GameObject EnemysRootObject => this.enemysRootObject;
+
 
     public List<DungeonActiveItem> HaveDungeonActiveItems => this.haveDungeonActiveItems;
     public List<DungeonPassiveItem> HaveDungeonPassiveItems => this.haveDungeonPassiveItems;

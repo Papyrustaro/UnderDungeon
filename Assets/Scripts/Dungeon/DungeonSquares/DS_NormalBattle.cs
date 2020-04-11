@@ -26,7 +26,8 @@ public class DS_NormalBattle : DungeonSquare
         int countOfEnemyKind = this.mayApeearEnemys.Count;
         for(int i = 0; i < UnityEngine.Random.Range(2, 5); i++)
         {
-            enemys.Add(this.mayApeearEnemys[UnityEngine.Random.Range(0, countOfEnemyKind)]);
+            BattleCharacter enemy = Instantiate(this.mayApeearEnemys[UnityEngine.Random.Range(0, countOfEnemyKind)], dm.EnemysRootObject.transform);
+            enemys.Add(enemy);
         }
         dm.Enemys = enemys;
 

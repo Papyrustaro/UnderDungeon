@@ -64,6 +64,7 @@ public class DungeonBattleManager : MonoBehaviour
 
     private void Start()
     {
+        this.uiManager.SetInit(this.allyList.Count, this.enemyList.Count);
         charaNum = charaList.Count;
         /*
         foreach(BattleCharacter bc in charaList)

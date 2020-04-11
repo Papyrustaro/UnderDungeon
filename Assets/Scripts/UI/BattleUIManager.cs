@@ -8,11 +8,8 @@ public class BattleUIManager : MonoBehaviour
     private static Text announceText;
     [SerializeField] private Text announceTextObject;
 
-    [SerializeField] private Button[] enemyTargetButton = new Button[4];
-    [SerializeField] private Button[] allyTargetButton = new Button[4];
-
-    public Button[] EnemyTargetButton => this.enemyTargetButton;
-    public Button[] AllyTargetButton => this.allyTargetButton;
+    [SerializeField] private List<Button> enemyTargetButton = new List<Button>();
+    [SerializeField] private List<Button> allyTargetButton = new List<Button>();
 
     private void Awake()
     {
@@ -27,6 +24,18 @@ public class BattleUIManager : MonoBehaviour
     {
         announceText.text = text;
         Debug.Log(text);
+    }
+
+    public void SetInit(int allyNum, int enemyNum)
+    {
+        for(int i = 3; i >= allyNum; i--)
+        {
+            this.allyTargetButton.RemoveAt(i);
+        }
+        for(int i = 3; i >= enemyNum; i--)
+        {
+            this.enemyTargetButton.RemoveAt(i);
+        }
     }
 
     /// <summary>
