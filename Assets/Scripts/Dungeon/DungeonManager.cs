@@ -345,6 +345,25 @@ public class DungeonManager : MonoBehaviour
     }
 
     /// <summary>
+    /// 戦闘終了後の初期化処理、シーン遷移
+    /// </summary>
+    public void FinishBattle()
+    {
+        //敵オブジェクト削除
+        foreach(Transform child in this.enemysRootObject.transform)
+        {
+            Destroy(child.gameObject);
+        }
+        this.Enemys = new List<BattleCharacter>();
+
+        StartCoroutine(DelayMethod(1, () =>
+        {
+            this.dungeonUIManager.LoadDungeonScene();
+            this.MoveScene(E_DungeonScene.SelectAction);
+        }));
+    }
+
+    /// <summary>
     /// 行動選択の入力受付(0:サイコロ, 1:アイテム使用, 2:DAS発動, 3:マップ確認, 4:パーティ確認)
     /// </summary>
     private void InputSelectAction()
@@ -1206,6 +1225,15 @@ public class DungeonManager : MonoBehaviour
     public void SetFlagUnderstandDungeonSquareType(bool flag)
     {
         this.mapManager.SetFlagUnderstandDungeonSquareType(ref this.understandDungeonSquareType, flag);
+    }
+
+    IEnumerator DelayMethod(int delayFrameCount, Action action)
+    {
+        for (int i = 0; i < delayFrameCount; i++)
+        {
+            yield return null;
+        }
+        action();
     }
 }
 

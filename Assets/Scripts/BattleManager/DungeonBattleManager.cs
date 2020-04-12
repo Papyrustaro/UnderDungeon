@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
+using System;
 
 public class DungeonBattleManager : MonoBehaviour
 {
@@ -99,6 +101,18 @@ public class DungeonBattleManager : MonoBehaviour
             {
                 ReSetPassiveEffect();
             }
+
+            if (IsWin())
+            {
+                WinBattle();
+                return;
+            }
+            if (IsLose())
+            {
+                LoseBattle();
+                return;
+            }
+
             CharacterAction();
         }else
         {
@@ -150,6 +164,58 @@ public class DungeonBattleManager : MonoBehaviour
 
     private void DebugFunc()
     {
+    }
+
+    /// <summary>
+    /// 戦いに勝利したときの処理
+    /// </summary>
+    private void WinBattle()
+    {
+        Debug.Log("戦いに勝利した");
+        foreach(BattleCharacter ally in this.allyList)
+        {
+            ally.Bsp = 0;
+        }
+        SceneManager.LoadScene("TestDungeon");
+        this.dungeonManager.FinishBattle();
+    }
+
+    private void LoseBattle()
+    {
+        Debug.Log("全滅した");
+        foreach(BattleCharacter ally in this.allyList)
+        {
+            ally.Bsp = 0;
+            ally.Hp = 1; //本来はGameOver処理
+        }
+        SceneManager.LoadScene("TestDungeon");
+        this.dungeonManager.FinishBattle();
+    }
+
+    /// <summary>
+    /// プレイヤーが勝利しているかどうか
+    /// </summary>
+    /// <returns>勝利していたらtrue</returns>
+    private bool IsWin()
+    {
+        foreach(BattleCharacter enemy in this.enemyList)
+        {
+            if (enemy.IsAlive) return false;
+        }
+        return true;
+    }
+
+    /// <summary>
+    /// プレイヤーが全滅(敗北)したかどうか
+    /// </summary>
+    /// <returns>全滅(敗北)していたらtrue</returns>
+    private bool IsLose()
+    {
+        foreach(BattleCharacter ally in this.allyList)
+        {
+            if (ally.IsAlive) return false;
+        }
+        return true;
     }
 
     /// <summary>

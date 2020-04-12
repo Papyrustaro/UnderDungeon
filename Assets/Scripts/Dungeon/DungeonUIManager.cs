@@ -7,7 +7,7 @@ public class DungeonUIManager : MonoBehaviour
 {
     private Text announceText;
 
-    public DungeonUIManager Instance { get; private set; }
+    public static DungeonUIManager Instance { get; private set; }
 
     public Text AnnounceText => this.announceText;
     private void Awake()
@@ -34,5 +34,10 @@ public class DungeonUIManager : MonoBehaviour
     {
         Debug.Log(announceText);
         this.announceText.text = announceText;
+    }
+
+    public void LoadDungeonScene()
+    {
+        this.announceText = GameObject.Find("DungeonCanvas/AnnounceText").GetComponent<Text>();
     }
 }
