@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 3523537391922769698}
   - component: {fileID: 8597235794058998891}
   - component: {fileID: 6298358982417061629}
-  - component: {fileID: 114129405469540416}
   m_Layer: 0
   m_Name: 1_KingSlimeE
   m_TagString: Enemy
@@ -83,15 +82,3 @@ MonoBehaviour:
   haveSpecialAI: 0
   haveBattleActiveSkillID: 
   dropRate: 50
---- !u!114 &114129405469540416
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 415489104033776643}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d59831af2fbee794f9b86e1985b47357, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 

@@ -9,5 +9,7 @@ public class DS_Stair : DungeonSquare
     public override void SquareEvent(DungeonManager dm)
     {
         Debug.Log("階段イベント発生");
+        //階段イベント処理
+        dm.MoveScene(E_DungeonScene.SelectAction);
     }
 }

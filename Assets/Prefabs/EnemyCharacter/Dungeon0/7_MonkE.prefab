@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 2081664428882303354}
   - component: {fileID: 6657614018640736549}
   - component: {fileID: 7120050897588026551}
-  - component: {fileID: 114930305893784356}
   m_Layer: 0
   m_Name: 7_MonkE
   m_TagString: Enemy
@@ -83,15 +82,3 @@ MonoBehaviour:
   haveSpecialAI: 0
   haveBattleActiveSkillID: 
   dropRate: 50
---- !u!114 &114930305893784356
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3391647888671013852}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d59831af2fbee794f9b86e1985b47357, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 

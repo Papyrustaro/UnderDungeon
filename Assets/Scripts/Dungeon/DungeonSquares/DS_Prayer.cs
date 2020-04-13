@@ -10,6 +10,7 @@ public class DS_Prayer : DungeonSquare
     {
         Debug.Log("祈祷イベント発生");
         Pray(dm);
+        dm.MoveScene(E_DungeonScene.SelectAction);
     }
 
     private void Pray(DungeonManager dm)

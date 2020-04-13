@@ -10,5 +10,6 @@ public class DS_Trap : DungeonSquare
     {
         Debug.Log("罠イベント発生");
         dm.GetTrapped();
+        dm.MoveScene(E_DungeonScene.SelectAction);
     }
 }

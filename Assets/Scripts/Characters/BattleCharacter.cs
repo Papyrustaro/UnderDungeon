@@ -490,13 +490,13 @@ public class BattleCharacter : MonoBehaviour
         if(Hp + value > MaxHp)
         {
             double diff = MaxHp - Hp;
-            Debug.Log(charaClass.CharaName + "の体力が満タンになった");
+            Debug.Log(CharaClass.CharaName + "の体力が満タンになった");
             Hp = MaxHp;
             return diff;
         }
         else
         {
-            Debug.Log(charaClass.CharaName + "の体力が" + (int)value + "回復した");
+            Debug.Log(CharaClass.CharaName + "の体力が" + (int)value + "回復した");
             Hp += value;
             return value;
         }
@@ -523,8 +523,8 @@ public class BattleCharacter : MonoBehaviour
         if(Hp - damage_value <= 0)
         {
             double diff = Hp;
-            Debug.Log(charaClass.CharaName + "は" + (int)Hp + "のダメージを受けた");
-            Debug.Log(charaClass.CharaName + "は倒れた");
+            Debug.Log(CharaClass.CharaName + "は" + (int)Hp + "のダメージを受けた");
+            Debug.Log(CharaClass.CharaName + "は倒れた");
             Hp = 0;
             InitActiveParameter();
             Reborn();
@@ -532,7 +532,7 @@ public class BattleCharacter : MonoBehaviour
         }
         else
         {
-            Debug.Log(charaClass.CharaName + "は" + (int)damage_value + "のダメージを受けた");
+            Debug.Log(CharaClass.CharaName + "は" + (int)damage_value + "のダメージを受けた");
             Hp -= damage_value;
             HaveDamageThisTurn += damage_value;
             return damage_value;

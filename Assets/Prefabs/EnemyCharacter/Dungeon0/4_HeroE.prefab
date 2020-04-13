@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 4907761132724132217}
   - component: {fileID: 2898883494719303776}
   - component: {fileID: 8212215395618828224}
-  - component: {fileID: 114024899280496598}
   m_Layer: 0
   m_Name: 4_HeroE
   m_TagString: Enemy
@@ -72,18 +71,6 @@ MonoBehaviour:
   haveBattleActiveSkillID: 
   dropRate: 50
 --- !u!114 &8212215395618828224
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1706402821638043307}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d59831af2fbee794f9b86e1985b47357, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &114024899280496598
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

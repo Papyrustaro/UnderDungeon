@@ -9,6 +9,8 @@ public class DS_Fountain : DungeonSquare
     public override void SquareEvent(DungeonManager dm)
     {
         Debug.Log("回復の泉イベント発生");
+        HealHp(dm);
+        dm.MoveScene(E_DungeonScene.SelectAction);
     }
 
     private void HealHp(DungeonManager dm)

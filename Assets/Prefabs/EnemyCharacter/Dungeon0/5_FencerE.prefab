@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 1287797416678237839}
   - component: {fileID: 2555357091171238169}
   - component: {fileID: 2476498826368457168}
-  - component: {fileID: 114947518594783766}
   m_Layer: 0
   m_Name: 5_FencerE
   m_TagString: Enemy
@@ -83,15 +82,3 @@ MonoBehaviour:
   haveSpecialAI: 0
   haveBattleActiveSkillID: 
   dropRate: 50
---- !u!114 &114947518594783766
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6498463540871350958}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d59831af2fbee794f9b86e1985b47357, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 

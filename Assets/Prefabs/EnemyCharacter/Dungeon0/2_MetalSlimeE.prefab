@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 4966059336718955476}
   - component: {fileID: 8642841171715753288}
   - component: {fileID: 5733513469560255904}
-  - component: {fileID: 114809092803091902}
   m_Layer: 0
   m_Name: 2_MetalSlimeE
   m_TagString: Enemy
@@ -83,15 +82,3 @@ MonoBehaviour:
   haveSpecialAI: 0
   haveBattleActiveSkillID: 
   dropRate: 50
---- !u!114 &114809092803091902
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 152651711077205048}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d59831af2fbee794f9b86e1985b47357, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 

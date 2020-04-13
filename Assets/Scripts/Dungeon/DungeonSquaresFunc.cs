@@ -8,14 +8,14 @@ public class DungeonSquaresFunc : MonoBehaviour
 
     public void DungeonSquareEvent(DungeonManager dm, E_DungeonSquareType dungeonSquareType)
     {
-        if(dungeonSquareType != E_DungeonSquareType.ランダム)
-        {
+        /*if(dungeonSquareType != E_DungeonSquareType.ランダム)
+        {*/
             this.dungeonSquares.Find(ds => ds.SquareType == dungeonSquareType).SquareEvent(dm);
-        }
+        /*}
         else
         {
             this.dungeonSquares[UnityEngine.Random.Range(0, this.dungeonSquares.Count)].SquareEvent(dm);
-        }
+        }*/
     }
 
     public void SetMayApeearDungeonSquares(List<DungeonSquare> dungeonSquares)

@@ -10,42 +10,53 @@ public class DS_CursedTreasureChest : DungeonSquare
     [SerializeField] private List<BattleActiveItem> mayApeearBattleActiveItems = new List<BattleActiveItem>();
     [SerializeField] private List<BattlePassiveItem> mayApeearBattlePassiveItems = new List<BattlePassiveItem>();
 
-    [SerializeField] private List<EnemyCharacter> mayApeearEnemy = new List<EnemyCharacter>();
+    [SerializeField] private List<BattleCharacter> mayApeearEnemy = new List<BattleCharacter>();
     public override E_DungeonSquareType SquareType => E_DungeonSquareType.呪いの宝箱;
 
     public override void SquareEvent(DungeonManager dm)
     {
         Debug.Log("呪いの宝箱イベント発生");
-        OpenCursedTreasureChest();
+        OpenCursedTreasureChest(dm);
     }
 
     /// <summary>
     /// 宝箱を開ける処理。(全てのリストが1以上要素を持つ前提)
     /// </summary>
-    private void OpenCursedTreasureChest()
+    private void OpenCursedTreasureChest(DungeonManager dm)
     {
-        Debug.Log("箱から出てきたのは");
         switch(UnityEngine.Random.Range(0, 9))
         {
             case 0:
             case 1:
-                Debug.Log(this.mayApeearDungeonActiveItems[UnityEngine.Random.Range(0, this.mayApeearDungeonActiveItems.Count)].EffectName);
+                DungeonActiveItem daItem = this.mayApeearDungeonActiveItems[UnityEngine.Random.Range(0, this.mayApeearDungeonActiveItems.Count)];
+                Debug.Log(daItem.EffectName + "を入手した");
+                dm.HaveDungeonActiveItems.Add(daItem);
                 break;
             case 2:
             case 3:
-                Debug.Log(this.mayApeearDungeonPassiveItems[UnityEngine.Random.Range(0, this.mayApeearDungeonPassiveItems.Count)].EffectName);
+                DungeonPassiveItem dpItem = this.mayApeearDungeonPassiveItems[UnityEngine.Random.Range(0, this.mayApeearDungeonPassiveItems.Count)];
+                Debug.Log(dpItem.EffectName + "を入手した");
+                dm.HaveDungeonPassiveItems.Add(dpItem);
                 break;
             case 4:
             case 5:
-                Debug.Log(this.mayApeearBattleActiveItems[UnityEngine.Random.Range(0, this.mayApeearBattleActiveItems.Count)].EffectName);
+                BattleActiveItem baItem = this.mayApeearBattleActiveItems[UnityEngine.Random.Range(0, this.mayApeearBattleActiveItems.Count)];
+                Debug.Log(baItem.EffectName + "を入手した");
+                dm.HaveBattleActiveItems.Add(baItem);
                 break;
             case 6:
             case 7:
-                Debug.Log(this.mayApeearBattlePassiveItems[UnityEngine.Random.Range(0, this.mayApeearBattlePassiveItems.Count)].EffectName);
+                BattlePassiveItem bpItem = this.mayApeearBattlePassiveItems[UnityEngine.Random.Range(0, this.mayApeearBattlePassiveItems.Count)];
+                Debug.Log(bpItem.EffectName + "を入手した");
+                dm.HaveBattlePassiveItems.Add(bpItem);
                 break;
             case 8:
-                Debug.Log("モンスター: " + this.mayApeearEnemy[UnityEngine.Random.Range(0, this.mayApeearEnemy.Count)].CharaName);
-                break;
+                BattleCharacter enemy = Instantiate(this.mayApeearEnemy[UnityEngine.Random.Range(0, this.mayApeearEnemy.Count)], dm.EnemysRootObject.transform);
+                Debug.Log(enemy.CharaClass.CharaName + "が出現した");
+                dm.Enemys = new List<BattleCharacter>() { enemy };
+                dm.MoveBattleScene();
+                return;
         }
+        dm.MoveScene(E_DungeonScene.SelectAction);
     }
 }

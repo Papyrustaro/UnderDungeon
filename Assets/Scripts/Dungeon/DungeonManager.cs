@@ -825,7 +825,7 @@ public class DungeonManager : MonoBehaviour
                 }
                 break;
             case 4:
-                Debug.Log("アイテムをひとつ失った");
+                Debug.Log("アイテム消失の罠");
                 LoseRandomOneItem();
                 break;
             case 5:
@@ -873,23 +873,51 @@ public class DungeonManager : MonoBehaviour
     }
 
     /// <summary>
-    /// ランダムでアイテムひとつ失う(4リスト最低1アイテム保持前提)
+    /// ランダムでアイテムひとつ失う
     /// </summary>
     public void LoseRandomOneItem()
     {
         switch(UnityEngine.Random.Range(0, 4))
         {
             case 0:
-                this.haveDungeonActiveItems.RemoveAt(UnityEngine.Random.Range(0, this.haveDungeonActiveItems.Count));
+                try
+                {
+                    this.haveDungeonActiveItems.RemoveAt(UnityEngine.Random.Range(0, this.haveDungeonActiveItems.Count));
+                }
+                catch (ArgumentOutOfRangeException)
+                {
+                    Debug.Log("DAIをひとつも持っていなかった");
+                }
                 break;
             case 1:
-                this.haveDungeonPassiveItems.RemoveAt(UnityEngine.Random.Range(0, this.haveDungeonPassiveItems.Count));
+                try
+                {
+                    this.haveDungeonPassiveItems.RemoveAt(UnityEngine.Random.Range(0, this.haveDungeonPassiveItems.Count));
+                }
+                catch (ArgumentOutOfRangeException)
+                {
+                    Debug.Log("DPIをひとつも持っていなかった");
+                }
                 break;
             case 2:
-                this.haveBattleActiveItems.RemoveAt(UnityEngine.Random.Range(0, this.haveBattleActiveItems.Count));
+                try
+                {
+                    this.haveBattleActiveItems.RemoveAt(UnityEngine.Random.Range(0, this.haveBattleActiveItems.Count));
+                }
+                catch (ArgumentOutOfRangeException)
+                {
+                    Debug.Log("BAIをひとつも持っていなかった");
+                }
                 break;
             case 3:
-                this.haveBattlePassiveItems.RemoveAt(UnityEngine.Random.Range(0, this.haveBattlePassiveItems.Count));
+                try
+                {
+                    this.haveBattlePassiveItems.RemoveAt(UnityEngine.Random.Range(0, this.haveBattlePassiveItems.Count));
+                }
+                catch (ArgumentOutOfRangeException)
+                {
+                    Debug.Log("BPIをひとつも持っていなかった");
+                }
                 break;
         }
     }
@@ -901,6 +929,7 @@ public class DungeonManager : MonoBehaviour
     {
         this.CurrentLocationRow = UnityEngine.Random.Range(0, this.mapManager.MapWidth);
         this.CurrentLocationColumn = UnityEngine.Random.Range(0, this.mapManager.MapHeight);
+        this.CurrentMovingDirection = E_Direction.None;
     }
 
     /// <summary>
