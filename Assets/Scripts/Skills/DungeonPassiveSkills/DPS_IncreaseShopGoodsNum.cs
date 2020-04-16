@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DPS_IncreaseShopGoodNum : DungeonPassiveSkill
+public class DPS_IncreaseShopGoodsNum : DungeonPassiveSkill
 {
     [SerializeField] private int increaseValue = 1;
 
@@ -10,6 +10,6 @@ public class DPS_IncreaseShopGoodNum : DungeonPassiveSkill
 
     public override void EffectFunc(DungeonManager dm)
     {
-        dm.IncreaseShopGoodNum(this.increaseValue);
+        dm.IncreaseShopGoodsNum(this.increaseValue);
     }
 }

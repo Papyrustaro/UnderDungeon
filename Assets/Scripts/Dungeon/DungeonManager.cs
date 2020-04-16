@@ -161,12 +161,12 @@ public class DungeonManager : MonoBehaviour
     /// <summary>
     /// レアアイテム販売率。Max0.5???
     /// </summary>
-    public double ShopRareGoodRate { get; private set; } = 0.1;
+    public double ShopRareGoodsRate { get; private set; } = 0.1;
 
     /// <summary>
     /// 店の商品数(最大8???)
     /// </summary>
-    public int ShopGoodNum { get; private set; } = 4;
+    public int ShopGoodsNum { get; private set; } = 4;
 
     /// <summary>
     /// マスイベントの出現率(初期値1、最大2?)
@@ -561,22 +561,22 @@ public class DungeonManager : MonoBehaviour
     /// 店レアアイテム販売率増加(とりあえず最大0,5)
     /// </summary>
     /// <param name="increaseRateValue">増加割合(0.1など)</param>
-    public void IncreaseShopRareGoodRate(double increaseRateValue)
+    public void IncreaseShopRareGoodsRate(double increaseRateValue)
     {
         Debug.Log("店レアアイテム販売率" + increaseRateValue + "増加");
-        this.ShopRareGoodRate += increaseRateValue;
-        if (this.ShopRareGoodRate > 0.5) this.ShopRareGoodRate = 0.5;
+        this.ShopRareGoodsRate += increaseRateValue;
+        if (this.ShopRareGoodsRate > 0.5) this.ShopRareGoodsRate = 0.5;
     }
 
     /// <summary>
     /// 店商品数増加(とりあえず最大8)
     /// </summary>
     /// <param name="increaseValue">商品増加数(基本1)</param>
-    public void IncreaseShopGoodNum(int increaseValue)
+    public void IncreaseShopGoodsNum(int increaseValue)
     {
         Debug.Log("店商品数" + increaseValue + "増加");
-        this.ShopGoodNum += increaseValue;
-        if (this.ShopGoodNum > 8) this.ShopGoodNum = 8;
+        this.ShopGoodsNum += increaseValue;
+        if (this.ShopGoodsNum > 8) this.ShopGoodsNum = 8;
     }
 
     /// <summary>

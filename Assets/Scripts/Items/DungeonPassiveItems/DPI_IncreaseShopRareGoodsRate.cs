@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DPS_IncreaseShopRareGoodRate : DungeonPassiveSkill
+public class DPI_IncreaseShopRareGoodsRate : DungeonPassiveItem
 {
     [SerializeField] private double increaseRateValue = 0.1;
 
@@ -10,6 +10,6 @@ public class DPS_IncreaseShopRareGoodRate : DungeonPassiveSkill
 
     public override void EffectFunc(DungeonManager dm)
     {
-        dm.IncreaseShopRareGoodRate(this.increaseRateValue);
+        dm.IncreaseShopRareGoodsRate(this.increaseRateValue);
     }
 }
