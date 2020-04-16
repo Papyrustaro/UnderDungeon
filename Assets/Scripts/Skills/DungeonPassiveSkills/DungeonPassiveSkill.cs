@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-public class DungeonPassiveSkill : DungeonPassiveEffect
+public abstract class DungeonPassiveSkill : DungeonPassiveEffect
 {
     [SerializeField]
     private E_DungeonPassiveSkill id;

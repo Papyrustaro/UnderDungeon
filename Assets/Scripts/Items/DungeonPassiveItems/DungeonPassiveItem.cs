@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-public class DungeonPassiveItem : DungeonPassiveEffect
+public abstract class DungeonPassiveItem : DungeonPassiveEffect
 {
     [SerializeField] private E_DungeonPassiveItem id;
     [SerializeField] private int sellPrice;

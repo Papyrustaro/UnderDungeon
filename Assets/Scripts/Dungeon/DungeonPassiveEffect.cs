@@ -21,12 +21,13 @@ public enum E_DungeonPassiveEffectType
 }
 public abstract class DungeonPassiveEffect : MonoBehaviour
 {
-    [SerializeField] private E_DungeonPassiveEffectType effectType;
     [SerializeField] private string description;
 
-    public E_DungeonPassiveEffectType EffectType => this.effectType;
+    public abstract E_DungeonPassiveEffectType EffectType { get; }
 
     public abstract string EffectName { get; }
+
+    public abstract void EffectFunc(DungeonManager dm);
 
     public string Description
     {

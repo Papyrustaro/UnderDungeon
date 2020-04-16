@@ -64,12 +64,12 @@ public class DungeonManager : MonoBehaviour
     /// <summary>
     /// 満腹度(マス移動する度に減少?)
     /// </summary>
-    public int Fullness { get; set; } = 100;
+    public int Fullness { get; private set; } = 100;
 
     /// <summary>
-    /// 最大満腹度
+    /// 最大満腹度(最大150???)
     /// </summary>
-    public int MaxFullNess { get; set; }
+    public int MaxFullNess { get; private set; } = 100;
 
     public List<BattleCharacter> Allys => this.allys;
 
@@ -101,12 +101,27 @@ public class DungeonManager : MonoBehaviour
     /// <summary>
     /// 何マス先まで見えるか→通常と狭いの2パターンのみにするか？
     /// </summary>
-    public int FieldOfVision { get; set; }
+    public int FieldOfVision { get; set; } = 3;
 
     /// <summary>
     /// 可視範囲減少効果の残りターン
     /// </summary>
     public int FieldOfVisionNarrowTurn { get; set; } = 0;
+
+    /// <summary>
+    /// 獲得経験値の倍率(最大2倍)
+    /// </summary>
+    public double GetExpRate { get; private set; } = 1;
+
+    /// <summary>
+    /// 獲得Goldの倍率(最大2倍)
+    /// </summary>
+    public double GetGoldRate { get; private set; } = 1;
+
+    /// <summary>
+    /// 敵ドロップ率(最大2倍)
+    /// </summary>
+    public double EnemyDropRate { get; private set; } = 1;
 
     /// <summary>
     /// 現在の階層
@@ -137,6 +152,36 @@ public class DungeonManager : MonoBehaviour
     /// 変化したサイコロの目(無いときはnull)
     /// </summary>
     public int[] ChangedDice => this.changedDice;
+
+    /// <summary>
+    /// レア敵出現率。Max0.5???
+    /// </summary>
+    public double AppearanceRareEnemyRate { get; private set; } = 0.1;
+
+    /// <summary>
+    /// レアアイテム販売率。Max0.5???
+    /// </summary>
+    public double ShopRareGoodRate { get; private set; } = 0.1;
+
+    /// <summary>
+    /// 店の商品数(最大8???)
+    /// </summary>
+    public int ShopGoodNum { get; private set; } = 4;
+
+    /// <summary>
+    /// マスイベントの出現率(初期値1、最大2?)
+    /// </summary>
+    public Dictionary<E_DungeonSquareType, double> SquareEventAppearanceRate { get; private set; }
+
+    /// <summary>
+    /// 宝箱解除成功率(初期値0.5, 最大1?)
+    /// </summary>
+    public double SuccessRateOfUnlockTreasureChest { get; private set; } = 0.5;
+
+    /// <summary>
+    /// 罠回避率。Max0.9???
+    /// </summary>
+    public double EvadeTrapRate { get; private set; } = 0.2;
 
     /// <summary>
     /// マス移動量増加量(基本0)
@@ -446,6 +491,116 @@ public class DungeonManager : MonoBehaviour
         Debug.Log(s);
     }
 
+    /// <summary>
+    /// レア敵出現率を増加させる。とりあえず最大0.5
+    /// </summary>
+    /// <param name="increaseRate">増加割合(0.1など)</param>
+    public void IncreaseAppearanceRareEnemyRate(double increaseRate)
+    {
+        Debug.Log("レア敵出現率" + increaseRate + "増加");
+        this.AppearanceRareEnemyRate += increaseRate;
+        if (this.AppearanceRareEnemyRate > 0.5) this.AppearanceRareEnemyRate = 0.5;
+    }
+
+    /// <summary>
+    /// 罠回避率を増加させる。とりあえず最大0.9
+    /// </summary>
+    /// <param name="increaseRate">増加割合(0.1など)</param>
+    public void IncreaseEvadeTrapRate(double increaseRate)
+    {
+        Debug.Log("罠回避率" + increaseRate + "増加");
+        this.EvadeTrapRate += increaseRate;
+        if (this.EvadeTrapRate > 0.9) this.EvadeTrapRate = 0.9;
+    }
+
+    /// <summary>
+    /// 獲得経験値倍率を増加させるとりあえず最大2倍
+    /// </summary>
+    /// <param name="increaseRate">増加割合(0.1など)</param>
+    public void IncreaseGetExpRate(double increaseRate)
+    {
+        Debug.Log("獲得経験値" + increaseRate + "増加");
+        this.GetExpRate += increaseRate;
+        if (this.GetExpRate > 2) this.GetExpRate = 2;
+    }
+
+    /// <summary>
+    /// 獲得経験値倍率を増加させるとりあえず最大2倍
+    /// </summary>
+    /// <param name="increaseRate">増加割合(0.1など)</param>
+    public void IncreaseGetGoldRate(double increaseRate)
+    {
+        Debug.Log("獲得経験値" + increaseRate + "増加");
+        this.GetGoldRate += increaseRate;
+        if (this.GetGoldRate > 2) this.GetGoldRate = 2;
+    }
+
+    /// <summary>
+    /// 最大満腹度増加(とりあえず最大150)
+    /// </summary>
+    /// <param name="increaseValue">増加値</param>
+    public void IncreaseMaxFullness(int increaseValue)
+    {
+        Debug.Log("最大満腹度" + increaseValue + "増加");
+        this.MaxFullNess += increaseValue;
+        if (this.MaxFullNess > 150) this.MaxFullNess = 150;
+    }
+
+    /// <summary>
+    /// 敵ドロップ率増加(とりあえず最大2倍)
+    /// </summary>
+    /// <param name="increaseRateValue">増加割合(0.1など)</param>
+    public void IncreaseEnemyDropRate(double increaseRateValue)
+    {
+        Debug.Log("敵ドロップ率" + increaseRateValue + "増加");
+        this.EnemyDropRate += increaseRateValue;
+        if (this.EnemyDropRate > 2) this.EnemyDropRate = 2;
+    }
+
+    /// <summary>
+    /// 店レアアイテム販売率増加(とりあえず最大0,5)
+    /// </summary>
+    /// <param name="increaseRateValue">増加割合(0.1など)</param>
+    public void IncreaseShopRareGoodRate(double increaseRateValue)
+    {
+        Debug.Log("店レアアイテム販売率" + increaseRateValue + "増加");
+        this.ShopRareGoodRate += increaseRateValue;
+        if (this.ShopRareGoodRate > 0.5) this.ShopRareGoodRate = 0.5;
+    }
+
+    /// <summary>
+    /// 店商品数増加(とりあえず最大8)
+    /// </summary>
+    /// <param name="increaseValue">商品増加数(基本1)</param>
+    public void IncreaseShopGoodNum(int increaseValue)
+    {
+        Debug.Log("店商品数" + increaseValue + "増加");
+        this.ShopGoodNum += increaseValue;
+        if (this.ShopGoodNum > 8) this.ShopGoodNum = 8;
+    }
+
+    /// <summary>
+    /// 特定のマスイベント発生率増加(とりあえず最大2)
+    /// </summary>
+    /// <param name="squareType">発生率を増やすマスイベント</param>
+    /// <param name="increaseRateValue">増加割合(0.1など)</param>
+    public void IncreaseSquareEventAppearanceRate(E_DungeonSquareType squareType, double increaseRateValue)
+    {
+        Debug.Log(squareType.ToString() + "イベント発生率" + increaseRateValue + "増加");
+        this.SquareEventAppearanceRate[squareType] += increaseRateValue;
+        if (this.SquareEventAppearanceRate[squareType] > 2) this.SquareEventAppearanceRate[squareType] = 2;
+    }
+
+    /// <summary>
+    /// 宝箱解除率を増加させる(とりあえず最大2)
+    /// </summary>
+    /// <param name="increaseRateValue">増加割合(0.1など)</param>
+    public void IncreaseSuccessRateOfUnlockTreasureChest(double increaseRateValue)
+    {
+        Debug.Log("宝箱解除率" + increaseRateValue + "増加");
+        this.SuccessRateOfUnlockTreasureChest += increaseRateValue;
+        if (this.SuccessRateOfUnlockTreasureChest > 2) this.SuccessRateOfUnlockTreasureChest = 2;
+    }
     /// <summary>
     /// マスタイプを簡略化した文字を返す
     /// </summary>
