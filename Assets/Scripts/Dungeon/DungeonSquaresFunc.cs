@@ -18,7 +18,7 @@ public class DungeonSquaresFunc : MonoBehaviour
         }*/
     }
 
-    public void SetMayApeearDungeonSquares(List<DungeonSquare> dungeonSquares)
+    public void SetMayAppearDungeonSquares(List<DungeonSquare> dungeonSquares)
     {
         this.dungeonSquares = dungeonSquares;
     }

@@ -18,12 +18,12 @@ public class MapManager : MonoBehaviour
     /// <summary>
     /// 出現する可能性のあるマスイベントクラス
     /// </summary>
-    [SerializeField] private List<DungeonSquare> mayApeearDungeonSquares = new List<DungeonSquare>();
+    [SerializeField] private List<DungeonSquare> mayAppearDungeonSquares = new List<DungeonSquare>();
 
     /// <summary>
     /// 出現する可能性のあるマスイベントの種類
     /// </summary>
-    private List<E_DungeonSquareType> mayApeearDungeonSquareTypes = new List<E_DungeonSquareType>();
+    private List<E_DungeonSquareType> mayAppearDungeonSquareTypes = new List<E_DungeonSquareType>();
 
 
     private List<GameObject> mapData = new List<GameObject>();
@@ -38,9 +38,9 @@ public class MapManager : MonoBehaviour
     /// </summary>
     public int MapHeight => this.mapHeight;
 
-    public List<DungeonSquare> MayApeearDungeonSquares => this.mayApeearDungeonSquares;
+    public List<DungeonSquare> MayAppearDungeonSquares => this.mayAppearDungeonSquares;
 
-    public List<E_DungeonSquareType> MayApeearDungeonSquareTypes => this.mayApeearDungeonSquareTypes;
+    public List<E_DungeonSquareType> MayAppearDungeonSquareTypes => this.mayAppearDungeonSquareTypes;
 
     public static MapManager Instance
     {
@@ -58,7 +58,7 @@ public class MapManager : MonoBehaviour
         DontDestroyOnLoad(this.gameObject);
 
 
-        SetMayApeearDungeonSquareTypes();
+        SetMayAppearDungeonSquareTypes();
     }
 
     private void Update()
@@ -69,18 +69,18 @@ public class MapManager : MonoBehaviour
     /// <summary>
     /// マスイベントクラス群から、マスイベント種類群を生成
     /// </summary>
-    private void SetMayApeearDungeonSquareTypes()
+    private void SetMayAppearDungeonSquareTypes()
     {
-        this.mayApeearDungeonSquareTypes = new List<E_DungeonSquareType>();
-        foreach(DungeonSquare ds in this.mayApeearDungeonSquares)
+        this.mayAppearDungeonSquareTypes = new List<E_DungeonSquareType>();
+        foreach(DungeonSquare ds in this.mayAppearDungeonSquares)
         {
-            if (this.mayApeearDungeonSquareTypes.Contains(ds.SquareType))
+            if (this.mayAppearDungeonSquareTypes.Contains(ds.SquareType))
             {
                 Debug.Log("error: 同じマスタイプが複数あります");
             }
             else
             {
-                this.mayApeearDungeonSquareTypes.Add(ds.SquareType);
+                this.mayAppearDungeonSquareTypes.Add(ds.SquareType);
             }
         }
     }
@@ -92,12 +92,12 @@ public class MapManager : MonoBehaviour
     public void GenerateFloor(E_DungeonSquareType[,] currentFloorDungeonSquares)
     {
         currentFloorDungeonSquares = new E_DungeonSquareType[mapWidth, mapHeight];
-        int countOfDungeonSquaresKind = this.mayApeearDungeonSquares.Count;
+        int countOfDungeonSquaresKind = this.mayAppearDungeonSquares.Count;
         for(int i = 0; i < this.mapWidth; i++)
         {
             for(int j = 0; j < this.mapHeight; j++)
             {
-                currentFloorDungeonSquares[i, j] = this.mayApeearDungeonSquareTypes[UnityEngine.Random.Range(0, countOfDungeonSquaresKind)];
+                currentFloorDungeonSquares[i, j] = this.mayAppearDungeonSquareTypes[UnityEngine.Random.Range(0, countOfDungeonSquaresKind)];
             }
         }
         /*for(int i = 0; i < this.mapWidth; i++)

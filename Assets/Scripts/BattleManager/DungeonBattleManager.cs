@@ -166,12 +166,27 @@ public class DungeonBattleManager : MonoBehaviour
     {
     }
 
+
+
+    private void DropEnemy()
+    {
+        foreach(BattleCharacter enemy in this.enemyList)
+        {
+            if(UnityEngine.Random.Range(0f, 1f) < enemy.EC.DropRate * this.dungeonManager.EnemyDropRate)
+            {
+                Debug.Log("enemyドロップ: " + enemy.CharaClass.CharaName);
+                this.dungeonManager.GetCharacters.Add(Instantiate(enemy, this.dungeonManager.GotEnemysObject.transform)); 
+            }
+        }
+    }
+
     /// <summary>
     /// 戦いに勝利したときの処理
     /// </summary>
     private void WinBattle()
     {
         Debug.Log("戦いに勝利した");
+        DropEnemy();
         foreach(BattleCharacter ally in this.allyList)
         {
             ally.Bsp = 0;

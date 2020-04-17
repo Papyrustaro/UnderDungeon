@@ -22,8 +22,8 @@ public class DS_Random : DungeonSquare
     private void RandomSquareEvent(DungeonManager dm)
     {
         MapManager mm = MapManager.Instance;
-        List<DungeonSquare> mayApeearDungeonSquares = new List<DungeonSquare>();
-        foreach(DungeonSquare ds in mm.MayApeearDungeonSquares)
+        List<DungeonSquare> mayAppearDungeonSquares = new List<DungeonSquare>();
+        foreach(DungeonSquare ds in mm.MayAppearDungeonSquares)
         {
             switch (ds.SquareType)
             {
@@ -36,11 +36,11 @@ public class DS_Random : DungeonSquare
                 case E_DungeonSquareType.通常戦闘:
                 case E_DungeonSquareType.闇商人:
                 case E_DungeonSquareType.なにもなし:
-                    mayApeearDungeonSquares.Add(ds);
+                    mayAppearDungeonSquares.Add(ds);
                     break;
             }
         }
 
-        mayApeearDungeonSquares[UnityEngine.Random.Range(0, mayApeearDungeonSquares.Count)].SquareEvent(dm);
+        mayAppearDungeonSquares[UnityEngine.Random.Range(0, mayAppearDungeonSquares.Count)].SquareEvent(dm);
     }
 }

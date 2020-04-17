@@ -5,10 +5,10 @@ using UnityEngine;
 public class DS_Shop : DungeonSquare
 {
     //販売しうるアイテム(IDでもいいけど)
-    [SerializeField] private List<DungeonActiveItem> mayApeearDungeonActiveItems = new List<DungeonActiveItem>();
-    [SerializeField] private List<DungeonPassiveItem> mayApeearDungeonPassiveItems = new List<DungeonPassiveItem>();
-    [SerializeField] private List<BattleActiveItem> mayApeearBattleActiveItems = new List<BattleActiveItem>();
-    [SerializeField] private List<BattlePassiveItem> mayApeearBattlePassiveItems = new List<BattlePassiveItem>();
+    [SerializeField] private List<DungeonActiveItem> mayAppearDungeonActiveItems = new List<DungeonActiveItem>();
+    [SerializeField] private List<DungeonPassiveItem> mayAppearDungeonPassiveItems = new List<DungeonPassiveItem>();
+    [SerializeField] private List<BattleActiveItem> mayAppearBattleActiveItems = new List<BattleActiveItem>();
+    [SerializeField] private List<BattlePassiveItem> mayAppearBattlePassiveItems = new List<BattlePassiveItem>();
 
     public override E_DungeonSquareType SquareType => E_DungeonSquareType.店;
 
@@ -25,10 +25,10 @@ public class DS_Shop : DungeonSquare
     private E_ShopScene currentScene = E_ShopScene.FirstSet;
     //private bool needAnnounce = false;
 
-    private DungeonActiveItem apeearDungeonActiveItem;
-    private DungeonPassiveItem apeearDungeonPassiveItem;
-    private BattleActiveItem apeearBattleActiveItem;
-    private BattlePassiveItem apeearBattlePassiveItem;
+    private DungeonActiveItem appearDungeonActiveItem;
+    private DungeonPassiveItem appearDungeonPassiveItem;
+    private BattleActiveItem appearBattleActiveItem;
+    private BattlePassiveItem appearBattlePassiveItem;
 
     public override void SquareEvent(DungeonManager dm)
     {
@@ -68,27 +68,27 @@ public class DS_Shop : DungeonSquare
     {
         string s = "購入する商品を選択してください\n";
         if (!isBought[0]) {
-            if(selectItemIndex == 0) s += this.apeearDungeonActiveItem.EffectName + "(" + this.apeearDungeonActiveItem.BuyPrice + "G) ◀\n";
-            else s += this.apeearDungeonActiveItem.EffectName + "(" + this.apeearDungeonActiveItem.BuyPrice + "G)\n";
+            if(selectItemIndex == 0) s += this.appearDungeonActiveItem.EffectName + "(" + this.appearDungeonActiveItem.BuyPrice + "G) ◀\n";
+            else s += this.appearDungeonActiveItem.EffectName + "(" + this.appearDungeonActiveItem.BuyPrice + "G)\n";
         }
         else s += "(購入済)\n";
 
         if (!isBought[1])
         {
-            if (selectItemIndex == 1) s += this.apeearDungeonPassiveItem.EffectName + "(" + this.apeearDungeonPassiveItem.BuyPrice + "G) ◀\n";
-            else s += this.apeearDungeonPassiveItem.EffectName + "(" + this.apeearDungeonPassiveItem.BuyPrice + "G)\n";
+            if (selectItemIndex == 1) s += this.appearDungeonPassiveItem.EffectName + "(" + this.appearDungeonPassiveItem.BuyPrice + "G) ◀\n";
+            else s += this.appearDungeonPassiveItem.EffectName + "(" + this.appearDungeonPassiveItem.BuyPrice + "G)\n";
         }
         else s += "(購入済)\n";
 
         if (!isBought[2]) { 
-            if(selectItemIndex == 2) s += this.apeearBattleActiveItem.EffectName + "(" + this.apeearBattleActiveItem.BuyPrice + "G) ◀\n";
-            else s += this.apeearBattleActiveItem.EffectName + "(" + this.apeearBattleActiveItem.BuyPrice + "G)\n";
+            if(selectItemIndex == 2) s += this.appearBattleActiveItem.EffectName + "(" + this.appearBattleActiveItem.BuyPrice + "G) ◀\n";
+            else s += this.appearBattleActiveItem.EffectName + "(" + this.appearBattleActiveItem.BuyPrice + "G)\n";
         }
         else s += "(購入済)\n";
 
         if (!isBought[3]) { 
-            if(selectItemIndex == 3) s += this.apeearBattlePassiveItem.EffectName + "(" + this.apeearBattlePassiveItem.BuyPrice + "G) ◀\n";
-            else s += this.apeearBattlePassiveItem.EffectName + "(" + this.apeearBattlePassiveItem.BuyPrice + "G)\n";
+            if(selectItemIndex == 3) s += this.appearBattlePassiveItem.EffectName + "(" + this.appearBattlePassiveItem.BuyPrice + "G) ◀\n";
+            else s += this.appearBattlePassiveItem.EffectName + "(" + this.appearBattlePassiveItem.BuyPrice + "G)\n";
         }
         else s += "(購入済)\n";
 
@@ -142,7 +142,7 @@ public class DS_Shop : DungeonSquare
         {
             if(selectItemIndex == 0)
             {
-                if(this.apeearDungeonActiveItem.BuyPrice > dm.HaveGold)
+                if(this.appearDungeonActiveItem.BuyPrice > dm.HaveGold)
                 {
                     dm.AnnounceByText("所持Gが足りません");
                     dm.NeedAnnounce = true;
@@ -150,7 +150,7 @@ public class DS_Shop : DungeonSquare
                 }
             }else if(selectItemIndex == 1)
             {
-                if(this.apeearDungeonPassiveItem.BuyPrice > dm.HaveGold)
+                if(this.appearDungeonPassiveItem.BuyPrice > dm.HaveGold)
                 {
                     dm.AnnounceByText("所持Gが足りません");
                     dm.NeedAnnounce = true;
@@ -158,7 +158,7 @@ public class DS_Shop : DungeonSquare
                 }
             }else if(selectItemIndex == 2)
             {
-                if(this.apeearBattleActiveItem.BuyPrice > dm.HaveGold)
+                if(this.appearBattleActiveItem.BuyPrice > dm.HaveGold)
                 {
                     dm.AnnounceByText("所持Gが足りません");
                     dm.NeedAnnounce = true;
@@ -167,7 +167,7 @@ public class DS_Shop : DungeonSquare
             }
             else
             {
-                if(this.apeearBattlePassiveItem.BuyPrice > dm.HaveGold)
+                if(this.appearBattlePassiveItem.BuyPrice > dm.HaveGold)
                 {
                     dm.AnnounceByText("所持Gが足りません");
                     dm.NeedAnnounce = true;
@@ -182,10 +182,10 @@ public class DS_Shop : DungeonSquare
     private void ShowBuyOrNot(DungeonManager dm)
     {
         string s = "以下の商品を購入しますか(所持G: " + dm.HaveGold + ")\n";
-        if (selectItemIndex == 0) s += this.apeearDungeonActiveItem.EffectName + "(" + this.apeearDungeonActiveItem.BuyPrice + "G)\n";
-        else if (selectItemIndex == 1) s += this.apeearDungeonPassiveItem.EffectName + "(" + this.apeearDungeonPassiveItem.BuyPrice + "G)\n";
-        else if (selectItemIndex == 2) s += this.apeearBattleActiveItem.EffectName + "(" + this.apeearBattleActiveItem.BuyPrice + "G)\n";
-        else s += this.apeearBattlePassiveItem.EffectName + "(" + this.apeearBattlePassiveItem.BuyPrice + "G)\n";
+        if (selectItemIndex == 0) s += this.appearDungeonActiveItem.EffectName + "(" + this.appearDungeonActiveItem.BuyPrice + "G)\n";
+        else if (selectItemIndex == 1) s += this.appearDungeonPassiveItem.EffectName + "(" + this.appearDungeonPassiveItem.BuyPrice + "G)\n";
+        else if (selectItemIndex == 2) s += this.appearBattleActiveItem.EffectName + "(" + this.appearBattleActiveItem.BuyPrice + "G)\n";
+        else s += this.appearBattlePassiveItem.EffectName + "(" + this.appearBattlePassiveItem.BuyPrice + "G)\n";
         s += "\nはい: [y] いいえ: [n]";
         dm.AnnounceByText(s);
     }
@@ -197,27 +197,27 @@ public class DS_Shop : DungeonSquare
             //購入処理
             if (selectItemIndex == 0)
             {
-                dm.HaveDungeonActiveItems.Add(this.apeearDungeonActiveItem);
-                dm.AnnounceByText(this.apeearDungeonActiveItem.EffectName + "を購入しました");
-                dm.HaveGold -= this.apeearDungeonActiveItem.BuyPrice;
+                dm.HaveDungeonActiveItems.Add(this.appearDungeonActiveItem);
+                dm.AnnounceByText(this.appearDungeonActiveItem.EffectName + "を購入しました");
+                dm.HaveGold -= this.appearDungeonActiveItem.BuyPrice;
             }
             else if (selectItemIndex == 1)
             {
-                dm.HaveDungeonPassiveItems.Add(this.apeearDungeonPassiveItem);
-                dm.AnnounceByText(this.apeearDungeonPassiveItem.EffectName + "を購入しました");
-                dm.HaveGold -= this.apeearDungeonPassiveItem.BuyPrice;
+                dm.HaveDungeonPassiveItems.Add(this.appearDungeonPassiveItem);
+                dm.AnnounceByText(this.appearDungeonPassiveItem.EffectName + "を購入しました");
+                dm.HaveGold -= this.appearDungeonPassiveItem.BuyPrice;
             }
             else if (selectItemIndex == 2)
             {
-                dm.HaveBattleActiveItems.Add(this.apeearBattleActiveItem);
-                dm.AnnounceByText(this.apeearBattleActiveItem.EffectName + "を購入しました");
-                dm.HaveGold -= this.apeearBattleActiveItem.BuyPrice;
+                dm.HaveBattleActiveItems.Add(this.appearBattleActiveItem);
+                dm.AnnounceByText(this.appearBattleActiveItem.EffectName + "を購入しました");
+                dm.HaveGold -= this.appearBattleActiveItem.BuyPrice;
             }
             else
             {
-                dm.HaveBattlePassiveItems.Add(this.apeearBattlePassiveItem);
-                dm.AnnounceByText(this.apeearBattlePassiveItem.EffectName + "を購入しました");
-                dm.HaveGold -= this.apeearBattlePassiveItem.BuyPrice;
+                dm.HaveBattlePassiveItems.Add(this.appearBattlePassiveItem);
+                dm.AnnounceByText(this.appearBattlePassiveItem.EffectName + "を購入しました");
+                dm.HaveGold -= this.appearBattlePassiveItem.BuyPrice;
             }
             this.isBought[selectItemIndex] = true;
             SetSelectItemIndex(dm);
@@ -236,10 +236,10 @@ public class DS_Shop : DungeonSquare
     /// </summary>
     private void ChooseSoldItems()
     {
-        this.apeearDungeonActiveItem = this.mayApeearDungeonActiveItems[UnityEngine.Random.Range(0, this.mayApeearDungeonActiveItems.Count)];
-        this.apeearDungeonPassiveItem = this.mayApeearDungeonPassiveItems[UnityEngine.Random.Range(0, this.mayApeearDungeonPassiveItems.Count)];
-        this.apeearBattleActiveItem = this.mayApeearBattleActiveItems[UnityEngine.Random.Range(0, this.mayApeearBattleActiveItems.Count)];
-        this.apeearBattlePassiveItem = this.mayApeearBattlePassiveItems[UnityEngine.Random.Range(0, this.mayApeearBattlePassiveItems.Count)];
+        this.appearDungeonActiveItem = this.mayAppearDungeonActiveItems[UnityEngine.Random.Range(0, this.mayAppearDungeonActiveItems.Count)];
+        this.appearDungeonPassiveItem = this.mayAppearDungeonPassiveItems[UnityEngine.Random.Range(0, this.mayAppearDungeonPassiveItems.Count)];
+        this.appearBattleActiveItem = this.mayAppearBattleActiveItems[UnityEngine.Random.Range(0, this.mayAppearBattleActiveItems.Count)];
+        this.appearBattlePassiveItem = this.mayAppearBattlePassiveItems[UnityEngine.Random.Range(0, this.mayAppearBattlePassiveItems.Count)];
     }
 
     /// <summary>

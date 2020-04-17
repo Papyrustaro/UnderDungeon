@@ -7,7 +7,9 @@ public class DS_NormalBattle : DungeonSquare
     /// <summary>
     /// 出現しうる敵リスト
     /// </summary>
-    [SerializeField] private List<BattleCharacter> mayApeearEnemys = new List<BattleCharacter>();
+    [SerializeField] private List<BattleCharacter> mayAppearEnemys = new List<BattleCharacter>();
+
+    [SerializeField] private List<BattleCharacter> mayAppearRareEnemys = new List<BattleCharacter>();
 
     public override E_DungeonSquareType SquareType => E_DungeonSquareType.通常戦闘;
 
@@ -23,11 +25,21 @@ public class DS_NormalBattle : DungeonSquare
     private void ChooseEnemys(DungeonManager dm)
     {
         List<BattleCharacter> enemys = new List<BattleCharacter>();
-        int countOfEnemyKind = this.mayApeearEnemys.Count;
+        int countOfEnemyKind = this.mayAppearEnemys.Count;
+        int countOfRareEnemyKind = this.mayAppearRareEnemys.Count;
         for(int i = 0; i < UnityEngine.Random.Range(2, 5); i++)
         {
-            BattleCharacter enemy = Instantiate(this.mayApeearEnemys[UnityEngine.Random.Range(0, countOfEnemyKind)], dm.EnemysRootObject.transform);
-            enemys.Add(enemy);
+            if(UnityEngine.Random.Range(0f, 1f) > dm.AppearanceRareEnemyRate)
+            {
+                BattleCharacter enemy = Instantiate(this.mayAppearEnemys[UnityEngine.Random.Range(0, countOfEnemyKind)], dm.EnemysRootObject.transform);
+                enemys.Add(enemy);
+            }
+            else
+            {
+                BattleCharacter rareEnemy = Instantiate(this.mayAppearRareEnemys[UnityEngine.Random.Range(0, countOfRareEnemyKind)], dm.EnemysRootObject.transform);
+                enemys.Add(rareEnemy);
+            }
+            
         }
         dm.Enemys = enemys;
 

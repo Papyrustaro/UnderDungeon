@@ -9,7 +9,14 @@ public class DS_Trap : DungeonSquare
     public override void SquareEvent(DungeonManager dm)
     {
         Debug.Log("罠イベント発生");
-        dm.GetTrapped();
+        if(UnityEngine.Random.Range(0f, 1f) > dm.EvadeTrapRate)
+        {
+            dm.GetTrapped();
+        }
+        else
+        {
+            Debug.Log("罠を回避した");
+        }
         dm.MoveScene(E_DungeonScene.SelectAction);
     }
 }

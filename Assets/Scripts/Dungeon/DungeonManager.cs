@@ -29,6 +29,7 @@ public class DungeonManager : MonoBehaviour
     [SerializeField] private DungeonUIManager dungeonUIManager;
     [SerializeField] private GameObject allysRootObject;
     [SerializeField] private GameObject enemysRootObject;
+    [SerializeField] private GameObject dontDestroyInDungeonObject;
 
     private List<DungeonActiveItem> haveDungeonActiveItems = new List<DungeonActiveItem>();
     private List<DungeonPassiveItem> haveDungeonPassiveItems = new List<DungeonPassiveItem>();
@@ -119,7 +120,7 @@ public class DungeonManager : MonoBehaviour
     public double GetGoldRate { get; private set; } = 1;
 
     /// <summary>
-    /// 敵ドロップ率(最大2倍)
+    /// 敵ドロップ「倍」率(最大2倍)
     /// </summary>
     public double EnemyDropRate { get; private set; } = 1;
 
@@ -203,6 +204,16 @@ public class DungeonManager : MonoBehaviour
     /// </summary>
     public GameObject EnemysRootObject => this.enemysRootObject;
 
+    /// <summary>
+    /// 手に入れたキャラオブジェクトを格納するオブジェクト
+    /// </summary>
+    public GameObject GotEnemysObject { get; private set; }
+
+    /// <summary>
+    /// ドロップや購入などで獲得したキャラクター(PlayerCharacter型のほうがいいか?)
+    /// </summary>
+    public List<BattleCharacter> GetCharacters { get; set; }
+
 
     public List<DungeonActiveItem> HaveDungeonActiveItems => this.haveDungeonActiveItems;
     public List<DungeonPassiveItem> HaveDungeonPassiveItems => this.haveDungeonPassiveItems;
@@ -245,7 +256,7 @@ public class DungeonManager : MonoBehaviour
         Instance = this;
         DontDestroyOnLoad(this.gameObject);
 
-
+        this.GotEnemysObject = this.dontDestroyInDungeonObject.transform.Find("GotEnemys").gameObject;
     }
 
     private void Start()
@@ -255,7 +266,7 @@ public class DungeonManager : MonoBehaviour
         {
             Debug.Log(this.mapManager.MapHeight + ":" + this.mapManager.MapWidth);
             this.GenerateFloor(this.mapManager.MapWidth, this.mapManager.MapHeight);
-            this.dungeonSquaresFunc.SetMayApeearDungeonSquares(this.mapManager.MayApeearDungeonSquares);
+            this.dungeonSquaresFunc.SetMayAppearDungeonSquares(this.mapManager.MayAppearDungeonSquares);
             this.MoveScene(E_DungeonScene.SelectAction);
             FirstSet();
             //SetFlagUnderstandDungeonSquareType(true);
@@ -824,14 +835,44 @@ public class DungeonManager : MonoBehaviour
     private void GenerateFloor(int rowSize, int columnSize)
     {
         this.currentFloorDungeonSquares = new E_DungeonSquareType[rowSize, columnSize];
-        int countOfDungeonSquaresKind = this.mapManager.MayApeearDungeonSquares.Count;
+        int countOfDungeonSquaresKind = this.mapManager.MayAppearDungeonSquares.Count;
+
         for (int i = 0; i < rowSize; i++)
         {
             for (int j = 0; j < columnSize; j++)
             {
-                this.currentFloorDungeonSquares[i, j] = this.mapManager.MayApeearDungeonSquareTypes[UnityEngine.Random.Range(0, countOfDungeonSquaresKind)];
+                /* 壁、Boss、階段は抜いてある。別の処理が必要 */
+                this.currentFloorDungeonSquares[i, j] = GetRandomDungeonSquareTypeByRate();
             }
         }
+    }
+
+    /// <summary>
+    /// ダンジョンマス出現率に合わせてランダムにマスタイプを返す(今の時点ではBoss, wallなど含んでいる)
+    /// </summary>
+    /// <returns>出現率を考慮してランダムに選ばれたマスイベント</returns>
+    private E_DungeonSquareType GetRandomDungeonSquareTypeByRate()
+    {
+        double sum = 0;
+        Dictionary<double, E_DungeonSquareType> dungeonSquareTypeInRate = new Dictionary<double, E_DungeonSquareType>();
+        foreach (E_DungeonSquareType dungeonSquareType in this.mapManager.MayAppearDungeonSquareTypes)
+        {
+            if(dungeonSquareType == E_DungeonSquareType.ボス戦 || dungeonSquareType == E_DungeonSquareType.壁 || dungeonSquareType == E_DungeonSquareType.階段)
+            {
+                continue;
+            }
+
+            sum += this.SquareEventAppearanceRate[dungeonSquareType];
+            dungeonSquareTypeInRate.Add(sum, dungeonSquareType);
+        }
+
+        double randomNum = UnityEngine.Random.Range(0, (float)sum);
+        foreach(KeyValuePair<double, E_DungeonSquareType> typeByRate in dungeonSquareTypeInRate)
+        {
+            if (typeByRate.Key <= randomNum) return typeByRate.Value;
+        }
+
+        throw new Exception();
     }
 
     public void MoveBattleScene()
@@ -1224,6 +1265,7 @@ public class DungeonManager : MonoBehaviour
         UnderstandDungeonSquareTypeAroundPlayer();
         //this.WaitDungeonSquareEvent = true;
         this.RemainingAmountOfMovement--;
+        this.Fullness--; //とりあえず1マス進むごとに満腹度-1
         Debug.Log("row/column = " + CurrentLocationRow + "/" + CurrentLocationColumn);
     }
 
