@@ -1356,5 +1356,15 @@ PrefabInstance:
       propertyPath: m_Name
       value: MapManager
       objectReference: {fileID: 0}
+    - target: {fileID: 2005290905161694259, guid: 77b19d0fba42f904c98e85a6d5e354fd,
+        type: 3}
+      propertyPath: mapWidth
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 2005290905161694259, guid: 77b19d0fba42f904c98e85a6d5e354fd,
+        type: 3}
+      propertyPath: mapHeight
+      value: 10
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 77b19d0fba42f904c98e85a6d5e354fd, type: 3}

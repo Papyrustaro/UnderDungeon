@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7776976621830658918}
-  - component: {fileID: 5166854750935258923}
+  - component: {fileID: 4872024335699379414}
   m_Layer: 0
   m_Name: DPI_2Sample
   m_TagString: Untagged
@@ -31,7 +31,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &5166854750935258923
+--- !u!114 &4872024335699379414
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -40,10 +40,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 7776976621830658919}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7152f7425a60f5f499912100a458e849, type: 3}
+  m_Script: {fileID: 11500000, guid: 89ec44902b6142e42b0e53ad937824b3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  effectType: 8
-  description: "DPI_\u7F60\u56DE\u907F\u7387\u5897\u52A0"
+  description: 
   id: 2
-  sellPrice: 400
+  sellPrice: 10000
+  increaseRateValue: 0.1

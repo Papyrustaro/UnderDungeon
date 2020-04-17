@@ -48,9 +48,9 @@ MonoBehaviour:
   - {fileID: 1908839966105076739, guid: 2a726b7e329c605498cafc020e68d083, type: 3}
   - {fileID: 1981961961123053877, guid: b44819d612680404bafcc2f2563eeef3, type: 3}
   mayApeearDungeonPassiveItems:
-  - {fileID: 6543817864932578012, guid: 6300b6d7606121e46b14f2a2cc112e7a, type: 3}
-  - {fileID: 6834273460707874119, guid: c3f532898f844bd4ea5ee152ccd2c4b5, type: 3}
-  - {fileID: 5166854750935258923, guid: ccb28ce05666e4441b664897f99db1cf, type: 3}
+  - {fileID: 1931304690208698324, guid: 6300b6d7606121e46b14f2a2cc112e7a, type: 3}
+  - {fileID: 114130396577175550, guid: c3f532898f844bd4ea5ee152ccd2c4b5, type: 3}
+  - {fileID: 4872024335699379414, guid: ccb28ce05666e4441b664897f99db1cf, type: 3}
   mayApeearBattleActiveItems:
   - {fileID: 7271127654028535811, guid: 66bd1bf86a2ca514d9ba0b96e62dbab9, type: 3}
   - {fileID: 451142692420643264, guid: e4bb4beffb8c9f9419227442882d5a14, type: 3}

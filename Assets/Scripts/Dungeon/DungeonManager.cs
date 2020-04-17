@@ -258,7 +258,8 @@ public class DungeonManager : MonoBehaviour
             this.dungeonSquaresFunc.SetMayApeearDungeonSquares(this.mapManager.MayApeearDungeonSquares);
             this.MoveScene(E_DungeonScene.SelectAction);
             FirstSet();
-            SetFlagUnderstandDungeonSquareType(true);
+            //SetFlagUnderstandDungeonSquareType(true);
+            UnderstandDungeonSquareTypeAroundPlayer();
 
             HaveGold = 5000000;
             this.isFinishFirstSet = true;
@@ -483,7 +484,7 @@ public class DungeonManager : MonoBehaviour
             for(int j = 0; j < this.mapManager.MapWidth; j++)
             {
                 if (understandDungeonSquareType[i, j]) s += DungeonManager.GetStringDungeonSquareType(this.currentFloorDungeonSquares[i, j]) + " ";
-                else s += "? ";
+                else s += "？ ";
             }
             s += "\n";
         }
@@ -1220,6 +1221,7 @@ public class DungeonManager : MonoBehaviour
                 else CurrentLocationColumn--;
                 break;
         }
+        UnderstandDungeonSquareTypeAroundPlayer();
         //this.WaitDungeonSquareEvent = true;
         this.RemainingAmountOfMovement--;
         Debug.Log("row/column = " + CurrentLocationRow + "/" + CurrentLocationColumn);
@@ -1256,9 +1258,9 @@ public class DungeonManager : MonoBehaviour
     private void SetTargetableDungeonSquare(List<E_DungeonSquareType> targetTypes, int effectRange)
     {
         this.targetableDungeonSquares = new List<PositionXY>();
-        for(int i = CurrentLocationRow - effectRange; i < CurrentLocationRow + effectRange; i++)
+        for(int i = CurrentLocationRow - effectRange; i <= CurrentLocationRow + effectRange; i++)
         {
-            for(int j = CurrentLocationColumn - effectRange + i; Math.Abs(CurrentLocationColumn - j) + Math.Abs(CurrentLocationRow - i) <= effectRange; j++)
+            for(int j = CurrentLocationColumn - effectRange + Math.Abs(effectRange - i); Math.Abs(CurrentLocationColumn - j) + Math.Abs(CurrentLocationRow - i) <= effectRange; j++)
             {
                 foreach(E_DungeonSquareType dsType in targetTypes)
                 {
@@ -1283,6 +1285,27 @@ public class DungeonManager : MonoBehaviour
         else
         {
             this.currentIndexOfTargetableDungeonSquares = 0;
+        }
+    }
+
+    /// <summary>
+    /// 自分の周囲のマスタイプを把握する
+    /// </summary>
+    private void UnderstandDungeonSquareTypeAroundPlayer()
+    {
+        for (int i = CurrentLocationRow - FieldOfVision; i <= CurrentLocationRow + FieldOfVision; i++)
+        {
+            for (int j = CurrentLocationColumn - FieldOfVision + Math.Abs(CurrentLocationRow - i); Math.Abs(CurrentLocationRow - i) + Math.Abs(CurrentLocationColumn - j) <= FieldOfVision; j++)
+            {
+                try
+                {
+                    this.understandDungeonSquareType[i, j] = true;
+                }
+                catch (IndexOutOfRangeException)
+                {
+                    continue;
+                }
+            }
         }
     }
 
