@@ -92,3 +92,8 @@
 ・獲得するアイテムId
 ・効果ターン
 ・
+
+## ダンジョン探索と戦闘間で保持すべきデータ
+・DungeonManager
+・Allys(BattleCharacter)
+・

@@ -43,12 +43,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 33a1225b5121b8249b2b6508acefbbb8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mapWidth: 2
-  mapHeight: 2
-  cameraObject: {fileID: 0}
+  mapWidth: 5
+  mapHeight: 5
   wallSquare: {fileID: 7794394096360812020, guid: 59aac5ead1627d8448a66407c2cdeb3b,
     type: 3}
-  mayApeearDungeonSquares:
+  mayAppearDungeonSquares:
   - {fileID: 6683470897146982148, guid: b518002fe9e10ab49a2d84be2eca1a9c, type: 3}
   - {fileID: 7964030144917720891, guid: cb175259391eefd469ea3d90e253d8e3, type: 3}
   - {fileID: 4270652426303896864, guid: 6f8876ecb54d6764d8c4e0dd5e46e742, type: 3}
@@ -61,4 +60,3 @@ MonoBehaviour:
   - {fileID: 4397960310991559944, guid: 383ca08a22c73e74fbb93f64f149e275, type: 3}
   - {fileID: 3018731905156185476, guid: 0ef9513909166c64a9a93e9801262d77, type: 3}
   - {fileID: 114954327380733956, guid: 369d50a6bf2759345834eb4a16b71abb, type: 3}
-  - {fileID: 7794394096360812020, guid: 59aac5ead1627d8448a66407c2cdeb3b, type: 3}

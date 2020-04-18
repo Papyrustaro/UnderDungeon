@@ -172,7 +172,7 @@ public class DungeonManager : MonoBehaviour
     /// <summary>
     /// マスイベントの出現率(初期値1、最大2?)
     /// </summary>
-    public Dictionary<E_DungeonSquareType, double> SquareEventAppearanceRate { get; private set; }
+    public Dictionary<E_DungeonSquareType, double> SquareEventAppearanceRate { get; private set; } = new Dictionary<E_DungeonSquareType, double>();
 
     /// <summary>
     /// 宝箱解除成功率(初期値0.5, 最大1?)
@@ -207,12 +207,12 @@ public class DungeonManager : MonoBehaviour
     /// <summary>
     /// 手に入れたキャラオブジェクトを格納するオブジェクト
     /// </summary>
-    public GameObject GotEnemysObject { get; private set; }
+    public GameObject GotCharactersObject { get; private set; }
 
     /// <summary>
     /// ドロップや購入などで獲得したキャラクター(PlayerCharacter型のほうがいいか?)
     /// </summary>
-    public List<BattleCharacter> GetCharacters { get; set; }
+    public List<BattleCharacter> GetCharacters { get; set; } = new List<BattleCharacter>();
 
 
     public List<DungeonActiveItem> HaveDungeonActiveItems => this.haveDungeonActiveItems;
@@ -256,7 +256,7 @@ public class DungeonManager : MonoBehaviour
         Instance = this;
         DontDestroyOnLoad(this.gameObject);
 
-        this.GotEnemysObject = this.dontDestroyInDungeonObject.transform.Find("GotEnemys").gameObject;
+        this.GotCharactersObject = this.dontDestroyInDungeonObject.transform.Find("GotCharacters").gameObject;
     }
 
     private void Start()
@@ -264,12 +264,12 @@ public class DungeonManager : MonoBehaviour
         //this.mapManager.GenerateFloor(this.currentFloorDungeonSquares);
         if (!isFinishFirstSet)
         {
+            FirstSet();
             Debug.Log(this.mapManager.MapHeight + ":" + this.mapManager.MapWidth);
             this.GenerateFloor(this.mapManager.MapWidth, this.mapManager.MapHeight);
             this.dungeonSquaresFunc.SetMayAppearDungeonSquares(this.mapManager.MayAppearDungeonSquares);
             this.MoveScene(E_DungeonScene.SelectAction);
-            FirstSet();
-            //SetFlagUnderstandDungeonSquareType(true);
+            SetFlagUnderstandDungeonSquareType(true);
             UnderstandDungeonSquareTypeAroundPlayer();
 
             HaveGold = 5000000;
@@ -302,11 +302,20 @@ public class DungeonManager : MonoBehaviour
     
 
     /// <summary>
-    /// 各データの初期化。Startで呼ぶ.
+    /// 各データの初期化。Start初めで呼ぶ.
     /// </summary>
     private void FirstSet()
     {
         this.understandDungeonSquareType = new bool[this.mapManager.MapWidth, this.mapManager.MapHeight];
+        foreach(E_DungeonSquareType dungeonSquareType in Enum.GetValues(typeof(E_DungeonSquareType)))
+        {
+            if(dungeonSquareType == E_DungeonSquareType.Error || dungeonSquareType == E_DungeonSquareType.ボス戦 || dungeonSquareType == E_DungeonSquareType.壁 || dungeonSquareType == E_DungeonSquareType.階段)
+            {
+                continue;
+            }
+            this.SquareEventAppearanceRate.Add(dungeonSquareType, 1);
+        }
+        
     }
 
     /// <summary>
@@ -841,10 +850,20 @@ public class DungeonManager : MonoBehaviour
         {
             for (int j = 0; j < columnSize; j++)
             {
-                /* 壁、Boss、階段は抜いてある。別の処理が必要 */
-                this.currentFloorDungeonSquares[i, j] = GetRandomDungeonSquareTypeByRate();
+                /* とりあえずx,y共に奇数の座標を壁にする */
+                if(i % 2 == 1 && j % 2 == 1)
+                {
+                    this.currentFloorDungeonSquares[i, j] = E_DungeonSquareType.壁;
+                }
+                else
+                {
+                    this.currentFloorDungeonSquares[i, j] = GetRandomDungeonSquareTypeByRate();
+                }
             }
         }
+
+        /* ランダムで1マスボスマスに変える(本来は階層チェックから判断し、階段と分岐する) */
+        this.currentFloorDungeonSquares[UnityEngine.Random.Range(0, rowSize), UnityEngine.Random.Range(0, columnSize)] = E_DungeonSquareType.ボス戦;
     }
 
     /// <summary>
@@ -869,7 +888,7 @@ public class DungeonManager : MonoBehaviour
         double randomNum = UnityEngine.Random.Range(0, (float)sum);
         foreach(KeyValuePair<double, E_DungeonSquareType> typeByRate in dungeonSquareTypeInRate)
         {
-            if (typeByRate.Key <= randomNum) return typeByRate.Value;
+            if (typeByRate.Key >= randomNum) return typeByRate.Value;
         }
 
         throw new Exception();
@@ -1302,18 +1321,20 @@ public class DungeonManager : MonoBehaviour
         this.targetableDungeonSquares = new List<PositionXY>();
         for(int i = CurrentLocationRow - effectRange; i <= CurrentLocationRow + effectRange; i++)
         {
-            for(int j = CurrentLocationColumn - effectRange + Math.Abs(effectRange - i); Math.Abs(CurrentLocationColumn - j) + Math.Abs(CurrentLocationRow - i) <= effectRange; j++)
+            for(int j = CurrentLocationColumn - effectRange + Math.Abs(CurrentLocationRow - i); Math.Abs(CurrentLocationColumn - j) + Math.Abs(CurrentLocationRow - i) <= effectRange; j++)
             {
-                foreach(E_DungeonSquareType dsType in targetTypes)
+                try
                 {
-                    try
+                    if (this.currentFloorDungeonSquares[i, j] == E_DungeonSquareType.ボス戦 || this.currentFloorDungeonSquares[i, j] == E_DungeonSquareType.階段) continue;
+
+                    foreach (E_DungeonSquareType dsType in targetTypes)
                     {
                         if (this.currentFloorDungeonSquares[i, j] == dsType) this.targetableDungeonSquares.Add(new PositionXY(i, j));
                     }
-                    catch (IndexOutOfRangeException)
-                    {
-                        break;
-                    }
+                }
+                catch (IndexOutOfRangeException)
+                {
+                    continue;
                 }
             }
         }

@@ -15,7 +15,7 @@ public class EnemyCharacter : MonoBehaviour
     [SerializeField]
     private E_BattleActiveSkill[] haveBattleActiveSkillID; //基本行動の敵の使用スキル
     [SerializeField]
-    private int dropRate = 50; //ドロップ率(%)
+    private double dropRate = 0.5; //ドロップ率
 
     private bool finishSetStatus = false;
     private BaseEnemyAI enemyAI;
@@ -39,7 +39,7 @@ public class EnemyCharacter : MonoBehaviour
     public double HpRate => this.hpRate;
     public double AtkRate => this.atkRate;
     public double SpdRate => this.spdRate;
-    public int DropRate => this.dropRate;
+    public double DropRate => this.dropRate;
     public E_BattleActiveSkill[] HaveBattleActtiveSkillID => this.haveBattleActiveSkillID;
     public bool HaveSpecialAI => this.haveSpecialAI;
     public Character CharaClass

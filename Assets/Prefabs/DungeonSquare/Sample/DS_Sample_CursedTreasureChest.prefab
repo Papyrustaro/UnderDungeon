@@ -43,20 +43,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1eef75ff1b5a9fe4e848e9174922d5de, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mayApeearDungeonActiveItems:
-  - {fileID: 114942000187379210, guid: 195e1ce4806345143b962f71a3ef8f52, type: 3}
-  - {fileID: 1908839966105076739, guid: 2a726b7e329c605498cafc020e68d083, type: 3}
+  mayAppearDungeonActiveItems:
   - {fileID: 1981961961123053877, guid: b44819d612680404bafcc2f2563eeef3, type: 3}
-  mayApeearDungeonPassiveItems:
-  - {fileID: 1931304690208698324, guid: 6300b6d7606121e46b14f2a2cc112e7a, type: 3}
-  - {fileID: 114130396577175550, guid: c3f532898f844bd4ea5ee152ccd2c4b5, type: 3}
+  mayAppearDungeonPassiveItems:
   - {fileID: 4872024335699379414, guid: ccb28ce05666e4441b664897f99db1cf, type: 3}
-  mayApeearBattleActiveItems:
-  - {fileID: 7271127654028535811, guid: 66bd1bf86a2ca514d9ba0b96e62dbab9, type: 3}
-  - {fileID: 451142692420643264, guid: e4bb4beffb8c9f9419227442882d5a14, type: 3}
+  mayAppearBattleActiveItems:
   - {fileID: 6034668840082478733, guid: 0f9fd786cb275f341b40809a62954181, type: 3}
-  mayApeearBattlePassiveItems:
+  mayAppearBattlePassiveItems:
   - {fileID: 4677454765080924915, guid: 87d5dcf6b45f4ad4b8b6d7a50777be24, type: 3}
-  - {fileID: 5933480642881591513, guid: af0d89ca1e7dc784b95b1f1e3de56caf, type: 3}
-  mayApeearEnemy:
-  - {fileID: 6375168223424066447, guid: c296482c76084aa41963956c24cce310, type: 3}
+  mayAppearEnemy:
+  - {fileID: 6657614018640736549, guid: 3d91ca3c184263340ac9634372a79471, type: 3}

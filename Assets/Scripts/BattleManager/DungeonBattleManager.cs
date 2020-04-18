@@ -175,7 +175,7 @@ public class DungeonBattleManager : MonoBehaviour
             if(UnityEngine.Random.Range(0f, 1f) < enemy.EC.DropRate * this.dungeonManager.EnemyDropRate)
             {
                 Debug.Log("enemyドロップ: " + enemy.CharaClass.CharaName);
-                this.dungeonManager.GetCharacters.Add(Instantiate(enemy, this.dungeonManager.GotEnemysObject.transform)); 
+                this.dungeonManager.GetCharacters.Add(Instantiate(enemy, this.dungeonManager.GotCharactersObject.transform)); 
             }
         }
     }
