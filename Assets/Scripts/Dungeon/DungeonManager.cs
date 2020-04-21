@@ -4,6 +4,7 @@ using UnityEngine;
 using System;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using System.Collections.ObjectModel;
 
 public class DungeonManager : MonoBehaviour
 {
@@ -72,8 +73,6 @@ public class DungeonManager : MonoBehaviour
     public static readonly double SQUARE_EVENT_APPEARANCE_RATE_UPPER_LIMIT = 2;
     public static readonly double SUCCESS_RATE_OF_UNLOCK_TREASURE_CHEST_UPPER_LIMIT = 1;
     public static readonly double EVADE_TRAP_RATE_UPPER_LIMIT = 0.9;
-
-
 
     /* ↑定数↑ */
 
@@ -236,7 +235,10 @@ public class DungeonManager : MonoBehaviour
 
 
     public List<DungeonActiveItem> HaveDungeonActiveItems => this.haveDungeonActiveItems;
-    public List<DungeonPassiveItem> HaveDungeonPassiveItems => this.haveDungeonPassiveItems;
+    /// <summary>
+    /// 現在持っているdungeonPassiveItem。追加する際はAddDungeonPassiveItemを呼ぶ。
+    /// </summary>
+    public ReadOnlyCollection<DungeonPassiveItem> HaveDungeonPassiveItems => new ReadOnlyCollection<DungeonPassiveItem>(this.haveDungeonPassiveItems);
     public List<BattleActiveItem> HaveBattleActiveItems => this.haveBattleActiveItems;
     public List<BattlePassiveItem> HaveBattlePassiveItems => this.haveBattlePassiveItems;
 
@@ -382,6 +384,25 @@ public class DungeonManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// PassiveEffectを初期化し、効果を適用させる
+    /// </summary>
+    private void ReSetAllPassiveEffect()
+    {
+        List<int> currentDsp = new List<int>();
+        foreach(BattleCharacter ally in this.allys)
+        {
+            currentDsp.Add(ally.Dsp);
+        }
+        InitAllPassiveEffectParameter();
+        SetAllPassiveEffect();
+        if (this.Fullness > this.MaxFullNess) this.Fullness = this.MaxFullNess;
+        for(int i = 0; i < currentDsp.Count; i++)
+        {
+            this.allys[i].Dsp = currentDsp[i]; //開始時Dsp増加分修正
+        }
+    }
+
     private void InitSquareEventAppearanceRate()
     {
         this.SquareEventAppearanceRate = new Dictionary<E_DungeonSquareType, double>();
@@ -454,6 +475,26 @@ public class DungeonManager : MonoBehaviour
                 //this.MoveScene(E_DungeonScene.SelectAction);
                 break;
         }
+    }
+
+    /// <summary>
+    /// アイテムの効果反映とリストへの追加
+    /// </summary>
+    /// <param name="addItem">入手したdungeonPassiveItem</param>
+    public void AddDungeonPassiveItem(DungeonPassiveItem addItem)
+    {
+        addItem.EffectFunc(this);
+        this.haveDungeonPassiveItems.Add(addItem);
+    }
+
+    /// <summary>
+    /// 所持していたdungeonPassiveItemを失う
+    /// </summary>
+    /// <param name="indexOfHaveDungeonPassiveItems">失うアイテムのindex</param>
+    public void RemoveHaveDungeonPassiveItem(int indexOfHaveDungeonPassiveItems)
+    {
+        this.haveDungeonPassiveItems.RemoveAt(indexOfHaveDungeonPassiveItems);
+        ReSetAllPassiveEffect();
     }
 
     /// <summary>
@@ -1212,7 +1253,7 @@ public class DungeonManager : MonoBehaviour
             case 1:
                 try
                 {
-                    this.haveDungeonPassiveItems.RemoveAt(UnityEngine.Random.Range(0, this.haveDungeonPassiveItems.Count));
+                    RemoveHaveDungeonPassiveItem(UnityEngine.Random.Range(0, this.haveDungeonPassiveItems.Count));
                 }
                 catch (ArgumentOutOfRangeException)
                 {

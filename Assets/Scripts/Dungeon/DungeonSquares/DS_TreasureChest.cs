@@ -38,7 +38,7 @@ public class DS_TreasureChest : DungeonSquare
             case 3:
                 DungeonPassiveItem dpItem = this.mayAppearDungeonPassiveItems[UnityEngine.Random.Range(0, this.mayAppearDungeonPassiveItems.Count)];
                 Debug.Log(dpItem.EffectName + "を入手した");
-                dm.HaveDungeonPassiveItems.Add(dpItem);
+                dm.AddDungeonPassiveItem(dpItem);
                 break;
             case 4:
             case 5:

@@ -208,7 +208,7 @@ public class DS_BlackMarketeer : DungeonSquare
             }
             else if (selectItemIndex == 1)
             {
-                dm.HaveDungeonPassiveItems.Add(this.appearDungeonPassiveItem);
+                dm.AddDungeonPassiveItem(this.appearDungeonPassiveItem);
                 dm.AnnounceByText(this.appearDungeonPassiveItem.EffectName + "を購入しました");
                 dm.HaveGold -= this.appearDungeonPassiveItem.BuyPrice;
             }
