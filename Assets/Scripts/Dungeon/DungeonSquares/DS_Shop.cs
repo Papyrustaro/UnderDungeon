@@ -23,13 +23,14 @@ public class DS_Shop : DungeonSquare
     private bool[] isBought = new bool[4];
 
     private E_ShopScene currentScene = E_ShopScene.FirstSet;
-    //private bool needAnnounce = false;
+    private bool finishFirstSet = false;
 
     private DungeonActiveItem appearDungeonActiveItem;
     private DungeonPassiveItem appearDungeonPassiveItem;
     private BattleActiveItem appearBattleActiveItem;
     private BattlePassiveItem appearBattlePassiveItem;
 
+    
     public override void SquareEvent(DungeonManager dm)
     {
         switch (this.currentScene)
@@ -42,6 +43,11 @@ public class DS_Shop : DungeonSquare
                 this.currentScene = E_ShopScene.SelectItem;
                 break;
             case E_ShopScene.SelectItem:
+                if (!this.finishFirstSet)
+                {
+                    this.currentScene = E_ShopScene.FirstSet;
+                    return;
+                }
                 if (dm.NeedAnnounce)
                 {
                     ShowSoldItem(dm);
@@ -250,6 +256,7 @@ public class DS_Shop : DungeonSquare
         this.currentScene = E_ShopScene.FirstSet;
         this.selectItemIndex = 0;
         this.isBought = new bool[4] { false, false, false, false };
+        this.finishFirstSet = true;
     }
     private void SetSelectItemIndex(DungeonManager dm)
     {

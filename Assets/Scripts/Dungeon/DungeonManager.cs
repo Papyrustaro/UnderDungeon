@@ -57,6 +57,26 @@ public class DungeonManager : MonoBehaviour
     private int currentIndexOfTargetableDungeonSquares = 0; //現在選んでいるtargetableDungeonSquaresの番地
     private bool isFinishFirstSet = false; //ダンジョン潜入直後のセットが終わったかどうか
 
+    /* ↓定数↓ */
+
+    public static readonly int MAX_FULLNESS_DEFAULT = 100;
+    public static readonly double ENEMY_DROP_RATE_DEFAULT = 1;
+    public static readonly double APPEARANCE_RARE_ENEMY_RATE_DEFAULT = 0.1;
+    public static readonly double SQUARE_EVENT_APPEARANCE_RATE_DEFAULT = 1;
+    public static readonly double SUCCESS_RATE_OF_UNLOCK_TREASURE_CHEST_DEFAULT = 0.5;
+    public static readonly double EVADE_TRAP_RATE_DEFAULT = 0.2;
+
+    public static readonly int MAX_FULLNESS_UPPER_LIMIT = 150;
+    public static readonly double ENEMY_DROP_RATE_UPPER_LIMIT = 2;
+    public static readonly double APPEARANCE_RARE_ENEMY_RATE_UPPER_LIMIT = 0.5;
+    public static readonly double SQUARE_EVENT_APPEARANCE_RATE_UPPER_LIMIT = 2;
+    public static readonly double SUCCESS_RATE_OF_UNLOCK_TREASURE_CHEST_UPPER_LIMIT = 1;
+    public static readonly double EVADE_TRAP_RATE_UPPER_LIMIT = 0.9;
+
+
+
+    /* ↑定数↑ */
+
     /// <summary>
     /// ActiveEffect発動前記憶用
     /// </summary>
@@ -122,7 +142,7 @@ public class DungeonManager : MonoBehaviour
     /// <summary>
     /// 敵ドロップ「倍」率(最大2倍)
     /// </summary>
-    public double EnemyDropRate { get; private set; } = 1;
+    public double EnemyDropRate { get; private set; } = ENEMY_DROP_RATE_DEFAULT;
 
     /// <summary>
     /// 現在の階層
@@ -157,7 +177,7 @@ public class DungeonManager : MonoBehaviour
     /// <summary>
     /// レア敵出現率。Max0.5???
     /// </summary>
-    public double AppearanceRareEnemyRate { get; private set; } = 0.1;
+    public double AppearanceRareEnemyRate { get; private set; } = APPEARANCE_RARE_ENEMY_RATE_DEFAULT;
 
     /// <summary>
     /// レアアイテム販売率。Max0.5???
@@ -177,12 +197,12 @@ public class DungeonManager : MonoBehaviour
     /// <summary>
     /// 宝箱解除成功率(初期値0.5, 最大1?)
     /// </summary>
-    public double SuccessRateOfUnlockTreasureChest { get; private set; } = 0.5;
+    public double SuccessRateOfUnlockTreasureChest { get; private set; } = SUCCESS_RATE_OF_UNLOCK_TREASURE_CHEST_DEFAULT;
 
     /// <summary>
     /// 罠回避率。Max0.9???
     /// </summary>
-    public double EvadeTrapRate { get; private set; } = 0.2;
+    public double EvadeTrapRate { get; private set; } = EVADE_TRAP_RATE_DEFAULT;
 
     /// <summary>
     /// マス移動量増加量(基本0)
@@ -264,8 +284,7 @@ public class DungeonManager : MonoBehaviour
         //this.mapManager.GenerateFloor(this.currentFloorDungeonSquares);
         if (!isFinishFirstSet)
         {
-            FirstSet();
-            Debug.Log(this.mapManager.MapHeight + ":" + this.mapManager.MapWidth);
+            InitSet();
             this.GenerateFloor(this.mapManager.MapWidth, this.mapManager.MapHeight);
             this.dungeonSquaresFunc.SetMayAppearDungeonSquares(this.mapManager.MayAppearDungeonSquares);
             this.MoveScene(E_DungeonScene.SelectAction);
@@ -273,6 +292,7 @@ public class DungeonManager : MonoBehaviour
             UnderstandDungeonSquareTypeAroundPlayer();
 
             HaveGold = 5000000;
+            FirstSet();
             this.isFinishFirstSet = true;
         }
     }
@@ -297,6 +317,14 @@ public class DungeonManager : MonoBehaviour
         {
             Debug.Log("所持G: " + HaveGold);
         }
+        if (Input.GetKeyDown(KeyCode.I))
+        {
+            ShowAllItem();
+        }
+        if (Input.GetKeyDown(KeyCode.F))
+        {
+            Debug.Log("満腹度: " + this.Fullness + "/" + this.MaxFullNess);
+        }
     }
 
     
@@ -304,20 +332,68 @@ public class DungeonManager : MonoBehaviour
     /// <summary>
     /// 各データの初期化。Start初めで呼ぶ.
     /// </summary>
-    private void FirstSet()
+    private void InitSet()
     {
         this.understandDungeonSquareType = new bool[this.mapManager.MapWidth, this.mapManager.MapHeight];
-        foreach(E_DungeonSquareType dungeonSquareType in Enum.GetValues(typeof(E_DungeonSquareType)))
+        InitSquareEventAppearanceRate();
+        SetAllPassiveEffect();
+    }
+
+
+    /// <summary>
+    /// 各データのPassiveを考慮した後の代入。Startの最後で呼ぶ
+    /// </summary>
+    private void FirstSet()
+    {
+        this.Fullness = this.MaxFullNess;
+    }
+
+    /// <summary>
+    /// 全てのPassiveEffectのパラメータを初期化する
+    /// </summary>
+    private void InitAllPassiveEffectParameter()
+    {
+        this.MaxFullNess = MAX_FULLNESS_DEFAULT;
+        this.EnemyDropRate = ENEMY_DROP_RATE_DEFAULT;
+        this.AppearanceRareEnemyRate = APPEARANCE_RARE_ENEMY_RATE_DEFAULT;
+        InitSquareEventAppearanceRate();
+        this.SuccessRateOfUnlockTreasureChest = SUCCESS_RATE_OF_UNLOCK_TREASURE_CHEST_DEFAULT;
+        this.EvadeTrapRate = EVADE_TRAP_RATE_DEFAULT;
+    }
+
+    /// <summary>
+    /// DPIとDPSの効果をすべて反映させる。初期化処理はしない
+    /// </summary>
+    private void SetAllPassiveEffect()
+    {
+        foreach(DungeonPassiveItem dpi in this.haveDungeonPassiveItems)
         {
-            if(dungeonSquareType == E_DungeonSquareType.Error || dungeonSquareType == E_DungeonSquareType.ボス戦 || dungeonSquareType == E_DungeonSquareType.壁 || dungeonSquareType == E_DungeonSquareType.階段)
+            dpi.EffectFunc(this);
+        }
+        foreach(BattleCharacter ally in this.allys)
+        {
+            for(int i = 0; i < ally.PC.HaveDungeonPassiveSkillID.Length; i++)
+            {
+                if(ally.PC.UseAbleDungeonPassiveSkillLV[i] <= ally.PC.LV)
+                {
+                    this.dungeonPassiveEffectsFunc.GetSkill(ally.PC.HaveDungeonPassiveSkillID[i]).EffectFunc(this);
+                }
+            }
+        }
+    }
+
+    private void InitSquareEventAppearanceRate()
+    {
+        this.SquareEventAppearanceRate = new Dictionary<E_DungeonSquareType, double>();
+        foreach (E_DungeonSquareType dungeonSquareType in Enum.GetValues(typeof(E_DungeonSquareType)))
+        {
+            if (dungeonSquareType == E_DungeonSquareType.Error || dungeonSquareType == E_DungeonSquareType.ボス戦 || dungeonSquareType == E_DungeonSquareType.壁 || dungeonSquareType == E_DungeonSquareType.階段)
             {
                 continue;
             }
             this.SquareEventAppearanceRate.Add(dungeonSquareType, 1);
         }
-        
     }
-
     /// <summary>
     /// 現在の状態に合わせてプレイヤーの入力などの分岐処理(Updateで呼ばれる)
     /// </summary>
@@ -520,7 +596,7 @@ public class DungeonManager : MonoBehaviour
     {
         Debug.Log("レア敵出現率" + increaseRate + "増加");
         this.AppearanceRareEnemyRate += increaseRate;
-        if (this.AppearanceRareEnemyRate > 0.5) this.AppearanceRareEnemyRate = 0.5;
+        if (this.AppearanceRareEnemyRate > APPEARANCE_RARE_ENEMY_RATE_UPPER_LIMIT) this.AppearanceRareEnemyRate = APPEARANCE_RARE_ENEMY_RATE_UPPER_LIMIT;
     }
 
     /// <summary>
@@ -531,7 +607,7 @@ public class DungeonManager : MonoBehaviour
     {
         Debug.Log("罠回避率" + increaseRate + "増加");
         this.EvadeTrapRate += increaseRate;
-        if (this.EvadeTrapRate > 0.9) this.EvadeTrapRate = 0.9;
+        if (this.EvadeTrapRate > EVADE_TRAP_RATE_UPPER_LIMIT) this.EvadeTrapRate = EVADE_TRAP_RATE_UPPER_LIMIT;
     }
 
     /// <summary>
@@ -564,7 +640,7 @@ public class DungeonManager : MonoBehaviour
     {
         Debug.Log("最大満腹度" + increaseValue + "増加");
         this.MaxFullNess += increaseValue;
-        if (this.MaxFullNess > 150) this.MaxFullNess = 150;
+        if (this.MaxFullNess > MAX_FULLNESS_UPPER_LIMIT) this.MaxFullNess = MAX_FULLNESS_UPPER_LIMIT;
     }
 
     /// <summary>
@@ -575,7 +651,7 @@ public class DungeonManager : MonoBehaviour
     {
         Debug.Log("敵ドロップ率" + increaseRateValue + "増加");
         this.EnemyDropRate += increaseRateValue;
-        if (this.EnemyDropRate > 2) this.EnemyDropRate = 2;
+        if (this.EnemyDropRate > ENEMY_DROP_RATE_UPPER_LIMIT) this.EnemyDropRate = ENEMY_DROP_RATE_UPPER_LIMIT;
     }
 
     /// <summary>
@@ -609,7 +685,7 @@ public class DungeonManager : MonoBehaviour
     {
         Debug.Log(squareType.ToString() + "イベント発生率" + increaseRateValue + "増加");
         this.SquareEventAppearanceRate[squareType] += increaseRateValue;
-        if (this.SquareEventAppearanceRate[squareType] > 2) this.SquareEventAppearanceRate[squareType] = 2;
+        if (this.SquareEventAppearanceRate[squareType] > SQUARE_EVENT_APPEARANCE_RATE_UPPER_LIMIT) this.SquareEventAppearanceRate[squareType] = SQUARE_EVENT_APPEARANCE_RATE_UPPER_LIMIT;
     }
 
     /// <summary>
@@ -620,7 +696,7 @@ public class DungeonManager : MonoBehaviour
     {
         Debug.Log("宝箱解除率" + increaseRateValue + "増加");
         this.SuccessRateOfUnlockTreasureChest += increaseRateValue;
-        if (this.SuccessRateOfUnlockTreasureChest > 2) this.SuccessRateOfUnlockTreasureChest = 2;
+        if (this.SuccessRateOfUnlockTreasureChest > SUCCESS_RATE_OF_UNLOCK_TREASURE_CHEST_UPPER_LIMIT) this.SuccessRateOfUnlockTreasureChest = SUCCESS_RATE_OF_UNLOCK_TREASURE_CHEST_UPPER_LIMIT;
     }
     /// <summary>
     /// マスタイプを簡略化した文字を返す
@@ -698,6 +774,34 @@ public class DungeonManager : MonoBehaviour
         this.MovementIncreaseValue = 0;
         this.changedDice = null;
         this.MoveScene(E_DungeonScene.MovingDungeonSquare); //移動に遷移
+    }
+
+    /// <summary>
+    /// 所持しているすべてのアイテムをConsoleに表示(debug用)
+    /// </summary>
+    private void ShowAllItem()
+    {
+        string s = "DAI\n";
+        foreach(DungeonActiveItem dai in this.HaveDungeonActiveItems)
+        {
+            s += dai.EffectName + "\n";
+        }
+        s += "DPI\n";
+        foreach(DungeonPassiveItem dpi in this.HaveDungeonPassiveItems)
+        {
+            s += dpi.EffectName + "\n";
+        }
+        s += "BAI\n";
+        foreach(BattleActiveItem bai in this.HaveBattleActiveItems)
+        {
+            s += bai.EffectName + "\n";
+        }
+        s += "BPI\n";
+        foreach(BattlePassiveItem bpi in this.HaveBattlePassiveItems)
+        {
+            s += bpi.EffectName + "\n";
+        }
+        Debug.Log(s);
     }
 
     

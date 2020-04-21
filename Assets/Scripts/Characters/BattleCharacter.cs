@@ -21,6 +21,8 @@ public class BattleCharacter : MonoBehaviour
 
     private List<E_BattleActiveSkill> battleActiveSkillID = new List<E_BattleActiveSkill>();
     private Character charaClass;
+    private PlayerCharacter playerClass;
+    private EnemyCharacter enemyClass;
 
     /// <summary>
     /// 経過ターン処理後に適用するActiveEffectの保存用リスト
@@ -107,8 +109,22 @@ public class BattleCharacter : MonoBehaviour
             return charaClass;
         }
     }
-    public PlayerCharacter PC { get; set; }
-    public EnemyCharacter EC { get; set; }
+    public PlayerCharacter PC
+    {
+        get
+        {
+            if (this.playerClass == null) SetCharacter();
+            return this.playerClass;
+        }
+    }
+    public EnemyCharacter EC
+    {
+        get
+        {
+            if (this.enemyClass == null) SetCharacter();
+            return this.enemyClass;
+        }
+    }
 
     /// <summary>
     /// 復活する際のHp回復割合(Max1, 0で復活しない)
@@ -198,12 +214,12 @@ public class BattleCharacter : MonoBehaviour
     {
         if (this.gameObject.CompareTag("Player"))
         {
-            this.PC = GetComponent<PlayerCharacter>();
+            this.playerClass = GetComponent<PlayerCharacter>();
             this.charaClass = PC.CharaClass;
         }
         else
         {
-            this.EC = GetComponent<EnemyCharacter>();
+            this.enemyClass = GetComponent<EnemyCharacter>();
             this.charaClass = EC.CharaClass;
             this.IsEnemy = true;
         }

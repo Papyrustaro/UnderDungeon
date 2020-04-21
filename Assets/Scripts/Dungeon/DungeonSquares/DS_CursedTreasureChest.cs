@@ -24,6 +24,13 @@ public class DS_CursedTreasureChest : DungeonSquare
     /// </summary>
     private void OpenCursedTreasureChest(DungeonManager dm)
     {
+        if(UnityEngine.Random.Range(0f, 1f) > dm.SuccessRateOfUnlockTreasureChest)
+        {
+            Debug.Log("宝箱の解除に失敗した"); /* あるいは鍵がかかっていないものも用意or成功率を宝箱ごとにわける */
+            dm.MoveScene(E_DungeonScene.SelectAction);
+            return;
+        }
+
         switch(UnityEngine.Random.Range(0, 9))
         {
             case 0:

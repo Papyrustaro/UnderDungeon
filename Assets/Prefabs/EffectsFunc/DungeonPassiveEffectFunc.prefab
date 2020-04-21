@@ -44,3 +44,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dungeonPassiveItems: []
+  dungeonPassiveSkills:
+  - {fileID: 7484403703018680577, guid: ab4cb2c39901f4d448287a6bacc15fb8, type: 3}
+  - {fileID: 190539988701799853, guid: 8634dc586a2b5b444858ce249c0af282, type: 3}
+  - {fileID: 2086463452918933205, guid: eb006524365b7c04caead9d47a36ed68, type: 3}

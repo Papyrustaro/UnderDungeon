@@ -1340,8 +1340,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5061160232512452244, guid: e066127918f14e946a2151f538f1c00e,
         type: 3}
+      propertyPath: haveDungeonPassiveSkillID.Array.size
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 5061160232512452244, guid: e066127918f14e946a2151f538f1c00e,
+        type: 3}
       propertyPath: haveBattleActiveSkillID.Array.data[0]
       value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 5061160232512452244, guid: e066127918f14e946a2151f538f1c00e,
+        type: 3}
+      propertyPath: haveExp
+      value: 40
       objectReference: {fileID: 0}
     - target: {fileID: 8000744719744227858, guid: e066127918f14e946a2151f538f1c00e,
         type: 3}

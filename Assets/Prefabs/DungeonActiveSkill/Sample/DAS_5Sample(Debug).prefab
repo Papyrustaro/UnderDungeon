@@ -47,6 +47,6 @@ MonoBehaviour:
   id: 5
   needDsp: 0
   targetTypeToDungeonSquare: 1
-  targetDungeonSquareTypes: 010000000b000000020000000300000004000000050000000600000007000000080000000a000000090000000c000000
-  afterChangeDungeonSquareType: 0
-  effectRange: 4
+  targetDungeonSquareTypes: 000000000b000000020000000300000001000000050000000600000007000000080000000a000000090000000c000000
+  afterChangeDungeonSquareType: 4
+  effectRange: 6
