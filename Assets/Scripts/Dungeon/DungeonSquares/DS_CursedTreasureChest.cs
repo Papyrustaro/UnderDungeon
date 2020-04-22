@@ -64,6 +64,7 @@ public class DS_CursedTreasureChest : DungeonSquare
                 dm.MoveBattleScene();
                 return;
         }
+        dm.ElapseTurn();
         dm.MoveScene(E_DungeonScene.SelectAction);
     }
 }

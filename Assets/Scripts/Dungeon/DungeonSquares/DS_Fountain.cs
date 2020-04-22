@@ -10,6 +10,7 @@ public class DS_Fountain : DungeonSquare
     {
         Debug.Log("回復の泉イベント発生");
         HealHp(dm);
+        dm.ElapseTurn();
         dm.MoveScene(E_DungeonScene.SelectAction);
     }
 

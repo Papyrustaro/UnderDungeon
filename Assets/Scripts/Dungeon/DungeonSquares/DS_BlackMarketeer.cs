@@ -57,6 +57,7 @@ public class DS_BlackMarketeer : DungeonSquare
         {
             Debug.Log("店を出た");
             InitSet();
+            dm.ElapseTurn();
             dm.MoveScene(E_DungeonScene.SelectAction);
         }
     }
@@ -272,6 +273,7 @@ public class DS_BlackMarketeer : DungeonSquare
             Debug.Log("販売できる商品はありません");
             Debug.Log("店を出た");
             //マスイベント終了処理
+            dm.ElapseTurn();
             dm.MoveScene(E_DungeonScene.SelectAction);
             InitSet();
         }

@@ -116,7 +116,7 @@ public class DungeonManager : MonoBehaviour
     /// <summary>
     /// 祈祷回数(ダンジョン潜入時0)
     /// </summary>
-    public int CountOfPray { get; set; } = 0;
+    //public int CountOfPray { get; set; } = 0;
 
     /// <summary>
     /// 何マス先まで見えるか→通常と狭いの2パターンのみにするか？
@@ -541,9 +541,19 @@ public class DungeonManager : MonoBehaviour
 
         StartCoroutine(DelayMethod(1, () =>
         {
+            this.ElapseTurn();
             this.dungeonUIManager.LoadDungeonScene();
             this.MoveScene(E_DungeonScene.SelectAction);
         }));
+    }
+
+    /// <summary>
+    /// マスイベント終了後に呼ぶ、ターン経過処理
+    /// </summary>
+    public void ElapseTurn()
+    {
+        if (this.FieldOfVisionNarrowTurn > 0) this.FieldOfVisionNarrowTurn--;
+        if (this.EnclosedUseDungeonActiveSkillTurn > 0) this.EnclosedUseDungeonActiveSkillTurn--;
     }
 
     /// <summary>
@@ -562,9 +572,16 @@ public class DungeonManager : MonoBehaviour
             this.NeedAnnounce = true;
         }else if (Input.GetKeyDown(((int)E_DungeonPlayerSelect.InvokeDungeonActiveSkill).ToString()))
         {
-            //DAS発動に遷移
-            this.MoveScene(E_DungeonScene.SelectDAS);
-            this.NeedAnnounce = true;
+            if(EnclosedUseDungeonActiveSkillTurn > 0)
+            {
+                Debug.Log("スキル発動ができない");
+            }
+            else
+            {
+                //DAS発動に遷移
+                this.MoveScene(E_DungeonScene.SelectDAS);
+                this.NeedAnnounce = true;
+            }
         }else if (Input.GetKeyDown(((int)E_DungeonPlayerSelect.VerificateMap).ToString()))
         {
             //マップ確認に遷移
@@ -616,14 +633,29 @@ public class DungeonManager : MonoBehaviour
     private void ViewMap()
     {
         string s = "マップ状態\n";
-        for(int i = 0; i < this.mapManager.MapHeight; i++)
+        if(this.FieldOfVisionNarrowTurn > 0)
         {
-            for(int j = 0; j < this.mapManager.MapWidth; j++)
+            for(int i = 0; i < this.mapManager.MapHeight; i++)
             {
-                if (understandDungeonSquareType[i, j]) s += DungeonManager.GetStringDungeonSquareType(this.currentFloorDungeonSquares[i, j]) + " ";
-                else s += "？ ";
+                for(int j = 0; j < this.mapManager.MapWidth; j++)
+                {
+                    if(Math.Abs(CurrentLocationRow - i) + Math.Abs(CurrentLocationColumn - j) <= 2) s += DungeonManager.GetStringDungeonSquareType(this.currentFloorDungeonSquares[i, j]) + " ";
+                    else s += "？ ";
+                }
+                s += "\n";
             }
-            s += "\n";
+        }
+        else
+        {
+            for (int i = 0; i < this.mapManager.MapHeight; i++)
+            {
+                for (int j = 0; j < this.mapManager.MapWidth; j++)
+                {
+                    if (understandDungeonSquareType[i, j]) s += DungeonManager.GetStringDungeonSquareType(this.currentFloorDungeonSquares[i, j]) + " ";
+                    else s += "？ ";
+                }
+                s += "\n";
+            }
         }
         //this.AnnounceByText(s);
         Debug.Log(s);
@@ -1430,6 +1462,11 @@ public class DungeonManager : MonoBehaviour
         //this.WaitDungeonSquareEvent = true;
         this.RemainingAmountOfMovement--;
         this.Fullness--; //とりあえず1マス進むごとに満腹度-1
+        if(this.Fullness <= 0)
+        {
+            Debug.Log("力尽きた");
+            //GameOver処理
+        }
         Debug.Log("row/column = " + CurrentLocationRow + "/" + CurrentLocationColumn);
     }
 

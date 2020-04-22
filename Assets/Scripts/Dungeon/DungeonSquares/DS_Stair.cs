@@ -10,6 +10,7 @@ public class DS_Stair : DungeonSquare
     {
         Debug.Log("階段イベント発生");
         //階段イベント処理
+        dm.ElapseTurn();
         dm.MoveScene(E_DungeonScene.SelectAction);
     }
 }

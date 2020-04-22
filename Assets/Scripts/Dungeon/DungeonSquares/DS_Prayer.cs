@@ -10,18 +10,23 @@ public class DS_Prayer : DungeonSquare
     {
         Debug.Log("祈祷イベント発生");
         Pray(dm);
+        dm.ElapseTurn();
         dm.MoveScene(E_DungeonScene.SelectAction);
     }
 
     private void Pray(DungeonManager dm)
     {
-        switch(UnityEngine.Random.Range(0, 2))
+        switch(UnityEngine.Random.Range(0, 3))
         {
             case 0:
                 dm.ActivateRandomGoodEffect();
                 break;
             case 1:
                 dm.ActivateRandomBadEffect();
+                break;
+            case 2:
+                dm.ActivateRandomBadEffect();
+                dm.ActivateRandomGoodEffect();
                 break;
         }
     }

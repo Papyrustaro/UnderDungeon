@@ -17,6 +17,7 @@ public class DS_Trap : DungeonSquare
         {
             Debug.Log("罠を回避した");
         }
+        dm.ElapseTurn();
         dm.MoveScene(E_DungeonScene.SelectAction);
     }
 }

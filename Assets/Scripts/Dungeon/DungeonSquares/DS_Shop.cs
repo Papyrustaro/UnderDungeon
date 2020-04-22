@@ -63,6 +63,7 @@ public class DS_Shop : DungeonSquare
         {
             Debug.Log("店を出た");
             InitSet();
+            dm.ElapseTurn();
             dm.MoveScene(E_DungeonScene.SelectAction);
         }
     }
@@ -275,6 +276,7 @@ public class DS_Shop : DungeonSquare
             Debug.Log("店を出た");
             //マスイベント終了処理
             dm.MoveScene(E_DungeonScene.SelectAction);
+            dm.ElapseTurn();
             InitSet();
         }
     }

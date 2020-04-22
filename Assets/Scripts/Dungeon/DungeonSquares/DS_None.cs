@@ -9,6 +9,7 @@ public class DS_None : DungeonSquare
     public override void SquareEvent(DungeonManager dm)
     {
         Debug.Log("イベント発生無し");
+        dm.ElapseTurn();
         dm.MoveScene(E_DungeonScene.SelectAction);
     }
 }

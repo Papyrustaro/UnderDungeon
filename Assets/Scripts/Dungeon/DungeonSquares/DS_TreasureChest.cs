@@ -59,6 +59,7 @@ public class DS_TreasureChest : DungeonSquare
                 dm.MoveBattleScene();
                 return;
         }
+        dm.ElapseTurn();
         dm.MoveScene(E_DungeonScene.SelectAction);
     }
 }
