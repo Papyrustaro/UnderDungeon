@@ -596,7 +596,7 @@ public class BattleCharacter : MonoBehaviour
     /// <returns>自身に集中しているか</returns>
     public bool IsAttracting(E_Element attackElement)
     {
-        return (IsDefending && PassiveAttractInDefending[attackElement]) || (ElementClass.GetTurn(this.attractingEffectTurn, attackElement) > 0);
+        return (IsDefending && ElementClass.GetFlagByElement(PassiveAttractInDefending, attackElement)) || (ElementClass.GetTurn(this.attractingEffectTurn, attackElement) > 0);
     }
 
     /// <summary>

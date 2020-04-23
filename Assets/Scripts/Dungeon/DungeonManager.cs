@@ -327,6 +327,10 @@ public class DungeonManager : MonoBehaviour
         {
             Debug.Log("満腹度: " + this.Fullness + "/" + this.MaxFullNess);
         }
+        if (Input.GetKeyDown(KeyCode.D) && Input.GetKey(KeyCode.LeftControl))
+        {
+            //debug用
+        }
     }
 
     
@@ -1240,6 +1244,7 @@ public class DungeonManager : MonoBehaviour
             case 9:
                 Debug.Log("マップ忘却");
                 this.mapManager.SetFlagUnderstandDungeonSquareType(ref this.understandDungeonSquareType, false);
+                UnderstandDungeonSquareTypeAroundPlayer();
                 break;
             case 10:
                 Debug.Log("デメリットアイテム獲得");
@@ -1316,13 +1321,32 @@ public class DungeonManager : MonoBehaviour
     }
 
     /// <summary>
-    /// マップ上のランダムなマスにワープ(現在位置移動)。壁かどうかの判断はまだしていない
+    /// マップ上のランダムなマスにワープ(現在位置移動)
     /// </summary>
     public void WarpToRandomPosition()
     {
-        this.CurrentLocationRow = UnityEngine.Random.Range(0, this.mapManager.MapWidth);
-        this.CurrentLocationColumn = UnityEngine.Random.Range(0, this.mapManager.MapHeight);
+        List<PositionXY> canWarpPositions = GetPositionsNotWall();
+        PositionXY choosePosition = canWarpPositions[UnityEngine.Random.Range(0, canWarpPositions.Count)];
+        this.CurrentLocationRow = choosePosition.Row;
+        this.CurrentLocationColumn = choosePosition.Column;
         this.CurrentMovingDirection = E_Direction.None;
+    }
+
+    /// <summary>
+    /// 壁以外のすべての座標を取得
+    /// </summary>
+    /// <returns>壁以外のすべての座標</returns>
+    public List<PositionXY> GetPositionsNotWall()
+    {
+        List<PositionXY> positions = new List<PositionXY>();
+        for(int i = 0; i < this.mapManager.MapHeight; i++)
+        {
+            for(int j = 0; j < this.mapManager.MapWidth; j++)
+            {
+                if (this.currentFloorDungeonSquares[i, j] != E_DungeonSquareType.壁) positions.Add(new PositionXY(i, j));
+            }
+        }
+        return positions;
     }
 
     /// <summary>

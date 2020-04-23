@@ -139,6 +139,7 @@ public class MapManager : MonoBehaviour
                 }
             }
         }
+
     }
     
 }

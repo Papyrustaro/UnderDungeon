@@ -179,4 +179,19 @@ public class ElementClass
         if (ElementClass.IsAqua(effectElement)) dic[E_Element.Aqua] = true;
         if (ElementClass.IsTree(effectElement)) dic[E_Element.Tree] = true;
     }
+
+    /// <summary>
+    /// 辞書型でflag格納している変数を使ってsearchElementのflagを返す
+    /// </summary>
+    /// <param name="dic">属性ごとのflagが格納された検索元</param>
+    /// <param name="searchElement">検索する属性</param>
+    /// <returns></returns>
+    public static bool GetFlagByElement(Dictionary<E_Element, bool> dic, E_Element searchElement)
+    {
+        if (IsFire(searchElement) && dic[E_Element.Fire] == true) return true;
+        if (IsAqua(searchElement) && dic[E_Element.Aqua] == true) return true;
+        if (IsTree(searchElement) && dic[E_Element.Tree] == true) return true;
+
+        return false;
+    }
 }

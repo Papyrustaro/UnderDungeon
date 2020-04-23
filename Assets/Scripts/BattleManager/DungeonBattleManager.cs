@@ -561,7 +561,7 @@ public class DungeonBattleManager : MonoBehaviour
     /// <summary>
     /// 攻撃を集中しているキャラクターをリストの先頭から探索
     /// </summary>
-    /// <param name="attractElement">集中している属性</param>
+    /// <param name="attractElement">集中しているか調べる属性</param>
     /// <param name="charaList">探索するキャラリスト</param>
     /// <returns>最初に見つかった集中させているキャラ(いなければnull)</returns>
     public BattleCharacter GetAttractingCharacter(E_Element attractElement, List<BattleCharacter> charaList) //charaListの先頭から検索していくため、sortされないlistを渡す必要がある
