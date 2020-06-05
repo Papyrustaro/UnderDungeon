@@ -290,7 +290,7 @@ public class DungeonManager : MonoBehaviour
             this.GenerateFloor(this.mapManager.MapWidth, this.mapManager.MapHeight);
             this.dungeonSquaresFunc.SetMayAppearDungeonSquares(this.mapManager.MayAppearDungeonSquares);
             this.MoveScene(E_DungeonScene.SelectAction);
-            SetFlagUnderstandDungeonSquareType(true);
+            //SetFlagUnderstandDungeonSquareType(true);
             UnderstandDungeonSquareTypeAroundPlayer();
 
             HaveGold = 5000000;
